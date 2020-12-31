@@ -1,0 +1,8 @@
+.eslintrc
+.nvmrc
+# CHANGELOG.md
+# CONTRIBUTING.md
+coverage
+# test/
+node_modules
+src
