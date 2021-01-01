@@ -1,6 +1,6 @@
 # React Headings
 
-> Never worry about **using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
+> Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
 React-headings dynamically maintains the current heading level and prevents skipping levels no matter your component structure, as required by WCAG.
 
