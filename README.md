@@ -51,8 +51,8 @@ function MyComponent() {
 - Works with component libraries (Material UI, etc.)
 - Fully tested
 - Zero dependencies
+- Tiny (~400b minified + gzipped)
 - Semver compliant
-<!-- - Tiny (less than x kb) -->
 
 ## Installation
 
