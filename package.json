@@ -1,6 +1,6 @@
 {
   "name": "react-headings",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "HTML headings with auto-incrementing levels for WCAG compliance.",
   "main": "build/index.js",
   "types": "types/index.d.ts",
