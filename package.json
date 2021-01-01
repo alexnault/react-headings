@@ -3,7 +3,7 @@
   "version": "1.0.4",
   "description": "HTML headings with auto-incrementing levels for WCAG compliance.",
   "main": "dist/index.js",
-  "types": "types/index.d.ts",
+  "types": "dist/index.d.ts",
   "author": "Alex Nault",
   "keywords": [
     "react",
@@ -21,7 +21,7 @@
   "repository": "alexnault/react-headings",
   "homepage": "https://github.com/alexnault/react-headings#readme",
   "scripts": {
-    "build": "tsc && tsc --project ./tsconfig.types.json",
+    "build": "tsc",
     "test": "jest"
   },
   "peerDependencies": {

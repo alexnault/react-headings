@@ -6,6 +6,7 @@
     "lib": ["ESNext", "dom"],
     "outDir": "dist",
     "target": "es5",
+    "declaration": true,
     "noImplicitAny": true,
     "noImplicitReturns": false,
     "noImplicitThis": true,
