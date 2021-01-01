@@ -46,7 +46,7 @@ function MyComponent() {
 - Simple API
 - Focus on developer experience
 - Accessible
-- Customizable & flexible (no component lock-in)
+- Flexible (no component lock-in)
 - Typed with TypeScript
 - Works with component libraries (Material UI, etc.)
 - Fully tested
