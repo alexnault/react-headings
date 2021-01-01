@@ -10,9 +10,9 @@ React-headings dynamically maintains the current heading level and prevents skip
 import React from "react";
 import { H, Level } from "react-headings";
 
-function App() {
+function ParentComponent() {
   return (
-    <>
+    <div>
       <H>My heading (hx)</H>
       <Level>
         <H>My subheading (hx+1)</H>
@@ -21,36 +21,35 @@ function App() {
         <Level>
           <H>My subsubheading (hx+2)</H>
           <p>...</p>
-          <MyComponent />
+          <ChildComponent />
         </Level>
       </Level>
-    </>
+    </div>
   );
 }
 
-function MyComponent() {
+function ChildComponent() {
   return (
-    <>
+    <div>
       <H>My heading (hy)</H>
       <Level>
         <H>My subheading (hy+1)</H>
         <p>...</p>
       </Level>
-    </>
+    </div>
   )
 }
 ```
 
 ## Features
 
-- Simple API
 - Flexible (no component lock-in)
-- Focus on developer experience
+- Focused on developer experience
 - Typed with TypeScript
 - Works with component libraries (Material UI, etc.)
 - Fully tested
 - Zero dependencies
-- Tiny (~400B minified + gzipped)
+- Tiny (~0.5kB minified + gzipped)
 - Semver compliant
 
 ## Installation
