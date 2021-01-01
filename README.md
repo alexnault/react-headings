@@ -1,8 +1,8 @@
 # React Headings
 
-**Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!**
+> Never worry about **using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
-React-headings maintains the current heading level and prevents skipping levels no matter your component structure, as required by WCAG.
+React-headings dynamically maintains the current heading level and prevents skipping levels no matter your component structure, as required by WCAG.
 
 ## Basic usage
 
@@ -13,13 +13,16 @@ import { H, Level } from "react-heading";
 function App() {
   return (
     <>
-      <H>This is a h1</H>
+      <H>My heading (hx)</H>
       <Level>
-        <H>This is a h2</H>
+        <H>My subheading (hx+1)</H>
         <p>...</p>
-        <H>This is a h2</H>
-        <p>...</p>
-        <MyComponent />
+        <H>My subheading (hx+1)</H>
+        <Level>
+          <H>My subsubheading (hx+2)</H>
+          <p>...</p>
+          <MyComponent />
+        </Level>
       </Level>
     </>
   );
@@ -28,9 +31,9 @@ function App() {
 function MyComponent() {
   return (
     <>
-      <H>This is a h2</H>
+      <H>My heading (hy)</H>
       <Level>
-        <H>This is a h3</H>
+        <H>My subheading (hy+1)</H>
         <p>...</p>
       </Level>
     </>
@@ -54,7 +57,7 @@ function MyComponent() {
 ## Installation
 
 ```bash
-npm install --save react-headings
+npm install react-headings --save
 ```
 
 ## More examples
