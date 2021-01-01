@@ -2,7 +2,7 @@
   "name": "react-headings",
   "version": "1.0.3",
   "description": "HTML headings with auto-incrementing levels for WCAG compliance.",
-  "main": "build/index.js",
+  "main": "dist/index.js",
   "types": "types/index.d.ts",
   "author": "Alex Nault",
   "keywords": [
