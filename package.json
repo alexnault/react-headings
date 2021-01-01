@@ -24,6 +24,9 @@
     "build": "tsc",
     "test": "jest"
   },
+  "files": [
+    "dist"
+  ],
   "peerDependencies": {
     "react": "^16.8.0 || ^17.0.0"
   },
