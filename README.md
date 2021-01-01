@@ -67,13 +67,18 @@ npm install react-headings --save
 ```jsx
 import React from "react";
 import { H, Level } from "react-heading";
-import { Typography } from '@material-ui/core';
+import { Typography } from "@material-ui/core";
 
 function MyComponent() {
   return (
-    <H>{(Component, level) => <Typography component={Component}>This is a h{level}</Typography>}</H>
+    <H>
+      {(Component, level) => (
+        <Typography component={Component}>This is a h{level}</Typography>
+      )}
+    </H>
   );
 }
+
 ```
 
 ### `useLevel` hook
@@ -85,8 +90,6 @@ import { useLevel } from "react-heading";
 function MyComponent() {
   const level = useLevel();
 
-  return (
-    <div>Current level is {level}</div>
-  );
+  return <div>Current level is {level}</div>;
 }
 ```
