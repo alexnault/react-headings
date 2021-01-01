@@ -2,13 +2,13 @@
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
-React-headings dynamically maintains the current heading level and prevents skipping levels no matter your component structure, as required by WCAG.
+React-headings dynamically maintains the current heading level and prevents skipping levels no matter your component structure, [as required by WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings/).
 
 ## Basic usage
 
 ```jsx
 import React from "react";
-import { H, Level } from "react-heading";
+import { H, Level } from "react-headings";
 
 function App() {
   return (
@@ -44,9 +44,8 @@ function MyComponent() {
 ## Features
 
 - Simple API
-- Focus on developer experience
-- Accessible
 - Flexible (no component lock-in)
+- Focus on developer experience
 - Typed with TypeScript
 - Works with component libraries (Material UI, etc.)
 - Fully tested
@@ -66,7 +65,7 @@ npm install react-headings --save
 
 ```jsx
 import React from "react";
-import { H, Level } from "react-heading";
+import { H, Level } from "react-headings";
 import { Typography } from "@material-ui/core";
 
 function MyComponent() {
@@ -85,7 +84,7 @@ function MyComponent() {
 
 ```jsx
 import React from "react";
-import { useLevel } from "react-heading";
+import { useLevel } from "react-headings";
 
 function MyComponent() {
   const level = useLevel();
