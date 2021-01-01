@@ -1,4 +1,4 @@
-# React Headings
+# React Headings ![npm](https://img.shields.io/npm/v/react-headings?style=flat-square) ![size](https://img.shields.io/bundlephobia/minzip/react-headings?style=flat-square)
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
