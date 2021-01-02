@@ -1,3 +1,5 @@
+<img align="right" width="200" src="https://github.com/alexnault/react-headings/raw/master/assets/react-headings.png" />
+
 # React Headings ![npm](https://img.shields.io/npm/v/react-headings?style=flat-square) ![size](https://img.shields.io/bundlephobia/minzip/react-headings?style=flat-square)
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
