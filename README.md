@@ -95,3 +95,15 @@ function MyComponent() {
   return <div>Current level is {level}</div>;
 }
 ```
+
+## Changelog
+
+For a list of changes and releases, see the [changelog](https://github.com/alexnault/react-headings/releases).
+
+## Contributing
+
+Found a bug, have a question or looking to improve react-headings? Open an [issue](https://github.com/alexnault/react-headings/issues/new) or a [PR](https://github.com/alexnault/react-headings/fork)!
+
+## License
+
+This project is under the [MIT license](/LICENSE).
