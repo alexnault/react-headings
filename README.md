@@ -52,7 +52,7 @@ function ChildComponent() {
 - Fully tested
 - Zero dependencies
 - Tiny (~0.4kB minified + gzipped)
-- Semver compliant
+- Follows [semantic versioning](https://semver.org/)
 
 ## Installation
 
