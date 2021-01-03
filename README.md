@@ -51,7 +51,7 @@ function ChildComponent() {
 - Works with component libraries (Material UI, etc.)
 - Fully tested
 - Zero dependencies
-- Tiny (~0.5kB minified + gzipped)
+- Tiny (~0.4kB minified + gzipped)
 - Semver compliant
 
 ## Installation

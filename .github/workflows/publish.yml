@@ -1,30 +1,28 @@
 # This workflow will run tests using node and then publish a package when a release is created
 # For more information see: https://help.github.com/actions/language-and-framework-guides/publishing-nodejs-packages
 
-name: Publish Package
+name: Test and publish package
 
 on:
   release:
     types: [created]
 
 jobs:
-  build-and-test:
+  test:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [10.x, 12.x, 14.x]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
         with:
-          node-version: 14
+          node-version: ${{ matrix.node }}
       - run: npm ci
-      - run: npm run build
       - run: npm test
-      - uses: actions/upload-artifact@v2
-        with:
-          name: dist
-          path: dist
 
   publish-npm:
-    needs: build-and-test
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -33,26 +31,9 @@ jobs:
           node-version: 14
           registry-url: https://registry.npmjs.org/
       - run: npm ci
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist
-      - run: npm publish
+      - run: npm run build
+      # - run: npm publish
+      - run: npx semantic-release
         env:
           NODE_AUTH_TOKEN: ${{secrets.NPM_TOKEN}}
-
-  publish-gpr:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: 14
-          registry-url: https://npm.pkg.github.com/
-      - run: npm ci
-      - uses: actions/download-artifact@v2
-        with:
-          name: dist
-      - run: npm publish
-        env:
-          NODE_AUTH_TOKEN: ${{secrets.GITHUB_TOKEN}}
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
