@@ -4,8 +4,9 @@
 name: Test and publish package
 
 on:
-  release:
-    types: [created]
+  push:
+    branches:
+      - "master"
 
 jobs:
   test:
