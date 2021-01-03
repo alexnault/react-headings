@@ -4,7 +4,7 @@
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
-React-headings dynamically maintains the current heading level and prevents skipping levels no matter your component structure, [as required by WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings/).
+React-headings maintains the current heading level and prevents skipping levels no matter your component structure, [as required by WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings/).
 
 ## Basic usage
 
@@ -64,6 +64,9 @@ npm install react-headings --save
 
 ### Custom component
 
+`H` exposes a `render` prop to render a custom component based on the current level.
+Note: `render` as precedence over `children`.
+
 ```jsx
 import React from "react";
 import { H, Level } from "react-headings";
@@ -71,14 +74,13 @@ import { Typography } from "@material-ui/core";
 
 function MyComponent() {
   return (
-    <H>
-      {(Component, level) => (
+    <H
+      render={({ Component, level }) => (
         <Typography component={Component}>This is a h{level}</Typography>
       )}
-    </H>
+    />
   );
 }
-
 ```
 
 ### `useLevel` hook

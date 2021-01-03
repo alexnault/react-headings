@@ -24,20 +24,27 @@ export function Level({ children }: LevelProps) {
   );
 }
 
-type HProps = {
-  children:
-    | React.ReactNode
-    | ((Component: Heading, level: HeadingLevel) => React.ReactElement);
+type HProps = React.DetailedHTMLProps<
+  React.HTMLAttributes<HTMLHeadingElement>,
+  HTMLHeadingElement
+> & {
+  render?: ({
+    Component,
+    level,
+  }: {
+    Component: Heading;
+    level: HeadingLevel;
+  }) => React.ReactElement;
 };
 
-export function H({ children }: HProps) {
+export function H({ render, ...props }: HProps) {
   const level = useLevel();
 
   const Component = `h${level}` as Heading;
 
-  if (typeof children === "function") {
-    return children(Component, level);
+  if (render) {
+    return render({ Component, level });
   }
 
-  return <Component>{children}</Component>;
+  return <Component {...props} />;
 }

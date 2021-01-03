@@ -32,7 +32,7 @@ describe("useLevel hook", () => {
     );
   });
 
-  it("should be level 6 even if we are at level 7", () => {
+  it("should be level 6 when at level 7 or more", () => {
     function MyComponent() {
       const level = useLevel();
 
@@ -80,7 +80,7 @@ describe("H component", () => {
     expect(headingEl.tagName).toBe("H2");
   });
 
-  it("should be level 6 even if we are at level 7", () => {
+  it("should be level 6 when at level 7 or more", () => {
     const { getByText } = render(
       <Level>
         <Level>
@@ -102,10 +102,32 @@ describe("H component", () => {
     expect(headingEl.tagName).toBe("H6");
   });
 
-  it("should render custom component", () => {
+  it("should forward HTML heading props", () => {
+    const { getByText } = render(<H className="myClass">My H1</H>);
+
+    const headingEl = getByText("My H1");
+
+    expect(headingEl.className).toBe("myClass");
+  });
+
+  it("should render a custom component", () => {
     const { getByText } = render(
       <Level>
-        <H>{(Component) => <Component>My H2</Component>}</H>
+        <H render={() => <span>My H2</span>} />
+      </Level>
+    );
+
+    const headingEl = getByText("My H2");
+
+    expect(headingEl.tagName).toBe("SPAN");
+  });
+
+  it("should render a custom component based on arguments", () => {
+    const { getByText } = render(
+      <Level>
+        <H
+          render={({ Component, level }) => <Component>My H{level}</Component>}
+        />
       </Level>
     );
 
