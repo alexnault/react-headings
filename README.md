@@ -1,4 +1,4 @@
-<img src="https://github.com/alexnault/react-headings/raw/master/assets/react-headings.png" />
+<img src="https://github.com/alexnault/react-headings/raw/master/assets/react-headings.png" width="100%" alt="React Headings" />
 
 # React Headings ![npm](https://img.shields.io/npm/v/react-headings?style=flat-square) ![size](https://img.shields.io/bundlephobia/minzip/react-headings?style=flat-square)
 
