@@ -57,7 +57,9 @@ function ChildComponent() {
 ## Installation
 
 ```bash
-npm install react-headings --save
+npm install react-headings
+# or
+yarn add react-headings
 ```
 
 ## More examples
