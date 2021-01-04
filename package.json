@@ -21,7 +21,7 @@
   "repository": "https://github.com/alexnault/react-headings",
   "homepage": "https://github.com/alexnault/react-headings#readme",
   "scripts": {
-    "build": "rm -rf ./dist && tsc",
+    "build": "tsc",
     "test": "jest"
   },
   "files": [
