@@ -3,7 +3,7 @@
     "esModuleInterop": true,
     "isolatedModules": false,
     "jsx": "react",
-    "lib": ["ESNext", "dom"],
+    "lib": ["esnext", "dom"],
     "outDir": "dist",
     "target": "es5",
     "declaration": true,
@@ -14,10 +14,9 @@
     "noUnusedParameters": true,
     "skipLibCheck": true,
     "strict": true,
-    "importHelpers": true,
     "types": ["jest"]
   },
-  "include": ["./src"],
+  "include": ["src/**/*"],
   "exclude": [
     "src/**/*.spec.ts",
     "src/**/*.spec.tsx"
