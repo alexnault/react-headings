@@ -4,13 +4,18 @@ type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
 type Heading = `h${HeadingLevel}`;
 
-const LevelContext = React.createContext<HeadingLevel>(1);
+type HeadingContextValue = { level: HeadingLevel; Component: Heading };
+
+const HeadingContext = React.createContext<HeadingContextValue>({
+  level: 1,
+  Component: "h1",
+});
 
 /**
- * Returns the current level
+ * Returns the current heading and level.
  */
-export function useLevel() {
-  return React.useContext(LevelContext);
+export function useHeadings() {
+  return React.useContext(HeadingContext);
 }
 
 type LevelProps = {
@@ -22,12 +27,17 @@ type LevelProps = {
  * Any H component rendered within this context will use its level.
  */
 export function Level({ children }: LevelProps) {
-  const level = useLevel();
+  const { level } = useHeadings();
 
   const nextLevel = Math.min(level + 1, 6) as HeadingLevel;
 
+  const value = {
+    level: nextLevel,
+    Component: `h${nextLevel}` as Heading,
+  };
+
   return (
-    <LevelContext.Provider value={nextLevel}>{children}</LevelContext.Provider>
+    <HeadingContext.Provider value={value}>{children}</HeadingContext.Provider>
   );
 }
 
@@ -35,26 +45,18 @@ type HProps = React.DetailedHTMLProps<
   React.HTMLAttributes<HTMLHeadingElement>,
   HTMLHeadingElement
 > & {
-  render?: ({
-    Component,
-    level,
-  }: {
-    Component: Heading;
-    level: HeadingLevel;
-  }) => React.ReactElement;
+  render?: (context: HeadingContextValue) => React.ReactElement;
 };
 
 /**
  * Renders a HTML heading (h1, h2, etc.) or a custom component according to the current level.
  */
 export function H({ render, ...props }: HProps) {
-  const level = useLevel();
-
-  const Component = `h${level}` as Heading;
+  const context = useHeadings();
 
   if (render) {
-    return render({ Component, level });
+    return render(context);
   }
 
-  return <Component {...props} />;
+  return <context.Component {...props} />;
 }

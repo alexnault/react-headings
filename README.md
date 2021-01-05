@@ -43,7 +43,7 @@ function ChildComponent() {
 }
 ```
 
-## Features
+## Highlights
 
 - Flexible (no component lock-in)
 - Focused on developer experience
@@ -62,41 +62,61 @@ npm install react-headings
 yarn add react-headings
 ```
 
-## More examples
+## Examples
 
 ### Custom component
 
-`H` exposes a `render` prop to render a custom component based on the current level.
-Note: `render` as precedence over `children`.
+You can render custom headings anywhere by using either the `H` component or the `useHeadings` hook.
+
+- With the `H` component:
 
 ```jsx
 import React from "react";
 import { H, Level } from "react-headings";
-import { Typography } from "@material-ui/core";
 
-function MyComponent() {
+function App() {
   return (
     <H
       render={({ Component, level }) => (
-        <Typography component={Component}>This is a h{level}</Typography>
+        <Component>This is a h{level}</Component>
       )}
     />
   );
 }
 ```
 
-### `useLevel` hook
+*Note: `render` as precedence over `children`.*
+
+- With the `useHeadings` hook:
 
 ```jsx
 import React from "react";
-import { useLevel } from "react-headings";
+import { useHeadings } from "react-headings";
 
-function MyComponent() {
-  const level = useLevel();
+function App() {
+  const { Component, level } = useHeadings();
 
-  return <div>Current level is {level}</div>;
+  return <Typography component={Component}>This is a h{level}</Typography>;
 }
 ```
+
+### Using component librairies
+
+Here's an example with [Material UI](https://material-ui.com/api/typography/):
+
+```jsx
+import React from "react";
+import { useHeadings } from "react-headings";
+import { Typography } from "@material-ui/core";
+
+function MyHeading(props) {
+  const { Component } = useHeadings();
+
+  return <Typography component={Component} {...props} />;
+}
+```
+
+Leveraging `Component` and `level` from the context should make implementing other librairies pretty straightforward.
 
 ## Changelog
 

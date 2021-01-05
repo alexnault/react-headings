@@ -1,12 +1,12 @@
 import React from "react";
 import { render } from "@testing-library/react";
 
-import { H, Level, useLevel } from "./index";
+import { H, Level, useHeadings } from "./index";
 
-describe("useLevel hook", () => {
+describe("useHeadings hook", () => {
   it("should be level 1 by default", () => {
     function MyComponent() {
-      const level = useLevel();
+      const { level } = useHeadings();
 
       expect(level).toBe(1);
 
@@ -18,7 +18,7 @@ describe("useLevel hook", () => {
 
   it("should be level 2 when 1 level down", () => {
     function MyComponent() {
-      const level = useLevel();
+      const { level } = useHeadings();
 
       expect(level).toBe(2);
 
@@ -34,7 +34,7 @@ describe("useLevel hook", () => {
 
   it("should be level 6 when at level 7 or more", () => {
     function MyComponent() {
-      const level = useLevel();
+      const { level } = useHeadings();
 
       expect(level).toBe(6);
 
