@@ -5,7 +5,7 @@ name: Test and publish package
 
 on:
   push:
-    branches: [master]
+    branches: [master, next]
 
 jobs:
   test:
