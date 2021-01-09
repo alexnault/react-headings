@@ -66,7 +66,7 @@ yarn add react-headings
 
 ### Custom component
 
-You can render custom headings anywhere by using either the `H` component or the `useLevel` hook.
+You can render custom headings anywhere by using either the `useLevel` hook or the `H` component.
 
 - With the `useLevel` hook:
 
