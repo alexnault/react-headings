@@ -6,6 +6,14 @@
 
 React-headings maintains the current heading level and prevents skipping levels no matter your component structure, [as required by WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings/).
 
+## Demos
+
+- [Minimal](https://codesandbox.io/s/react-headings-minimal-4temt?file=/src/Demo.js)
+- [Custom component](https://codesandbox.io/s/react-headings-custom-component-l4bjb?file=/src/Demo.js)
+- [Advanced structure](https://codesandbox.io/s/react-headings-advanced-structure-uxk4p?file=/src/Demo.js)
+<!-- - [Using `<Level>`]()
+- [Using `<Section>`]() -->
+-
 ## Basic usage
 
 ```jsx
@@ -15,14 +23,12 @@ import { H, Level } from "react-headings";
 function ParentComponent() {
   return (
     <div>
-      <H>My heading (hx)</H>
+      <H>My hx</H>
       <Level>
-        <H>My subheading (hx+1)</H>
+        <H>My hx+1</H>
         <p>...</p>
-        <H>My subheading (hx+1)</H>
+        <H>My hx+1</H>
         <Level>
-          <H>My subsubheading (hx+2)</H>
-          <p>...</p>
           <ChildComponent />
         </Level>
       </Level>
@@ -33,9 +39,9 @@ function ParentComponent() {
 function ChildComponent() {
   return (
     <div>
-      <H>My heading (hy)</H>
+      <H>My hy</H>
       <Level>
-        <H>My subheading (hy+1)</H>
+        <H>My hy+1</H>
         <p>...</p>
       </Level>
     </div>
@@ -43,14 +49,40 @@ function ChildComponent() {
 }
 ```
 
+```jsx
+import React from "react";
+import { H, Section } from "react-headings";
+
+function ParentComponent() {
+  return (
+    <Section component={<H>My hx</H>}>
+      <Section component={<H>My hx+1</H>}>
+        <p>...</p>
+      </Section>
+      <Section component={<H>My hx+1</H>}>
+        <ChildComponent />
+      </Section>
+    </Section>
+  );
+}
+
+function ChildComponent() {
+  return (
+    <Section component={<H>My hx+2</H>}>
+      <p>...</p>
+    </Section>
+  );
+}
+```
+
 ## Highlights
 
-- Flexible (no component lock-in)
+- Flexible
 - Focused on developer experience
+- Fully tested
 - Typed with TypeScript
 - Works with component libraries (Material UI, etc.)
-- Fully tested
-- Zero dependencies
+- Supports SSR
 - Tiny (<1 kB minified + gzipped)
 - Follows [semantic versioning](https://semver.org/)
 

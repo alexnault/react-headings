@@ -60,3 +60,22 @@ export function H({ render, ...props }: HProps) {
 
   return <context.Component {...props} />;
 }
+
+type SectionProps = {
+  component: React.ReactNode;
+  children?: React.ReactNode;
+};
+
+/**
+ * Renders `component` in the current level and `children` in the next level.
+ * @param component A component containing a heading
+ * @param children The children in the next level
+ */
+export function Section({ component, children }: SectionProps) {
+  return (
+    <>
+      {component}
+      <Level>{children}</Level>
+    </>
+  );
+}

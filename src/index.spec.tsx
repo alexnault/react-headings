@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 
-import { H, Level, useHeadings } from "./index";
+import { H, Level, Section, useHeadings } from "./index";
 
 describe("useHeadings hook", () => {
   it("should be level 1 by default", () => {
@@ -88,7 +88,7 @@ describe("H component", () => {
             <Level>
               <Level>
                 <Level>
-                  <H>My H6</H>
+                  <H>My H6-2</H>
                 </Level>
               </Level>
             </Level>
@@ -97,7 +97,7 @@ describe("H component", () => {
       </Level>
     );
 
-    const headingEl = getByText("My H6");
+    const headingEl = getByText("My H6-2");
 
     expect(headingEl.tagName).toBe("H6");
   });
@@ -111,13 +111,9 @@ describe("H component", () => {
   });
 
   it("should render a custom component", () => {
-    const { getByText } = render(
-      <Level>
-        <H render={() => <span>My H2</span>} />
-      </Level>
-    );
+    const { getByText } = render(<H render={() => <span>My span</span>} />);
 
-    const headingEl = getByText("My H2");
+    const headingEl = getByText("My span");
 
     expect(headingEl.tagName).toBe("SPAN");
   });
@@ -134,5 +130,65 @@ describe("H component", () => {
     const headingEl = getByText("My H2");
 
     expect(headingEl.tagName).toBe("H2");
+  });
+});
+
+describe("Section component", () => {
+  it("should be level 1 by default", () => {
+    const { getByText } = render(<Section component={<H>My H1</H>} />);
+
+    const headingEl = getByText("My H1");
+
+    expect(headingEl.tagName).toBe("H1");
+  });
+
+  it("should be level 2 when 1 level down", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>}></Section>
+      </Section>
+    );
+
+    const headingEl = getByText("My H2");
+
+    expect(headingEl.tagName).toBe("H2");
+  });
+
+  it("should be level 6 when at level 7 or more", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>}>
+          <Section component={<H>My H3</H>}>
+            <Section component={<H>My H4</H>}>
+              <Section component={<H>My H5</H>}>
+                <Section component={<H>My H6</H>}>
+                  <Section component={<H>My H6-2</H>}></Section>
+                </Section>
+              </Section>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
+    );
+
+    const headingEl = getByText("My H6-2");
+
+    expect(headingEl.tagName).toBe("H6");
+  });
+
+  it("should render a heading and its content", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <p>My content</p>
+      </Section>
+    );
+
+    const headingEl = getByText("My H1");
+
+    expect(headingEl.tagName).toBe("H1");
+
+    const pEl = getByText("My content");
+
+    expect(pEl.tagName).toBe("P");
   });
 });
