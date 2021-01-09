@@ -66,7 +66,7 @@ yarn add react-headings
 
 ### Custom component
 
-You can render custom headings anywhere by using either the `H` component or the `useHeadings` hook.
+You can render custom headings anywhere by using either the `H` component or the `useLevel` hook.
 
 - With the `H` component:
 
@@ -87,14 +87,14 @@ function App() {
 
 *Note: `render` as precedence over `children`.*
 
-- With the `useHeadings` hook:
+- With the `useLevel` hook:
 
 ```jsx
 import React from "react";
-import { useHeadings } from "react-headings";
+import { useLevel } from "react-headings";
 
 function App() {
-  const { Component, level } = useHeadings();
+  const { Component, level } = useLevel();
 
   return <Typography component={Component}>This is a h{level}</Typography>;
 }
@@ -106,11 +106,11 @@ Here's an example with [Material UI](https://material-ui.com/api/typography/):
 
 ```jsx
 import React from "react";
-import { useHeadings } from "react-headings";
+import { useLevel } from "react-headings";
 import { Typography } from "@material-ui/core";
 
 function MyHeading(props) {
-  const { Component } = useHeadings();
+  const { Component } = useLevel();
 
   return <Typography component={Component} {...props} />;
 }
