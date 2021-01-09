@@ -1,4 +1,4 @@
-<img src="https://github.com/alexnault/react-headings/raw/master/assets/react-headings.png" width="100%" alt="React Headings" />
+![React Headings Logo](https://github.com/alexnault/react-headings/raw/master/assets/react-headings.png)
 
 # React Headings ![npm](https://img.shields.io/npm/v/react-headings?style=flat-square) ![size](https://img.shields.io/bundlephobia/minzip/react-headings?style=flat-square)
 
@@ -6,51 +6,51 @@
 
 React-headings maintains the current heading level and prevents skipping levels no matter your component structure, [as required by WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings/).
 
+## Demos
+
+- [Minimal](https://codesandbox.io/s/react-headings-minimal-4temt?file=/src/Demo.js)
+- [Custom component](https://codesandbox.io/s/react-headings-custom-component-l4bjb?file=/src/Demo.js)
+- [Advanced structure](https://codesandbox.io/s/react-headings-advanced-structure-uxk4p?file=/src/Demo.js)
+
+<!-- - [Using `<Level>`]()
+- [Using `<Section>`]() -->
+
 ## Basic usage
 
 ```jsx
 import React from "react";
-import { H, Level } from "react-headings";
+import { H, Section } from "react-headings";
 
 function ParentComponent() {
   return (
-    <div>
-      <H>My heading (hx)</H>
-      <Level>
-        <H>My subheading (hx+1)</H>
+    <Section component={<H>My hx</H>}>
+      <Section component={<H>My hx+1</H>}>
         <p>...</p>
-        <H>My subheading (hx+1)</H>
-        <Level>
-          <H>My subsubheading (hx+2)</H>
-          <p>...</p>
-          <ChildComponent />
-        </Level>
-      </Level>
-    </div>
+      </Section>
+      <Section component={<H>My hx+1</H>}>
+        <ChildComponent />
+      </Section>
+    </Section>
   );
 }
 
 function ChildComponent() {
   return (
-    <div>
-      <H>My heading (hy)</H>
-      <Level>
-        <H>My subheading (hy+1)</H>
-        <p>...</p>
-      </Level>
-    </div>
-  )
+    <Section component={<H>My hx+2</H>}>
+      <p>...</p>
+    </Section>
+  );
 }
 ```
 
-## Features
+## Highlights
 
-- Flexible (no component lock-in)
+- Flexible
 - Focused on developer experience
+- Fully tested
 - Typed with TypeScript
 - Works with component libraries (Material UI, etc.)
-- Fully tested
-- Zero dependencies
+- Supports SSR
 - Tiny (<1 kB minified + gzipped)
 - Follows [semantic versioning](https://semver.org/)
 
@@ -62,41 +62,61 @@ npm install react-headings
 yarn add react-headings
 ```
 
-## More examples
+## Examples
 
 ### Custom component
 
-`H` exposes a `render` prop to render a custom component based on the current level.
-Note: `render` as precedence over `children`.
+You can render custom headings anywhere by using either the `useLevel` hook or the `H` component.
+
+- With the `useLevel` hook:
+
+```jsx
+import React from "react";
+import { useLevel } from "react-headings";
+
+function App() {
+  const { Component, level } = useLevel();
+
+  return <Component>This is a h{level}</Component>;
+}
+```
+
+- With the `H` component:
 
 ```jsx
 import React from "react";
 import { H, Level } from "react-headings";
-import { Typography } from "@material-ui/core";
 
-function MyComponent() {
+function App() {
   return (
     <H
       render={({ Component, level }) => (
-        <Typography component={Component}>This is a h{level}</Typography>
+        <Component>This is a h{level}</Component>
       )}
     />
   );
 }
 ```
 
-### `useLevel` hook
+*Note: `render` as precedence over `children`.*
+
+### Using component librairies
+
+Here's an example with [Material UI](https://material-ui.com/api/typography/):
 
 ```jsx
 import React from "react";
 import { useLevel } from "react-headings";
+import { Typography } from "@material-ui/core";
 
-function MyComponent() {
-  const level = useLevel();
+function MyHeading(props) {
+  const { Component } = useLevel();
 
-  return <div>Current level is {level}</div>;
+  return <Typography component={Component} {...props} />;
 }
 ```
+
+Leveraging `Component` and `level` from the context should make implementing other librairies pretty straightforward.
 
 ## Changelog
 
