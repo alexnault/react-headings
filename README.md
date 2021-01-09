@@ -68,6 +68,19 @@ yarn add react-headings
 
 You can render custom headings anywhere by using either the `H` component or the `useLevel` hook.
 
+- With the `useLevel` hook:
+
+```jsx
+import React from "react";
+import { useLevel } from "react-headings";
+
+function App() {
+  const { Component, level } = useLevel();
+
+  return <Component>This is a h{level}</Component>;
+}
+```
+
 - With the `H` component:
 
 ```jsx
@@ -86,19 +99,6 @@ function App() {
 ```
 
 *Note: `render` as precedence over `children`.*
-
-- With the `useLevel` hook:
-
-```jsx
-import React from "react";
-import { useLevel } from "react-headings";
-
-function App() {
-  const { Component, level } = useLevel();
-
-  return <Typography component={Component}>This is a h{level}</Typography>;
-}
-```
 
 ### Using component librairies
 
