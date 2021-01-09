@@ -11,43 +11,11 @@ React-headings maintains the current heading level and prevents skipping levels 
 - [Minimal](https://codesandbox.io/s/react-headings-minimal-4temt?file=/src/Demo.js)
 - [Custom component](https://codesandbox.io/s/react-headings-custom-component-l4bjb?file=/src/Demo.js)
 - [Advanced structure](https://codesandbox.io/s/react-headings-advanced-structure-uxk4p?file=/src/Demo.js)
+
 <!-- - [Using `<Level>`]()
 - [Using `<Section>`]() -->
--
+
 ## Basic usage
-
-```jsx
-import React from "react";
-import { H, Level } from "react-headings";
-
-function ParentComponent() {
-  return (
-    <div>
-      <H>My hx</H>
-      <Level>
-        <H>My hx+1</H>
-        <p>...</p>
-        <H>My hx+1</H>
-        <Level>
-          <ChildComponent />
-        </Level>
-      </Level>
-    </div>
-  );
-}
-
-function ChildComponent() {
-  return (
-    <div>
-      <H>My hy</H>
-      <Level>
-        <H>My hy+1</H>
-        <p>...</p>
-      </Level>
-    </div>
-  )
-}
-```
 
 ```jsx
 import React from "react";
