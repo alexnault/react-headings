@@ -49,7 +49,7 @@ type HProps = React.DetailedHTMLProps<
 };
 
 /**
- * Renders a HTML heading (h1, h2, etc.) or a custom component according to the current level.
+ * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
  */
 export function H({ render, ...props }: HProps) {
   const context = useLevel();
