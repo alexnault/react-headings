@@ -6,9 +6,10 @@ import { H, Level, Section, useHeadings } from "./index";
 describe("useHeadings hook", () => {
   it("should be level 1 by default", () => {
     function MyComponent() {
-      const { level } = useHeadings();
+      const { level, Component } = useHeadings();
 
       expect(level).toBe(1);
+      expect(Component).toBe("h1");
 
       return null;
     }
@@ -18,9 +19,10 @@ describe("useHeadings hook", () => {
 
   it("should be level 2 when 1 level down", () => {
     function MyComponent() {
-      const { level } = useHeadings();
+      const { level, Component } = useHeadings();
 
       expect(level).toBe(2);
+      expect(Component).toBe("h2");
 
       return null;
     }
@@ -34,9 +36,10 @@ describe("useHeadings hook", () => {
 
   it("should be level 6 when at level 7 or more", () => {
     function MyComponent() {
-      const { level } = useHeadings();
+      const { level, Component } = useHeadings();
 
       expect(level).toBe(6);
+      expect(Component).toBe("h6");
 
       return null;
     }
