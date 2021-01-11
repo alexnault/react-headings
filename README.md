@@ -6,6 +6,13 @@
 
 React-headings maintains the current heading level and prevents skipping levels no matter your component structure, [as required by WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings/).
 
+## Table of contents
+
+- [Demos](#demos)
+- [Highlights](#highlights)
+- [Installation](#installation)
+- [Examples](#examples)
+
 ## Demos
 
 - [Minimal](https://codesandbox.io/s/react-headings-minimal-4temt?file=/src/Demo.js)
@@ -15,7 +22,28 @@ React-headings maintains the current heading level and prevents skipping levels 
 <!-- - [Using `<Level>`]()
 - [Using `<Section>`]() -->
 
-## Basic usage
+## Highlights
+
+- Flexible
+- Focused on developer experience
+- Fully tested
+- Typed with TypeScript
+- Works with component libraries (Material UI, etc.)
+- Supports server-side rendering
+- Tiny (<1 kB minified + gzipped)
+- Follows [semantic versioning](https://semver.org/)
+
+## Installation
+
+```bash
+npm install react-headings
+# or
+yarn add react-headings
+```
+
+## Examples
+
+### Basic usage
 
 ```jsx
 import React from "react";
@@ -42,27 +70,6 @@ function ChildComponent() {
   );
 }
 ```
-
-## Highlights
-
-- Flexible
-- Focused on developer experience
-- Fully tested
-- Typed with TypeScript
-- Works with component libraries (Material UI, etc.)
-- Supports SSR
-- Tiny (<1 kB minified + gzipped)
-- Follows [semantic versioning](https://semver.org/)
-
-## Installation
-
-```bash
-npm install react-headings
-# or
-yarn add react-headings
-```
-
-## Examples
 
 ### Custom component
 
@@ -124,8 +131,4 @@ For a list of changes and releases, see the [changelog](https://github.com/alexn
 
 ## Contributing
 
-Found a bug, have a question or looking to improve react-headings? Open an [issue](https://github.com/alexnault/react-headings/issues/new) or a [PR](https://github.com/alexnault/react-headings/fork)!
-
-## License
-
-This project is under the [MIT license](/LICENSE).
+Found a bug, have a question or looking to improve react-headings? Open an [issue](https://github.com/alexnault/react-headings/issues/new), start a [discussion](https://github.com/alexnault/react-headings/discussions/new) or submit a [PR](https://github.com/alexnault/react-headings/fork)!
