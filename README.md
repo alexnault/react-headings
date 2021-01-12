@@ -19,9 +19,6 @@ React-headings maintains the current heading level and prevents skipping levels 
 - [Custom component](https://codesandbox.io/s/react-headings-custom-component-l4bjb?file=/src/Demo.js)
 - [Advanced structure](https://codesandbox.io/s/react-headings-advanced-structure-uxk4p?file=/src/Demo.js)
 
-<!-- - [Using `<Level>`]()
-- [Using `<Section>`]() -->
-
 ## Highlights
 
 - Flexible
@@ -92,7 +89,7 @@ function App() {
 
 ```jsx
 import React from "react";
-import { H, Level } from "react-headings";
+import { H } from "react-headings";
 
 function App() {
   return (

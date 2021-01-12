@@ -1,10 +1,10 @@
 import React from "react";
 
-type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
-type Heading = `h${HeadingLevel}`;
+type Heading = `h${Level}`;
 
-type LevelContextValue = { level: HeadingLevel; Component: Heading };
+type LevelContextValue = { level: Level; Component: Heading };
 
 const LevelContext = React.createContext<LevelContextValue>({
   level: 1,
@@ -16,29 +16,6 @@ const LevelContext = React.createContext<LevelContextValue>({
  */
 export function useLevel() {
   return React.useContext(LevelContext);
-}
-
-type LevelProps = {
-  children: React.ReactNode;
-};
-
-/**
- * Creates a new context 1 level down from current level.
- * Any H component rendered within this context will use its level.
- */
-export function Level({ children }: LevelProps) {
-  const { level } = useLevel();
-
-  const nextLevel = Math.min(level + 1, 6) as HeadingLevel;
-
-  const value = {
-    level: nextLevel,
-    Component: `h${nextLevel}` as Heading,
-  };
-
-  return (
-    <LevelContext.Provider value={value}>{children}</LevelContext.Provider>
-  );
 }
 
 type HProps = React.DetailedHTMLProps<
@@ -72,10 +49,19 @@ type SectionProps = {
  * @param children The children in the next level
  */
 export function Section({ component, children }: SectionProps) {
+  const { level } = useLevel();
+
+  const nextLevel = Math.min(level + 1, 6) as Level;
+
+  const value = {
+    level: nextLevel,
+    Component: `h${nextLevel}` as Heading,
+  };
+
   return (
     <>
       {component}
-      <Level>{children}</Level>
+      <LevelContext.Provider value={value}>{children}</LevelContext.Provider>
     </>
   );
 }

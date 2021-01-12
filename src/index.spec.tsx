@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
 
-import { H, Level, Section, useLevel } from "./index";
+import { H, Section, useLevel } from "./index";
 
 describe("useLevel hook", () => {
   it("should be level 1 by default", () => {
@@ -28,9 +28,9 @@ describe("useLevel hook", () => {
     }
 
     render(
-      <Level>
+      <Section component={<H>My H1</H>}>
         <MyComponent />
-      </Level>
+      </Section>
     );
   });
 
@@ -45,19 +45,21 @@ describe("useLevel hook", () => {
     }
 
     render(
-      <Level>
-        <Level>
-          <Level>
-            <Level>
-              <Level>
-                <Level>
-                  <MyComponent />
-                </Level>
-              </Level>
-            </Level>
-          </Level>
-        </Level>
-      </Level>
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>}>
+          <Section component={<H>My H3</H>}>
+            <Section component={<H>My H4</H>}>
+              <Section component={<H>My H5</H>}>
+                <Section component={<H>My H6</H>}>
+                  <Section component={<H>My H6-2</H>}>
+                    <MyComponent />
+                  </Section>
+                </Section>
+              </Section>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
     );
   });
 });
@@ -69,40 +71,6 @@ describe("H component", () => {
     const headingEl = getByText("My H1");
 
     expect(headingEl.tagName).toBe("H1");
-  });
-
-  it("should be level 2 when 1 level down", () => {
-    const { getByText } = render(
-      <Level>
-        <H>My H2</H>
-      </Level>
-    );
-
-    const headingEl = getByText("My H2");
-
-    expect(headingEl.tagName).toBe("H2");
-  });
-
-  it("should be level 6 when at level 7 or more", () => {
-    const { getByText } = render(
-      <Level>
-        <Level>
-          <Level>
-            <Level>
-              <Level>
-                <Level>
-                  <H>My H6-2</H>
-                </Level>
-              </Level>
-            </Level>
-          </Level>
-        </Level>
-      </Level>
-    );
-
-    const headingEl = getByText("My H6-2");
-
-    expect(headingEl.tagName).toBe("H6");
   });
 
   it("should forward HTML heading props", () => {
@@ -123,11 +91,17 @@ describe("H component", () => {
 
   it("should render a custom component based on arguments", () => {
     const { getByText } = render(
-      <Level>
-        <H
-          render={({ Component, level }) => <Component>My H{level}</Component>}
-        />
-      </Level>
+      <Section component={<H>My H1</H>}>
+        <Section
+          component={
+            <H
+              render={({ Component, level }) => (
+                <Component>My H{level}</Component>
+              )}
+            />
+          }
+        ></Section>
+      </Section>
     );
 
     const headingEl = getByText("My H2");
@@ -137,15 +111,15 @@ describe("H component", () => {
 });
 
 describe("Section component", () => {
-  it("should be level 1 by default", () => {
-    const { getByText } = render(<Section component={<H>My H1</H>} />);
+  it("should be level 1 in first section", () => {
+    const { getByText } = render(<Section component={<H>My H1</H>}></Section>);
 
     const headingEl = getByText("My H1");
 
     expect(headingEl.tagName).toBe("H1");
   });
 
-  it("should be level 2 when 1 level down", () => {
+  it("should be level 2 in second section", () => {
     const { getByText } = render(
       <Section component={<H>My H1</H>}>
         <Section component={<H>My H2</H>}></Section>
@@ -157,7 +131,7 @@ describe("Section component", () => {
     expect(headingEl.tagName).toBe("H2");
   });
 
-  it("should be level 6 when at level 7 or more", () => {
+  it("should be level 6 in 7th section", () => {
     const { getByText } = render(
       <Section component={<H>My H1</H>}>
         <Section component={<H>My H2</H>}>
