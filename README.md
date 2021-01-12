@@ -49,10 +49,16 @@ yarn add react-headings
 ```jsx
 import React from "react";
 import { H, Section } from "react-headings";
+import MyIcon from "./MyIcon";
 
 function ParentComponent() {
   return (
-    <Section component={<H>My hx</H>}>
+    <Section component={
+      <div>
+        <MyIcon />
+        <H>My hx</H>
+      </div>
+    }>
       <Section component={<H>My hx+1</H>}>
         <p>...</p>
       </Section>
