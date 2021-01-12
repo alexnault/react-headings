@@ -4,7 +4,9 @@
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
-React-headings maintains the current heading level and prevents skipping levels no matter your component structure, [as required by WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings/).
+React-headings maintains the proper hierarchy of headings for improved accessibility and SEO, no matter the component structure.
+
+Logical hierarchy is required by [WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings) and [Lighthouse SEO audits](https://web.dev/heading-order/).
 
 ## Table of contents
 
@@ -12,6 +14,8 @@ React-headings maintains the current heading level and prevents skipping levels 
 - [Highlights](#highlights)
 - [Installation](#installation)
 - [Examples](#examples)
+- [Changelog](#changelog)
+- [Contributing](#contributing)
 
 ## Demos
 
@@ -27,7 +31,7 @@ React-headings maintains the current heading level and prevents skipping levels 
 - Typed with TypeScript
 - Works with component libraries (Material UI, etc.)
 - Supports server-side rendering
-- Tiny (<1 kB minified + gzipped)
+- Under 1 kB minified & gzipped
 - Follows [semantic versioning](https://semver.org/)
 
 ## Installation
