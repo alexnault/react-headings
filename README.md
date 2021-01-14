@@ -4,9 +4,12 @@
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
-React-headings maintains the proper hierarchy of headings for improved accessibility and SEO, no matter the component structure.
+React-headings maintains the proper hierarchy of headings for improved accessibility and SEO, no matter the component structure, while you keep full control of what's rendered.
 
-Logical hierarchy is required by [WCAG](https://www.w3.org/WAI/tutorials/page-structure/headings) and [Lighthouse SEO audits](https://web.dev/heading-order/).
+References:
+
+- [WCAG 2.0 technique H69](https://www.w3.org/TR/WCAG20-TECHS/H69.html)
+- [Lighthouse SEO heading order audit](https://web.dev/heading-order/)
 
 ## Table of contents
 
