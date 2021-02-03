@@ -144,10 +144,6 @@ Leveraging `Component` and `level` from the context should make implementing oth
 
 Creates a new section (a heading and its level).
 
-```js
-import { Section } from "react-headings";
-```
-
 #### Props
 
 | Name        | Type   | Required | Description                                                                     |
@@ -155,13 +151,38 @@ import { Section } from "react-headings";
 | `component` | `node` | Yes      | The heading component. Can be anything but best used in combination with `<H>`. |
 | `children`  | `node` | No       | The content of the new level.                                                   |
 
+#### Example
+
+```jsx
+import React from "react";
+import { Section, H } from "react-headings";
+
+function Example1() {
+  return (
+    <Section component={<H>This is my title</H>}>This is my content</Section>
+  );
+}
+
+function Example2() {
+  return (
+    <Section
+      component={
+        <div>
+          <div>
+            <H>This is my title</H>
+          </div>
+        </div>
+      }
+    >
+      This is my content
+    </Section>
+  );
+}
+```
+
 ### `<H>` component
 
 Renders a `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>` or `<h6>` depending on the current level.
-
-```js
-import { H } from "react-headings";
-```
 
 #### Props
 
@@ -172,13 +193,26 @@ import { H } from "react-headings";
 
 Any other props will be passed to the heading element.
 
+#### Example
+
+```jsx
+import React from "react";
+import { H } from "react-headings";
+
+function Example1() {
+  return <H>This is my title</H>;
+}
+
+function Example2() {
+  return (
+    <H render={({ level, Component }) => <Component>My h{level}</Component>} />
+  );
+}
+```
+
 ### `useLevel` hook
 
 Returns an object containing the current `level` and current `Component`.
-
-```js
-import { useLevel } from "react-headings";
-```
 
 #### Arguments
 
@@ -190,6 +224,19 @@ None
 | ----------- | -------------------------------------------------------- | ------------------------------------- |
 | `level`     | `1` \| `2` \| `3` \| `4` \| `5` \| `6`                   | The current level.                    |
 | `Component` | `"h1"` \| `"h2"` \| `"h3"` \| `"h4"` \| `"h5"` \| `"h6"` | The current component. Same as level. |
+
+#### Example
+
+```jsx
+import React from "react";
+import { useLevel } from "react-headings";
+
+function Example(props) {
+  const { level, Component } = useLevel();
+
+  return <Component {...props}>This is a h{level}</Component>;
+}
+```
 
 ## Changelog
 
