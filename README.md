@@ -140,6 +140,36 @@ Leveraging `Component` and `level` from the context should make implementing oth
 
 ## API
 
+### `<H>` component
+
+Renders a `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>` or `<h6>` depending on the current level.
+
+#### Props
+
+| Name       | Type       | Required | Description                                    |
+| ---------- | ---------- | -------- | ---------------------------------------------- |
+| `render`   | `function` | No       | Override with a custom heading.                |
+| `children` | `node`     | No       | The content of the heading. Usually the title. |
+
+Any other props will be passed to the heading element.
+
+#### Example
+
+```jsx
+import React from "react";
+import { H } from "react-headings";
+
+function Example1() {
+  return <H>This is my title</H>;
+}
+
+function Example2() {
+  return (
+    <H render={({ level, Component }) => <Component>My h{level}</Component>} />
+  );
+}
+```
+
 ### `<Section>` component
 
 Creates a new section (a heading and its level).
@@ -176,36 +206,6 @@ function Example2() {
     >
       This is my content
     </Section>
-  );
-}
-```
-
-### `<H>` component
-
-Renders a `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>` or `<h6>` depending on the current level.
-
-#### Props
-
-| Name       | Type       | Required | Description                                    |
-| ---------- | ---------- | -------- | ---------------------------------------------- |
-| `render`   | `function` | No       | Override with a custom heading.                |
-| `children` | `node`     | No       | The content of the heading. Usually the title. |
-
-Any other props will be passed to the heading element.
-
-#### Example
-
-```jsx
-import React from "react";
-import { H } from "react-headings";
-
-function Example1() {
-  return <H>This is my title</H>;
-}
-
-function Example2() {
-  return (
-    <H render={({ level, Component }) => <Component>My h{level}</Component>} />
   );
 }
 ```
