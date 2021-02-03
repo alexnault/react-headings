@@ -118,8 +118,6 @@ function App() {
 }
 ```
 
-_Note: `render` as precedence over `children`._
-
 ### Using component librairies
 
 Here's an example with [Material UI](https://material-ui.com/api/typography/):
@@ -146,10 +144,10 @@ Renders a `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>` or `<h6>` depending on the curr
 
 #### Props
 
-| Name       | Type       | Required | Description                                    |
-| ---------- | ---------- | -------- | ---------------------------------------------- |
-| `render`   | `function` | No       | Override with a custom heading.                |
-| `children` | `node`     | No       | The content of the heading. Usually the title. |
+| Name       | Type       | Required | Description                                                     |
+| ---------- | ---------- | -------- | --------------------------------------------------------------- |
+| `render`   | `function` | No       | Override with a custom heading. Has precedence over `children`. |
+| `children` | `node`     | No       | The content of the heading. Usually the title.                  |
 
 Any other props will be passed to the heading element.
 
