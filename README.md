@@ -17,6 +17,7 @@ References:
 - [Highlights](#highlights)
 - [Installation](#installation)
 - [Examples](#examples)
+- [API](#api)
 - [Changelog](#changelog)
 - [Contributing](#contributing)
 
@@ -56,12 +57,14 @@ import MyIcon from "./MyIcon";
 
 function ParentComponent() {
   return (
-    <Section component={
-      <div>
-        <MyIcon />
-        <H>My hx</H>
-      </div>
-    }>
+    <Section
+      component={
+        <div>
+          <MyIcon />
+          <H>My hx</H>
+        </div>
+      }
+    >
       <Section component={<H>My hx+1</H>}>
         <p>...</p>
       </Section>
@@ -115,7 +118,7 @@ function App() {
 }
 ```
 
-*Note: `render` as precedence over `children`.*
+_Note: `render` as precedence over `children`._
 
 ### Using component librairies
 
@@ -134,6 +137,59 @@ function MyHeading(props) {
 ```
 
 Leveraging `Component` and `level` from the context should make implementing other librairies pretty straightforward.
+
+## API
+
+### `<Section>` component
+
+Creates a new section (a heading and its level).
+
+```js
+import { Section } from "react-headings";
+```
+
+#### Props
+
+| Name      | Type | Required | Description                                                                     |
+| --------- | ---- | -------- | ------------------------------------------------------------------------------- |
+| component | node | Yes      | The heading component. Can be anything but best used in combination with `<H>`. |
+| children  | node | No       | The content of the new level.                                                   |
+
+### `<H>` component
+
+Renders a `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>` or `<h6>` depending on the current level.
+
+```js
+import { H } from "react-headings";
+```
+
+#### Props
+
+| Name     | Type     | Required | Description                                    |
+| -------- | -------- | -------- | ---------------------------------------------- |
+| render   | function | No       | Override with a custom heading.                |
+| children | node     | No       | The content of the heading. Usually the title. |
+
+Any other props will be passed to the heading element.
+
+### `useLevel` hook
+
+Returns an object containing the current `level` and current `Component`.
+
+```js
+import { useLevel } from "react-headings";
+```
+
+#### Arguments
+
+None
+
+#### Returns
+
+| Name      | Type                                         | Description                           |
+| --------- | -------------------------------------------- | ------------------------------------- |
+| level     | 1 \| 2 \| 3 \| 4 \| 5 \| 6                   | The current level.                    |
+| Component | "h1" \| "h2" \| "h3" \| "h4" \| "h5" \| "h6" | The current component. Same as level. |
 
 ## Changelog
 
