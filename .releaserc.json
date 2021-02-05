@@ -3,11 +3,11 @@
     "master",
     { "name": "next", "channel": "next", "prerelease": "next" }
   ],
+  "preset": "angular",
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
       {
-        "preset": "angular",
         "releaseRules": [
           { "type": "docs", "release": "patch" },
           { "type": "refactor", "release": "patch" },
@@ -20,7 +20,55 @@
         }
       }
     ],
-    "@semantic-release/release-notes-generator",
+    [
+      "@semantic-release/release-notes-generator",
+      {
+        "presetConfig": {
+          "types": [
+            {
+              "type": "feat",
+              "section": "Features",
+              "hidden": false
+            },
+            {
+              "type": "fix",
+              "section": "Bug Fixes",
+              "hidden": false
+            },
+            {
+              "type": "docs",
+              "section": "Documentation",
+              "hidden": false
+            },
+            {
+              "type": "refactor",
+              "section": "Code Refactors",
+              "hidden": false
+            },
+            {
+              "type": "perf",
+              "section": "Performance",
+              "hidden": false
+            },
+            {
+              "type": "style",
+              "section": "Styles",
+              "hidden": false
+            },
+            {
+              "type": "test",
+              "section": "Tests",
+              "hidden": false
+            },
+            {
+              "type": "chore",
+              "section": "Chores",
+              "hidden": false
+            }
+          ]
+        }
+      }
+    ],
     "@semantic-release/npm",
     "@semantic-release/github"
   ]
