@@ -1,6 +1,6 @@
 ![React Headings Logo](https://github.com/alexnault/react-headings/raw/master/assets/react-headings.png)
 
-# React Headings ![npm](https://img.shields.io/npm/v/react-headings?style=flat-square) ![size](https://img.shields.io/bundlephobia/minzip/react-headings?style=flat-square)
+# React Headings ![checks](https://img.shields.io/github/workflow/status/alexnault/react-headings/ci-and-publish?style=flat-square) ![npm](https://img.shields.io/npm/v/react-headings?style=flat-square) ![size](https://img.shields.io/bundlephobia/minzip/react-headings?style=flat-square)
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
