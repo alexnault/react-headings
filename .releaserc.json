@@ -3,7 +3,7 @@
     "master",
     { "name": "next", "channel": "next", "prerelease": "next" }
   ],
-  "preset": "angular",
+  "preset": "conventionalcommits",
   "plugins": [
     [
       "@semantic-release/commit-analyzer",
