@@ -87,11 +87,6 @@ function ParentComponent() {
         </Section>
       </Section>
 
-      <Section component={<H>My hx+1</H>}>
-        {/* The child component will inherit the current level */}
-        <ChildComponent />
-      </Section>
-
       {/* A fancy DOM structure for heading */}
       <Section
         component={
@@ -100,7 +95,14 @@ function ParentComponent() {
             <H>My hx+1</H>
           </div>
         }
-      ></Section>
+      >
+        <p>...</p>
+      </Section>
+
+      <Section component={<H>My hx+1</H>}>
+        {/* The child component will inherit the current level */}
+        <ChildComponent />
+      </Section>
     </Section>
   );
 }
@@ -108,7 +110,7 @@ function ParentComponent() {
 function ChildComponent() {
   return (
     <Section component={<H>My hy</H>}>
-      {/* The following heading would be a <h4> */}
+      {/* The following heading would be a <h4> in the current context */}
       <Section component={<H>My hy+1</H>}>
         <p>...</p>
       </Section>
