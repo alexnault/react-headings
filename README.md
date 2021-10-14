@@ -30,10 +30,10 @@ References:
 ## Highlights
 
 - Improves SEO and accessibility
-- Typed with TypeScript
-- Fully tested
 - Supports server-side rendering
 - Under 1 kB minified & gzipped
+- Typed with TypeScript
+- Fully tested
 - Works with any CSS solutions (Tailwind, CSS-in-JS, etc.)
 - Plays nicely with component librairies (Material UI, etc.)
 - Follows [semantic versioning](https://semver.org/)
