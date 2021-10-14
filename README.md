@@ -29,13 +29,13 @@ References:
 
 ## Highlights
 
-- Flexible
+- Improves SEO and accessibility
 - Typed with TypeScript
 - Fully tested
 - Supports server-side rendering
 - Under 1 kB minified & gzipped
-- Focused on developer experience
-- Works with other dependencies (Tailwind, Material UI, etc.)
+- Works with any CSS solutions (Tailwind, CSS-in-JS, etc.)
+- Plays nicely with component librairies (Material UI, etc.)
 - Follows [semantic versioning](https://semver.org/)
 
 ## Installation
@@ -79,28 +79,39 @@ import MyIcon from "./MyIcon";
 
 function ParentComponent() {
   return (
-    <Section
-      component={
-        <div>
-          <MyIcon />
-          <H>My hx</H>
-        </div>
-      }
-    >
+    <Section component={<H>My hx</H>}>
       <Section component={<H>My hx+1</H>}>
-        <p>...</p>
+        {/* One more level down */}
+        <Section component={<H>My hx+2</H>}>
+          <p>...</p>
+        </Section>
       </Section>
+
       <Section component={<H>My hx+1</H>}>
+        {/* The child component will inherit the current level */}
         <ChildComponent />
       </Section>
+
+      {/* A fancy DOM structure for heading */}
+      <Section
+        component={
+          <div>
+            <MyIcon />
+            <H>My hx+1</H>
+          </div>
+        }
+      ></Section>
     </Section>
   );
 }
 
 function ChildComponent() {
   return (
-    <Section component={<H>My hx+2</H>}>
-      <p>...</p>
+    <Section component={<H>My hy</H>}>
+      {/* The following heading would be a <h4> */}
+      <Section component={<H>My hy+1</H>}>
+        <p>...</p>
+      </Section>
     </Section>
   );
 }
@@ -191,7 +202,9 @@ import { Section, H } from "react-headings";
 
 function Example1() {
   return (
-    <Section component={<H>This is my title</H>}>This is my content</Section>
+    <Section component={<H>This is my title</H>}>
+      This is my content
+    </Section>
   );
 }
 
