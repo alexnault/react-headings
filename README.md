@@ -30,12 +30,12 @@ References:
 ## Highlights
 
 - Flexible
-- Focused on developer experience
-- Fully tested
 - Typed with TypeScript
-- Works with component libraries (Material UI, etc.)
+- Fully tested
 - Supports server-side rendering
 - Under 1 kB minified & gzipped
+- Focused on developer experience
+- Works with other dependencies (Tailwind, Material UI, etc.)
 - Follows [semantic versioning](https://semver.org/)
 
 ## Installation
@@ -49,6 +49,28 @@ yarn add react-headings
 ## Examples
 
 ### Basic usage
+
+```jsx
+import React from "react";
+import { H, Section } from "react-headings";
+
+function App() {
+  return (
+    <Section component={<H>My hx</H>}>
+      <div>...</div>
+      <div>...</div>
+      <div>...</div>
+      <Section component={<H>My hx+1</H>}>
+        <div>...</div>
+        <div>...</div>
+        <div>...</div>
+      </Section>
+    </Section>
+  );
+}
+```
+
+### Advanced usage
 
 ```jsx
 import React from "react";
@@ -84,42 +106,26 @@ function ChildComponent() {
 }
 ```
 
-### Custom component
+### Styling
 
-You can render custom headings anywhere by using either the `useLevel` hook or the `H` component.
-
-- With the `useLevel` hook:
+Headings can be styled like any ordinary `<hx>` element since it accepts all the same props.
 
 ```jsx
 import React from "react";
-import { useLevel } from "react-headings";
-
-function App() {
-  const { Component, level } = useLevel();
-
-  return <Component>This is a h{level}</Component>;
-}
-```
-
-- With the `H` component:
-
-```jsx
-import React from "react";
-import { H } from "react-headings";
+import { H, Section } from "react-headings";
 
 function App() {
   return (
-    <H
-      render={({ Component, level }) => (
-        <Component>This is a h{level}</Component>
-      )}
-    />
+    <Section component={<H className="my-class">My hx</H>}>
+      ...
+    </Section>
   );
 }
 ```
 
 ### Using component librairies
 
+Leveraging `Component` and `level` from the context allows the use of component librairies.
 Here's an example with [Material UI](https://material-ui.com/api/typography/):
 
 ```jsx
@@ -133,8 +139,6 @@ function MyHeading(props) {
   return <Typography component={Component} {...props} />;
 }
 ```
-
-Leveraging `Component` and `level` from the context should make implementing other librairies pretty straightforward.
 
 ## API
 
