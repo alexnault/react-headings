@@ -29,13 +29,13 @@ References:
 
 ## Highlights
 
-- Flexible
-- Focused on developer experience
-- Fully tested
-- Typed with TypeScript
-- Works with component libraries (Material UI, etc.)
+- Improves SEO and accessibility
 - Supports server-side rendering
 - Under 1 kB minified & gzipped
+- Typed with TypeScript
+- Fully tested
+- Works with any CSS solutions (Tailwind, CSS-in-JS, etc.)
+- Plays nicely with component librairies (Material UI, etc.)
 - Follows [semantic versioning](https://semver.org/)
 
 ## Installation
@@ -53,23 +53,38 @@ yarn add react-headings
 ```jsx
 import React from "react";
 import { H, Section } from "react-headings";
-import MyIcon from "./MyIcon";
+
+function App() {
+  return (
+    <Section component={<H>My hx</H>}>
+      <div>...</div>
+      <div>...</div>
+      <div>...</div>
+      <Section component={<H>My hx+1</H>}>
+        <div>...</div>
+        <div>...</div>
+        <div>...</div>
+      </Section>
+    </Section>
+  );
+}
+```
+
+### Advanced structure
+
+Child components inherit the current level of their parent:
+
+```jsx
+import React from "react";
+import { H, Section } from "react-headings";
 
 function ParentComponent() {
   return (
-    <Section
-      component={
-        <div>
-          <MyIcon />
-          <H>My hx</H>
-        </div>
-      }
-    >
+    <Section component={<H>My hx</H>}>
       <Section component={<H>My hx+1</H>}>
-        <p>...</p>
-      </Section>
-      <Section component={<H>My hx+1</H>}>
-        <ChildComponent />
+        <Section component={<H>My hx+2</H>}>
+          <ChildComponent />
+        </Section>
       </Section>
     </Section>
   );
@@ -77,49 +92,63 @@ function ParentComponent() {
 
 function ChildComponent() {
   return (
-    <Section component={<H>My hx+2</H>}>
-      <p>...</p>
+    <Section component={<H>My hy</H>}>
+      {/* The following heading would be a <h5> in the current context */}
+      <Section component={<H>My hy+1</H>}>
+        <p>...</p>
+      </Section>
     </Section>
   );
 }
 ```
 
-### Custom component
+### Styling
 
-You can render custom headings anywhere by using either the `useLevel` hook or the `H` component.
-
-- With the `useLevel` hook:
+A heading can be styled like any ordinary `<hx>` element since it accepts all the same props:
 
 ```jsx
 import React from "react";
-import { useLevel } from "react-headings";
-
-function App() {
-  const { Component, level } = useLevel();
-
-  return <Component>This is a h{level}</Component>;
-}
-```
-
-- With the `H` component:
-
-```jsx
-import React from "react";
-import { H } from "react-headings";
+import { H, Section } from "react-headings";
 
 function App() {
   return (
-    <H
-      render={({ Component, level }) => (
-        <Component>This is a h{level}</Component>
-      )}
-    />
+    <Section component={<H className="my-class">My hx</H>}>
+      ...
+    </Section>
+  );
+}
+```
+
+### Custom heading
+
+A heading can be as complex as we want:
+
+```jsx
+import React from "react";
+import { H, Section } from "react-headings";
+import MyIcon from "./MyIcon";
+
+function App() {
+  return (
+    <Section
+      component={
+        <div className="my-div">
+          <MyIcon className="my-icon" />
+          <H className="my-heading">My hx</H>
+        </div>
+      }
+    >
+      <div>...</div>
+      <div>...</div>
+      <div>...</div>
+    </Section>
   );
 }
 ```
 
 ### Using component librairies
 
+Leveraging `Component` and `level` from the context allows the use of component librairies.
 Here's an example with [Material UI](https://material-ui.com/api/typography/):
 
 ```jsx
@@ -133,8 +162,6 @@ function MyHeading(props) {
   return <Typography component={Component} {...props} />;
 }
 ```
-
-Leveraging `Component` and `level` from the context should make implementing other librairies pretty straightforward.
 
 ## API
 
@@ -187,7 +214,9 @@ import { Section, H } from "react-headings";
 
 function Example1() {
   return (
-    <Section component={<H>This is my title</H>}>This is my content</Section>
+    <Section component={<H>This is my title</H>}>
+      This is my content
+    </Section>
   );
 }
 
