@@ -70,38 +70,21 @@ function App() {
 }
 ```
 
-### Advanced usage
+### Advanced structure
+
+Child components inherit the current level of their parent:
 
 ```jsx
 import React from "react";
 import { H, Section } from "react-headings";
-import MyIcon from "./MyIcon";
 
 function ParentComponent() {
   return (
     <Section component={<H>My hx</H>}>
       <Section component={<H>My hx+1</H>}>
-        {/* One more level down */}
         <Section component={<H>My hx+2</H>}>
-          <p>...</p>
+          <ChildComponent />
         </Section>
-      </Section>
-
-      {/* A fancy DOM structure for heading */}
-      <Section
-        component={
-          <div>
-            <MyIcon />
-            <H>My hx+1</H>
-          </div>
-        }
-      >
-        <p>...</p>
-      </Section>
-
-      <Section component={<H>My hx+1</H>}>
-        {/* The child component will inherit the current level */}
-        <ChildComponent />
       </Section>
     </Section>
   );
@@ -110,7 +93,7 @@ function ParentComponent() {
 function ChildComponent() {
   return (
     <Section component={<H>My hy</H>}>
-      {/* The following heading would be a <h4> in the current context */}
+      {/* The following heading would be a <h5> in the current context */}
       <Section component={<H>My hy+1</H>}>
         <p>...</p>
       </Section>
@@ -121,7 +104,7 @@ function ChildComponent() {
 
 ### Styling
 
-Headings can be styled like any ordinary `<hx>` element since it accepts all the same props.
+A heading can be styled like any ordinary `<hx>` element since it accepts all the same props:
 
 ```jsx
 import React from "react";
@@ -131,6 +114,33 @@ function App() {
   return (
     <Section component={<H className="my-class">My hx</H>}>
       ...
+    </Section>
+  );
+}
+```
+
+### Custom heading
+
+A heading can be as complex as we want:
+
+```jsx
+import React from "react";
+import { H, Section } from "react-headings";
+import MyIcon from "./MyIcon";
+
+function App() {
+  return (
+    <Section
+      component={
+        <div className="my-div">
+          <MyIcon className="my-icon" />
+          <H className="my-heading">My hx</H>
+        </div>
+      }
+    >
+      <div>...</div>
+      <div>...</div>
+      <div>...</div>
     </Section>
   );
 }
