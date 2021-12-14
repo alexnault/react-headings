@@ -22,6 +22,7 @@
   "homepage": "https://github.com/alexnault/react-headings#readme",
   "scripts": {
     "build": "rm -rf ./dist && tsc",
+    "lint": "eslint src/ --max-warnings=0",
     "test": "jest"
   },
   "files": [

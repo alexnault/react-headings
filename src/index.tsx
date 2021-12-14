@@ -14,7 +14,7 @@ const LevelContext = React.createContext<LevelContextValue>({
 /**
  * Returns the current heading and level.
  */
-export function useLevel() {
+export function useLevel(): LevelContextValue {
   return React.useContext(LevelContext);
 }
 
@@ -28,7 +28,7 @@ type HProps = React.DetailedHTMLProps<
 /**
  * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
  */
-export function H({ render, ...props }: HProps) {
+export function H({ render, ...props }: HProps): JSX.Element {
   const context = useLevel();
 
   if (render) {
@@ -48,7 +48,7 @@ type SectionProps = {
  * @param component A component containing a heading
  * @param children The children in the next level
  */
-export function Section({ component, children }: SectionProps) {
+export function Section({ component, children }: SectionProps): JSX.Element {
   const { level } = useLevel();
 
   const nextLevel = Math.min(level + 1, 6) as Level;
