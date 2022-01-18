@@ -35,7 +35,7 @@ References:
 - Typed with TypeScript
 - Fully tested
 - Works with any CSS solutions (Tailwind, CSS-in-JS, etc.)
-- Plays nicely with component librairies (Material UI, etc.)
+- Plays nicely with component libraries (Material UI, etc.)
 - Follows [semantic versioning](https://semver.org/)
 
 ## Installation
@@ -146,9 +146,9 @@ function App() {
 }
 ```
 
-### Using component librairies
+### Using component libraries
 
-Leveraging `Component` and `level` from the context allows the use of component librairies.
+Leveraging `Component` and `level` from the context allows the use of component libraries.
 Here's an example with [Material UI](https://material-ui.com/api/typography/):
 
 ```jsx
