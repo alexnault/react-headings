@@ -2,18 +2,20 @@
 
 # React Headings
 
-<a aria-label="Build check" href="https://github.com/alexnault/react-headings/actions">
-  <img alt="" src="https://img.shields.io/github/workflow/status/alexnault/react-headings/ci-and-publish?style=for-the-badge">
-</a>
-<a aria-label="NPM version" href="https://www.npmjs.com/package/react-headings">
-  <img alt="" src="https://img.shields.io/npm/v/react-headings?style=for-the-badge">
-</a>
-<a aria-label="Size" href="https://bundlephobia.com/package/react-headings">
-  <img alt="" src="https://img.shields.io/bundlephobia/minzip/react-headings?style=for-the-badge">
-</a>
-<a aria-label="Monthly downloads" href="https://www.npmjs.com/package/react-headings">
-  <img alt="" src="https://img.shields.io/npm/dm/react-headings?style=for-the-badge">
-</a>
+<p>
+  <a aria-label="Build check" href="https://github.com/alexnault/react-headings/actions">
+    <img alt="" src="https://img.shields.io/github/workflow/status/alexnault/react-headings/ci-and-publish?style=for-the-badge">
+  </a>
+  <a aria-label="NPM version" href="https://www.npmjs.com/package/react-headings">
+    <img alt="" src="https://img.shields.io/npm/v/react-headings?style=for-the-badge">
+  </a>
+  <a aria-label="Size" href="https://bundlephobia.com/package/react-headings">
+    <img alt="" src="https://img.shields.io/bundlephobia/minzip/react-headings?style=for-the-badge">
+  </a>
+  <a aria-label="Monthly downloads" href="https://www.npmjs.com/package/react-headings">
+    <img alt="" src="https://img.shields.io/npm/dm/react-headings?style=for-the-badge">
+  </a>
+</p>
 
 > Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
 
