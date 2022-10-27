@@ -25,18 +25,23 @@ type HProps = React.DetailedHTMLProps<
   render?: (context: LevelContextValue) => React.ReactElement;
 };
 
-/**
- * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
- */
-export function H({ render, ...props }: HProps): JSX.Element {
+function InternalH(
+  { render, ...props }: HProps,
+  forwardedRef: React.ForwardedRef<HTMLHeadingElement>
+): JSX.Element {
   const context = useLevel();
 
   if (render) {
     return render(context);
   }
 
-  return <context.Component {...props} />;
+  return <context.Component ref={forwardedRef} {...props} />;
 }
+
+/**
+ * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
+ */
+export const H = React.forwardRef(InternalH);
 
 type SectionProps = {
   component: React.ReactNode;

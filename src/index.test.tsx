@@ -108,6 +108,12 @@ describe("H component", () => {
 
     expect(headingEl.tagName).toBe("H2");
   });
+
+  it("should forward ref", () => {
+    const ref = React.createRef<HTMLHeadingElement>();
+    const { container } = render(<H ref={ref}>Heading</H>);
+    expect(ref.current).toBe(container.firstElementChild);
+  });
 });
 
 describe("Section component", () => {
