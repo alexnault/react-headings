@@ -126,7 +126,11 @@ import React from "react";
 import { H, Section } from "react-headings";
 
 function App() {
-  return <Section component={<H className="my-class">My hx</H>}>...</Section>;
+  return (
+    <Section component={<H className="my-class">My hx</H>}>
+      ...
+    </Section>
+  );
 }
 ```
 
@@ -225,7 +229,9 @@ import { Section, H } from "react-headings";
 
 function Example1() {
   return (
-    <Section component={<H>This is my title</H>}>This is my content</Section>
+    <Section component={<H>This is my title</H>}>
+      This is my content
+    </Section>
   );
 }
 
