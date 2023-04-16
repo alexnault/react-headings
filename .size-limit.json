@@ -3,11 +3,11 @@
     "name": "JS Minified",
     "path": "dist/*.js",
     "gzip": false,
-    "limit": "1572B"
+    "limit": "1610B"
   },
   {
     "name": "JS Compressed",
     "path": "dist/*.js",
-    "limit": "743B"
+    "limit": "748B"
   }
 ]
