@@ -1,7 +1,12 @@
 import React from "react";
-import { render } from "@testing-library/react";
+import { render, cleanup } from "@testing-library/react";
+import { describe, it, expect, afterEach } from "vitest";
 
 import { H, Section, useLevel } from "./index";
+
+afterEach(() => {
+  cleanup();
+});
 
 describe("useLevel hook", () => {
   it("should be level 1 by default", () => {
