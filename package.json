@@ -41,6 +41,7 @@
     "conventional-changelog-conventionalcommits": "^4.6.1",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.3.0",
+    "jsdom": "^21.1.1",
     "prettier": "^2.2.1",
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
