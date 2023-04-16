@@ -24,6 +24,7 @@
     "build": "rm -rf ./dist && tsc",
     "format": "prettier ./ --write",
     "lint": "eslint ./ --max-warnings=0",
+    "size": "size-limit",
     "test": "vitest run --coverage"
   },
   "files": [
@@ -34,6 +35,7 @@
     "react": "^16.8.0 || ^17.0.0 || ^18.0.0"
   },
   "devDependencies": {
+    "@size-limit/preset-small-lib": "^7.0.8",
     "@testing-library/react": "^13.0.1",
     "@types/react": "^18.0.3",
     "@types/react-dom": "^18.0.0",
@@ -48,6 +50,7 @@
     "react": "^18.0.0",
     "react-dom": "^18.0.0",
     "semantic-release": "^19.0.2",
+    "size-limit": "^7.0.8",
     "typescript": "^4.4.3",
     "vitest": "^0.30.1"
   }
