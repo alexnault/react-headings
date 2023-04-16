@@ -1,0 +1,13 @@
+[
+  {
+    "name": "JS Minified",
+    "path": "dist/*.js",
+    "gzip": false,
+    "limit": "1572B"
+  },
+  {
+    "name": "JS Compressed",
+    "path": "dist/*.js",
+    "limit": "743B"
+  }
+]
