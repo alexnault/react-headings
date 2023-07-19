@@ -57,8 +57,6 @@ References:
 
 ```bash
 npm install react-headings
-# or
-yarn add react-headings
 ```
 
 ## Examples
