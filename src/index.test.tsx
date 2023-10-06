@@ -2,7 +2,7 @@ import React from "react";
 import { render, cleanup } from "@testing-library/react";
 import { describe, it, expect, afterEach } from "vitest";
 
-import { H, Section, useLevel } from "./index";
+import { H, Section, useLevel, LevelProvider } from "./index";
 
 afterEach(() => {
   cleanup();
@@ -118,6 +118,78 @@ describe("H component", () => {
     const ref = React.createRef<HTMLHeadingElement>();
     const { container } = render(<H ref={ref}>Heading</H>);
     expect(ref.current).toBe(container.firstElementChild);
+  });
+});
+
+describe("LevelProvider component", () => {
+  it("should render a heading and its content", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>}>
+          <Section component={<H>My H3</H>}>
+            <Section component={<H>My H4</H>}>
+              <LevelProvider level={2}>
+                <Section component={<H>My new H2</H>}>
+                  <p>My content</p>
+                </Section>
+              </LevelProvider>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
+    );
+
+    const headingEl = getByText("My new H2");
+
+    expect(headingEl.tagName).toBe("H2");
+  });
+
+  it("should default to level 1", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>}>
+          <Section component={<H>My H3</H>}>
+            <LevelProvider>
+              <Section component={<H>My new H1</H>}>
+                <p>My content</p>
+              </Section>
+            </LevelProvider>
+          </Section>
+        </Section>
+      </Section>
+    );
+
+    const headingEl = getByText("My new H1");
+
+    expect(headingEl.tagName).toBe("H1");
+  });
+
+  it("should start a component tree to level 3", () => {
+    const { getByText } = render(
+      <LevelProvider level={3}>
+        <Section component={<H>My H3</H>}>
+          <p>My content</p>
+        </Section>
+      </LevelProvider>
+    );
+
+    const headingEl = getByText("My H3");
+
+    expect(headingEl.tagName).toBe("H3");
+  });
+
+  it("should start a component tree to level 1 by default", () => {
+    const { getByText } = render(
+      <LevelProvider>
+        <Section component={<H>My H1</H>}>
+          <p>My content</p>
+        </Section>
+      </LevelProvider>
+    );
+
+    const headingEl = getByText("My H1");
+
+    expect(headingEl.tagName).toBe("H1");
   });
 });
 

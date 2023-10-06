@@ -25,7 +25,10 @@ type HProps = React.DetailedHTMLProps<
   render?: (context: LevelContextValue) => React.ReactElement;
 };
 
-function InternalH(
+/**
+ * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
+ */
+export const H = React.forwardRef(function H(
   { render, ...props }: HProps,
   forwardedRef: React.ForwardedRef<HTMLHeadingElement>
 ): JSX.Element {
@@ -36,12 +39,29 @@ function InternalH(
   }
 
   return <context.Component ref={forwardedRef} {...props} />;
-}
+});
+
+type LevelProviderProps = {
+  level?: Level;
+  children?: React.ReactNode;
+};
 
 /**
- * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
+ * TODO documentation
  */
-export const H = React.forwardRef(InternalH);
+export function LevelProvider({
+  level = 1,
+  children,
+}: LevelProviderProps): JSX.Element {
+  const value = {
+    level,
+    Component: `h${level}` as Heading,
+  };
+
+  return (
+    <LevelContext.Provider value={value}>{children}</LevelContext.Provider>
+  );
+}
 
 type SectionProps = {
   component: React.ReactNode;
@@ -58,15 +78,10 @@ export function Section({ component, children }: SectionProps): JSX.Element {
 
   const nextLevel = Math.min(level + 1, 6) as Level;
 
-  const value = {
-    level: nextLevel,
-    Component: `h${nextLevel}` as Heading,
-  };
-
   return (
     <>
       {component}
-      <LevelContext.Provider value={value}>{children}</LevelContext.Provider>
+      <LevelProvider level={nextLevel}>{children}</LevelProvider>
     </>
   );
 }

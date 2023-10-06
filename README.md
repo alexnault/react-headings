@@ -250,6 +250,10 @@ function Example2() {
 }
 ```
 
+### `<LevelProvider>` component
+
+TODO document advanced use case
+
 ### `useLevel` hook
 
 Returns an object containing the current `level` and current `Component`.
