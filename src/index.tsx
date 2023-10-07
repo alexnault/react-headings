@@ -51,10 +51,7 @@ type LevelProps = {
  * @param children The children in the next level, or the desired level
  * @param level The desired level
  */
-export function Level({
-  level: desiredLevel,
-  children,
-}: LevelProps): JSX.Element {
+function Level({ level: desiredLevel, children }: LevelProps): JSX.Element {
   const { level: currentLevel } = useLevel();
 
   const level = desiredLevel ?? (Math.min(currentLevel + 1, 6) as Level);
@@ -72,14 +69,29 @@ export function Level({
 type SectionProps = {
   component: React.ReactNode;
   children?: React.ReactNode;
+  level?: Level;
 };
 
 /**
  * Renders `component` in the current level and `children` in the next level.
  * @param component A component containing a heading
  * @param children The children in the next level
+ * @param level A specific level to render instead of the current one
  */
-export function Section({ component, children }: SectionProps): JSX.Element {
+export function Section({
+  component,
+  children,
+  level,
+}: SectionProps): JSX.Element {
+  if (level) {
+    return (
+      <Level level={level}>
+        {component}
+        <Level>{children}</Level>
+      </Level>
+    );
+  }
+
   return (
     <>
       {component}

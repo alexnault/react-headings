@@ -2,7 +2,7 @@ import React from "react";
 import { render, cleanup } from "@testing-library/react";
 import { describe, it, expect, afterEach } from "vitest";
 
-import { H, Section, Level, useLevel } from "./index";
+import { H, Section, useLevel } from "./index";
 
 afterEach(() => {
   cleanup();
@@ -121,44 +121,6 @@ describe("H component", () => {
   });
 });
 
-describe("Level component", () => {
-  it("should render a H at the next level", () => {
-    const { getByText } = render(
-      <Level>
-        <Level>
-          <Level>
-            <Level>
-              <H>My H5</H>
-            </Level>
-          </Level>
-        </Level>
-      </Level>
-    );
-
-    const headingEl = getByText("My H5");
-
-    expect(headingEl.tagName).toBe("H5");
-  });
-
-  it("should render a H at a specified level", () => {
-    const { getByText } = render(
-      <Level>
-        <Level>
-          <Level>
-            <Level level={2}>
-              <H>My H2</H>
-            </Level>
-          </Level>
-        </Level>
-      </Level>
-    );
-
-    const headingEl = getByText("My H2");
-
-    expect(headingEl.tagName).toBe("H2");
-  });
-});
-
 describe("Section component", () => {
   it("should be level 1 in first section", () => {
     const { getByText } = render(<Section component={<H>My H1</H>}></Section>);
@@ -216,5 +178,27 @@ describe("Section component", () => {
     const pEl = getByText("My content");
 
     expect(pEl.tagName).toBe("P");
+  });
+
+  it("should render a heading at the specified level", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>}>
+          <Section component={<H>My H3</H>}>
+            <Section component={<H>My H2-2</H>} level={2}>
+              <Section component={<H>My H3-2</H>}></Section>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
+    );
+
+    const heading2El = getByText("My H2-2");
+
+    expect(heading2El.tagName).toBe("H2");
+
+    const heading3El = getByText("My H3-2");
+
+    expect(heading3El.tagName).toBe("H3");
   });
 });
