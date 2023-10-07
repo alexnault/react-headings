@@ -41,18 +41,24 @@ export const H = React.forwardRef(function H(
   return <context.Component ref={forwardedRef} {...props} />;
 });
 
-type LevelProviderProps = {
+type LevelProps = {
   level?: Level;
   children?: React.ReactNode;
 };
 
 /**
- * TODO documentation
+ * Renders `children` 1 level down, or at the desired level.
+ * @param children The children in the next level, or the desired level
+ * @param level The desired level
  */
-export function LevelProvider({
-  level = 1,
+export function Level({
+  level: desiredLevel,
   children,
-}: LevelProviderProps): JSX.Element {
+}: LevelProps): JSX.Element {
+  const { level: currentLevel } = useLevel();
+
+  const level = desiredLevel ?? (Math.min(currentLevel + 1, 6) as Level);
+
   const value = {
     level,
     Component: `h${level}` as Heading,
@@ -74,14 +80,10 @@ type SectionProps = {
  * @param children The children in the next level
  */
 export function Section({ component, children }: SectionProps): JSX.Element {
-  const { level } = useLevel();
-
-  const nextLevel = Math.min(level + 1, 6) as Level;
-
   return (
     <>
       {component}
-      <LevelProvider level={nextLevel}>{children}</LevelProvider>
+      <Level>{children}</Level>
     </>
   );
 }

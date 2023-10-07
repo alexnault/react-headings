@@ -250,9 +250,9 @@ function Example2() {
 }
 ```
 
-### `<LevelProvider>` component
+### `<Level>` component
 
-TODO document advanced use case
+TODO documentation for low level api / advanced use case (dialogs & portals)
 
 ### `useLevel` hook
 
