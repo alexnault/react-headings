@@ -219,6 +219,8 @@ Creates a new section (a heading and its level).
 | `component` | `node` | Yes      | The heading component. Can be anything but best used in combination with `<H>`. |
 | `children`  | `node` | No       | The content of the new level.                                                   |
 
+<!-- TODO update docs with low level api / advanced use case (dialogs & portals) -->
+
 #### Example
 
 ```jsx

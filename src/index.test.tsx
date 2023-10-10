@@ -179,4 +179,26 @@ describe("Section component", () => {
 
     expect(pEl.tagName).toBe("P");
   });
+
+  it("should render a heading at the specified level", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>}>
+          <Section component={<H>My H3</H>}>
+            <Section component={<H>My H2-2</H>} level={2}>
+              <Section component={<H>My H3-2</H>}></Section>
+            </Section>
+          </Section>
+        </Section>
+      </Section>
+    );
+
+    const heading2El = getByText("My H2-2");
+
+    expect(heading2El.tagName).toBe("H2");
+
+    const heading3El = getByText("My H3-2");
+
+    expect(heading3El.tagName).toBe("H3");
+  });
 });
