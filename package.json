@@ -49,7 +49,7 @@
     "prettier": "^2.8.8",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "semantic-release": "^21.1.2",
+    "semantic-release": "^25.0.3",
     "size-limit": "^7.0.8",
     "typescript": "^4.9.5",
     "vitest": "^0.30.1"
