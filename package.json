@@ -42,7 +42,7 @@
     "@typescript-eslint/eslint-plugin": "^4.33.0",
     "@typescript-eslint/parser": "^4.33.0",
     "@vitest/coverage-c8": "^0.30.1",
-    "conventional-changelog-conventionalcommits": "^4.6.3",
+    "conventional-changelog-conventionalcommits": "^8.0.0",
     "eslint": "^7.32.0",
     "eslint-config-prettier": "^8.10.2",
     "jsdom": "^21.1.2",
