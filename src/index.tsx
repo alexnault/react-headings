@@ -45,7 +45,7 @@ export const H = React.forwardRef(InternalH);
 
 type SectionProps = {
   component: React.ReactNode;
-  children?: React.ReactNode;
+  children?: React.ReactNode | ((level: Level) => React.ReactNode);
 };
 
 /**
@@ -63,10 +63,12 @@ export function Section({ component, children }: SectionProps): JSX.Element {
     Component: `h${nextLevel}` as Heading,
   };
 
+  const childrenWithLevel = typeof children === "function" ? children(nextLevel) : children;
+
   return (
     <>
       {component}
-      <LevelContext.Provider value={value}>{children}</LevelContext.Provider>
+      <LevelContext.Provider value={value}>{childrenWithLevel}</LevelContext.Provider>
     </>
   );
 }
