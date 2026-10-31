@@ -11,9 +11,9 @@
   </a>
 </p>
 
-> Heading levels that follow your component tree, so components render the right `h1`–`h6` wherever they're used.
+> Never write `h1`–`h6` again.
 
-React-headings follows the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) and [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset) proposal, but works in any browser today, including through React portals.
+Search engines and screen readers rely on heading levels, but reusable components can't know how deep they'll be rendered. React Headings works out each level from your component tree, like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) proposal, but in any browser today.
 
 ## Features
 
