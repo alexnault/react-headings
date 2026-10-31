@@ -61,7 +61,7 @@ function Card({ title, children }) {
 }
 ```
 
-`Card` doesn't know its level. Its heading renders at whatever level `Card` is placed: `h2` for Characters, `h3` for each character nested inside, and `h1` if you render it on its own.
+`Card` doesn't know its level: it renders `h2` for Characters, `h3` for each character, and `h1` on its own.
 
 ### Dialogs
 
@@ -77,7 +77,7 @@ Portaled elements, like dialogs, aren't part of the page outline. Use `HeadingRe
 
 ### Styling
 
-React Headings only decides the tag. Style headings however you like, or render your own component with `render`:
+React Headings only picks the tag. Style headings however you like, or use `render` for your own component:
 
 ```tsx
 <H render={(props, { tag }) => <Text as={tag} size="lg" {...props} />}>
@@ -89,13 +89,13 @@ React Headings only decides the tag. Style headings however you like, or render 
 
 ### `Heading` / `H`
 
-Renders an `h1`–`h6` according to the current level. With no `HeadingOffset` or `HeadingReset` above it, that's `h1`. Levels above 6 render as `h6`.
+Renders `h1`–`h6` based on the current level: `h1` by default, and never deeper than `h6`.
 
 Accepts every `h1` prop and a `ref`, plus:
 
 | Prop     | Type                                         | Description                                                                                                 |
 | -------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
-| `render` | `(props, { level, tag }) => ReactElement`    | Renders a custom element. Spread `props` on it: it holds `children`, `ref` and every other prop you passed. |
+| `render` | `(props, { level, tag }) => ReactElement`    | Renders your own element. Spread `props` on it (includes `children` and `ref`). |
 
 `H` is the same component as `Heading`. Pick one name per project.
 
@@ -103,35 +103,35 @@ Accepts every `h1` prop and a `ref`, plus:
 
 | Prop     | Type     | Default | Description                                     |
 | -------- | -------- | ------- | ----------------------------------------------- |
-| `offset` | `number` | `1`     | How many levels deeper headings inside render. |
+| `offset` | `number` | `1`     | Levels added to headings inside. |
 
-Offsets add up when nested. `offset={0}` changes nothing, which is handy for conditional nesting.
+Nested offsets add up. `offset={0}` adds nothing, which is useful for conditional nesting.
 
 ### `HeadingReset`
 
 | Prop     | Type     | Default | Description                                                          |
 | -------- | -------- | ------- | -------------------------------------------------------------------- |
-| `offset` | `number` | `0`     | Ignores parent offsets: headings inside start at `h1`, plus `offset`. |
+| `offset` | `number` | `0`     | Headings inside start over at `h1` + `offset`, ignoring parents. |
 
 ### `useHeadingLevel()`
 
-Returns `{ level, tag }` (`1`–`6` and `"h1"`–`"h6"`), what a `Heading` would render at that position.
+Returns the `level` (`1`–`6`) and `tag` (`"h1"`–`"h6"`) a `Heading` would render here.
 
-An invalid `offset` never throws. Like the native attribute, negative values, `NaN` and `Infinity` count as `0`, and fractions round down.
+Invalid offsets never throw: negative values, `NaN` and `Infinity` count as `0`, and fractions round down.
 
 ## Development warnings
 
 In development, React Headings warns in the console when:
 
-- a heading level is skipped, for example an `h3` inside a `HeadingOffset` that has no `h2`,
+- a level is skipped, like an `h3` with no `h2` above it,
 - a level goes past 6,
 - an `offset` is invalid.
 
-Warnings only exist in the package's development build, so your production bundle has no warning code. Vite and webpack use the development build automatically in dev mode. In plain Node or Jest, run with `--conditions=development` to get warnings.
+Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node or Jest, run with `--conditions=development`.
 
 ## Server Components and SSR
 
-Every export is a client component (`"use client"`), so you can render them from React Server Components, with server-rendered children inside. Server-side rendering outputs the right tags. A Server Component can't read the current level itself.
+All components are client components (`"use client"`), so you can use them in Server Components, with server-rendered children inside. SSR outputs the right tags. Server Components can't call `useHeadingLevel`.
 
 ## Differences from native `headingoffset`
 
@@ -140,7 +140,7 @@ Every export is a client component (`"use client"`), so you can render them from
 - Levels stop at 6, while native goes up to 9 through `aria-level`.
 - The output is a real `h1`–`h6` tag, so CSS like `h2 { … }` matches the level.
 
-Don't combine React Headings with the native attributes: both would add the offset.
+Don't use both together: offsets would apply twice.
 
 ## License
 
