@@ -9,12 +9,6 @@
   <a aria-label="NPM version" href="https://www.npmjs.com/package/react-headings">
     <img alt="" src="https://img.shields.io/npm/v/react-headings?style=for-the-badge">
   </a>
-  <a aria-label="Size" href="https://bundlephobia.com/package/react-headings">
-    <img alt="" src="https://img.shields.io/bundlephobia/minzip/react-headings?style=for-the-badge">
-  </a>
-  <a aria-label="Monthly downloads" href="https://www.npmjs.com/package/react-headings">
-    <img alt="" src="https://img.shields.io/npm/dm/react-headings?style=for-the-badge">
-  </a>
 </p>
 
 > Heading levels that follow your component tree, so components render the right `h1`–`h6` wherever they're used.
@@ -26,8 +20,6 @@ React Headings computes heading levels from nesting, like the HTML [`headingoffs
 ```sh
 npm install react-headings
 ```
-
-Requires React 18 or later. The package is ESM only.
 
 ## Usage
 
