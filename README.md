@@ -13,7 +13,7 @@
 
 > Heading levels that follow your component tree, so components render the right `h1`–`h6` wherever they're used.
 
-React Headings computes heading levels from nesting, like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) and [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset) attributes, but it renders real heading tags today, works through portals and renders on the server.
+React-headings follows the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) and [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset) proposal, but renders real heading tags today, works through portals and on the server.
 
 ## Install
 
@@ -23,7 +23,7 @@ npm install react-headings
 
 ## Usage
 
-A component that renders a heading wraps the content under it in `HeadingOffset`. Headings inside render one level deeper.
+Use `H` for every heading. Wrap the content that belongs under a heading in `HeadingOffset`: headings inside render one level deeper.
 
 ```tsx
 import { H, HeadingOffset } from "react-headings";
@@ -103,13 +103,13 @@ Offsets add up when nested. `offset={0}` changes nothing, which is handy for con
 
 | Prop     | Type     | Default | Description                                                          |
 | -------- | -------- | ------- | -------------------------------------------------------------------- |
-| `offset` | `number` | `0`     | Levels deeper than `h1` that headings inside render, ignoring parents. |
+| `offset` | `number` | `0`     | Ignores parent offsets: headings inside start at `h1`, plus `offset`. |
 
 ### `useHeadingLevel()`
 
 Returns `{ level, tag }` (`1`–`6` and `"h1"`–`"h6"`), what a `Heading` would render at that position.
 
-An invalid `offset` (negative, fractional, `NaN` or infinite) is handled like the native attribute: negative and non-finite values count as `0`, fractions round down.
+An invalid `offset` never throws. Like the native attribute, negative values, `NaN` and `Infinity` count as `0`, and fractions round down.
 
 ## Development warnings
 
@@ -119,11 +119,11 @@ In development, React Headings warns in the console when:
 - a level goes past 6,
 - an `offset` is invalid.
 
-Warnings come from a separate development build, picked through the `development` [export condition](https://nodejs.org/api/packages.html#conditional-exports). Vite and webpack select it automatically in development. In plain Node or Jest, pass `--conditions=development` to get them. Production builds contain no warning code.
+Warnings only exist in the package's development build, so your production bundle has no warning code. Vite and webpack use the development build automatically in dev mode. In plain Node or Jest, run with `--conditions=development` to get warnings.
 
 ## Server Components and SSR
 
-Every export is a client component, so you can render them from React Server Components, with server-rendered children inside. Server-side rendering outputs the right tags. A Server Component can't read the current level itself.
+Every export is a client component (`"use client"`), so you can render them from React Server Components, with server-rendered children inside. Server-side rendering outputs the right tags. A Server Component can't read the current level itself.
 
 ## Differences from native `headingoffset`
 
