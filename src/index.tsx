@@ -14,14 +14,14 @@ import type {
   ReactNode,
 } from "react";
 
-type Level = 1 | 2 | 3 | 4 | 5 | 6;
+export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type HeadingLevel = { level: Level; tag: `h${Level}` };
+export type HeadingTag = `h${HeadingLevel}`;
 
 export type HeadingProps = ComponentPropsWithoutRef<"h1"> & {
   render?: (
     props: ComponentPropsWithRef<"h1">,
-    headingLevel: HeadingLevel,
+    heading: { level: HeadingLevel; tag: HeadingTag },
   ) => ReactElement;
 };
 
@@ -117,8 +117,8 @@ export function HeadingReset({ offset = 0, children }: HeadingResetProps) {
 /**
  * Returns the level and tag a `Heading` would render at this position.
  */
-export function useHeadingLevel(): HeadingLevel {
-  const level = Math.min(useContext(LevelContext), 6) as Level;
+export function useHeadingLevel(): { level: HeadingLevel; tag: HeadingTag } {
+  const level = Math.min(useContext(LevelContext), 6) as HeadingLevel;
   return { level, tag: `h${level}` };
 }
 
