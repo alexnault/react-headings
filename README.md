@@ -36,17 +36,6 @@ Wrap a heading and its content in `HeadingOffset`. Headings inside render one le
 ```tsx
 import { H, HeadingOffset } from "react-headings";
 
-function Card({ title, children }) {
-  return (
-    <HeadingOffset>
-      <article>
-        <H>{title}</H>
-        {children}
-      </article>
-    </HeadingOffset>
-  );
-}
-
 function Page() {
   return (
     <>
@@ -55,6 +44,17 @@ function Page() {
         <Card title="Subchapter" /> {/* h3 */}
       </Card>
     </>
+  );
+}
+
+function Card({ title, children }) {
+  return (
+    <HeadingOffset>
+      <article>
+        <H>{title}</H>
+        {children}
+      </article>
+    </HeadingOffset>
   );
 }
 ```
