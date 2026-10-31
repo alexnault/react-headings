@@ -201,4 +201,16 @@ describe("Section component", () => {
 
     expect(heading3El.tagName).toBe("H3");
   });
+
+  it("should not affect siblings when rendering at a specified level", () => {
+    const { getByText } = render(
+      <Section component={<H>My H1</H>}>
+        <Section component={<H>My H2</H>} level={5} />
+        <H>My sibling H2</H>
+      </Section>
+    );
+
+    expect(getByText("My H2").tagName).toBe("H5");
+    expect(getByText("My sibling H2").tagName).toBe("H2");
+  });
 });
