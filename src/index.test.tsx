@@ -3,13 +3,7 @@ import { createRef } from "react";
 import { createPortal } from "react-dom";
 import { afterEach, describe, expect, it } from "vitest";
 
-import {
-  H,
-  Heading,
-  HeadingOffset,
-  HeadingReset,
-  useHeadingLevel,
-} from "./index";
+import { H, Heading, Level, useHeadingLevel } from "./index";
 
 afterEach(cleanup);
 
@@ -43,7 +37,7 @@ describe("Heading render prop", () => {
     const ref = createRef<HTMLHeadingElement>();
 
     render(
-      <HeadingOffset>
+      <Level>
         <Heading
           ref={ref}
           className="big"
@@ -54,7 +48,7 @@ describe("Heading render prop", () => {
         >
           Custom
         </Heading>
-      </HeadingOffset>,
+      </Level>,
     );
 
     const heading = screen.getByRole("heading", { name: "Custom" });
@@ -68,9 +62,9 @@ describe("Heading render prop", () => {
 describe("Heading clamping", () => {
   it("clamps levels above 6 to h6", () => {
     render(
-      <HeadingOffset offset={8}>
+      <Level offset={8}>
         <Heading>Too deep</Heading>
-      </HeadingOffset>,
+      </Level>,
     );
 
     expect(screen.getByRole("heading", { name: "Too deep" }).tagName).toBe(
@@ -79,17 +73,17 @@ describe("Heading clamping", () => {
   });
 });
 
-describe("HeadingOffset", () => {
+describe("Level", () => {
   it("renders headings inside one level deeper by default", () => {
     render(
       <>
         <Heading>Page</Heading>
-        <HeadingOffset>
+        <Level>
           <Heading>Chapter</Heading>
-          <HeadingOffset>
+          <Level>
             <Heading>Sub</Heading>
-          </HeadingOffset>
-        </HeadingOffset>
+          </Level>
+        </Level>
       </>,
     );
 
@@ -100,12 +94,12 @@ describe("HeadingOffset", () => {
 
   it("renders headings inside `offset` levels deeper", () => {
     render(
-      <HeadingOffset offset={2}>
+      <Level offset={2}>
         <Heading>Deep</Heading>
-        <HeadingOffset offset={0}>
+        <Level offset={0}>
           <Heading>Same</Heading>
-        </HeadingOffset>
-      </HeadingOffset>,
+        </Level>
+      </Level>,
     );
 
     expect(screen.getByRole("heading", { name: "Deep" }).tagName).toBe("H3");
@@ -113,36 +107,59 @@ describe("HeadingOffset", () => {
   });
 });
 
-describe("HeadingReset", () => {
-  it("discards ancestor offsets, then applies its own offset", () => {
+describe("Level with level", () => {
+  it("renders headings inside at `level`, ignoring ancestors", () => {
     render(
-      <HeadingOffset offset={3}>
-        <HeadingReset>
+      <Level offset={3}>
+        <Level level={1}>
           <Heading>Reset</Heading>
-          <HeadingOffset>
+          <Level>
             <Heading>Nested</Heading>
-          </HeadingOffset>
-        </HeadingReset>
-        <HeadingReset offset={1}>
-          <Heading>Reset with offset</Heading>
-        </HeadingReset>
-      </HeadingOffset>,
+          </Level>
+        </Level>
+        <Level level={2}>
+          <Heading>Reset to 2</Heading>
+        </Level>
+      </Level>,
     );
 
     expect(screen.getByRole("heading", { name: "Reset" }).tagName).toBe("H1");
     expect(screen.getByRole("heading", { name: "Nested" }).tagName).toBe("H2");
-    expect(
-      screen.getByRole("heading", { name: "Reset with offset" }).tagName,
-    ).toBe("H2");
+    expect(screen.getByRole("heading", { name: "Reset to 2" }).tagName).toBe(
+      "H2",
+    );
+  });
+
+  it("cannot be combined with `offset`", () => {
+    // @ts-expect-error `offset` and `level` are mutually exclusive.
+    void (<Level offset={1} level={1} />);
+  });
+});
+
+describe("conditional nesting", () => {
+  it("keeps children mounted when `offset` toggles", () => {
+    function Chapter({ isNested }: { isNested: boolean }) {
+      return (
+        <Level offset={isNested ? 1 : 0}>
+          <Heading>Title</Heading>
+          <input aria-label="Notes" />
+        </Level>
+      );
+    }
+
+    const { rerender } = render(<Chapter isNested={false} />);
+    const input = screen.getByRole("textbox", { name: "Notes" });
+    rerender(<Chapter isNested />);
+
+    expect(screen.getByRole("textbox", { name: "Notes" })).toBe(input);
+    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H2");
   });
 });
 
 describe("portals", () => {
   it("inherit the level from the React tree", () => {
     render(
-      <HeadingOffset>
-        {createPortal(<Heading>Portaled</Heading>, document.body)}
-      </HeadingOffset>,
+      <Level>{createPortal(<Heading>Portaled</Heading>, document.body)}</Level>,
     );
 
     expect(screen.getByRole("heading", { name: "Portaled" }).tagName).toBe(
@@ -161,12 +178,12 @@ describe("useHeadingLevel", () => {
     render(
       <>
         <Probe name="root" />
-        <HeadingOffset offset={2}>
+        <Level offset={2}>
           <Probe name="nested" />
-        </HeadingOffset>
-        <HeadingOffset offset={9}>
+        </Level>
+        <Level offset={9}>
           <Probe name="clamped" />
-        </HeadingOffset>
+        </Level>
       </>,
     );
 
@@ -182,13 +199,13 @@ describe("invalid offsets", () => {
     [1.5, "H3"],
     [NaN, "H2"],
     [Infinity, "H2"],
-  ])("HeadingOffset treats %s like the native attribute", (offset, tagName) => {
+  ])("Level treats offset %s like the native attribute", (offset, tagName) => {
     render(
-      <HeadingOffset>
-        <HeadingOffset offset={offset}>
+      <Level>
+        <Level offset={offset}>
           <Heading>Title</Heading>
-        </HeadingOffset>
-      </HeadingOffset>,
+        </Level>
+      </Level>,
     );
 
     expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
@@ -196,13 +213,19 @@ describe("invalid offsets", () => {
     );
   });
 
-  it("HeadingReset normalizes its offset the same way", () => {
+  it.each([
+    [0, "H1"],
+    [2.5, "H2"],
+    [NaN, "H1"],
+  ])("Level treats level %s as %s", (level, tagName) => {
     render(
-      <HeadingReset offset={1.5}>
+      <Level level={level}>
         <Heading>Title</Heading>
-      </HeadingReset>,
+      </Level>,
     );
 
-    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H2");
+    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
+      tagName,
+    );
   });
 });

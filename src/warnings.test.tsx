@@ -2,7 +2,7 @@ import { cleanup, render } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-import { Heading, HeadingOffset, HeadingReset } from "./index";
+import { Heading, Level } from "./index";
 
 function settle() {
   return new Promise((resolve) => setTimeout(resolve));
@@ -23,9 +23,9 @@ afterEach(() => {
 describe("overflow", () => {
   it("warns when a heading level exceeds 6", () => {
     render(
-      <HeadingOffset offset={6}>
+      <Level offset={6}>
         <Heading>Too deep</Heading>
-      </HeadingOffset>,
+      </Level>,
     );
 
     expect(warn).toHaveBeenCalledWith(
@@ -35,38 +35,38 @@ describe("overflow", () => {
 
   it("does not warn at level 6", () => {
     render(
-      <HeadingOffset offset={5}>
+      <Level offset={5}>
         <Heading>Deepest</Heading>
-      </HeadingOffset>,
+      </Level>,
     );
 
     expect(warn).not.toHaveBeenCalled();
   });
 });
 
-describe("invalid offset", () => {
-  it("warns when HeadingOffset receives an invalid offset", () => {
-    render(<HeadingOffset offset={1.5} />);
+describe("invalid value", () => {
+  it("warns when Level receives an invalid offset", () => {
+    render(<Level offset={1.5} />);
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: HeadingOffset received invalid offset 1.5, treated as 1.",
+      "react-headings: Level received invalid offset 1.5, treated as 1.",
     );
   });
 
-  it("warns when HeadingReset receives an invalid offset", () => {
-    render(<HeadingReset offset={-2} />);
+  it("warns when Level receives an invalid level", () => {
+    render(<Level level={-2} />);
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: HeadingReset received invalid offset -2, treated as 0.",
+      "react-headings: Level received invalid level -2, treated as 1.",
     );
   });
 
-  it("does not warn for valid offsets", () => {
+  it("does not warn for valid values", () => {
     render(
       <>
-        <HeadingOffset offset={0} />
-        <HeadingOffset offset={3} />
-        <HeadingReset offset={1} />
+        <Level offset={0} />
+        <Level offset={3} />
+        <Level level={2} />
       </>,
     );
 
@@ -79,7 +79,7 @@ describe("skipped level", () => {
     return (
       <article>
         <Heading>{title}</Heading>
-        <HeadingOffset>{children}</HeadingOffset>
+        <Level>{children}</Level>
       </article>
     );
   }
@@ -88,11 +88,11 @@ describe("skipped level", () => {
     render(
       <>
         <Heading>Page</Heading>
-        <HeadingOffset>
-          <HeadingOffset>
+        <Level>
+          <Level>
             <Heading>Too deep</Heading>
-          </HeadingOffset>
-        </HeadingOffset>
+          </Level>
+        </Level>
       </>,
     );
     await settle();
@@ -107,12 +107,12 @@ describe("skipped level", () => {
     render(
       <>
         <Heading>Page</Heading>
-        <HeadingOffset>
+        <Level>
           <Card title="Chapter">
             <Card title="Sub" />
           </Card>
           <Card title="Other chapter" />
-        </HeadingOffset>
+        </Level>
       </>,
     );
     await settle();
@@ -124,9 +124,9 @@ describe("skipped level", () => {
     render(
       <>
         <Heading>Page</Heading>
-        <HeadingOffset offset={2}>
+        <Level offset={2}>
           <Heading>Skipped</Heading>
-        </HeadingOffset>
+        </Level>
       </>,
     );
     await settle();
@@ -138,12 +138,12 @@ describe("skipped level", () => {
 
   it("reports each gap once", async () => {
     render(
-      <HeadingOffset>
+      <Level>
         <Heading>Chapter</Heading>
-        <HeadingOffset offset={2}>
+        <Level offset={2}>
           <Heading>Skipped</Heading>
-        </HeadingOffset>
-      </HeadingOffset>,
+        </Level>
+      </Level>,
     );
     await settle();
 
@@ -156,9 +156,9 @@ describe("skipped level", () => {
   it("does not treat offset 0 as a scope", async () => {
     render(
       <Card title="Chapter">
-        <HeadingOffset offset={0}>
+        <Level offset={0}>
           <Card title="Sub" />
-        </HeadingOffset>
+        </Level>
       </Card>,
     );
     await settle();
@@ -166,27 +166,27 @@ describe("skipped level", () => {
     expect(warn).not.toHaveBeenCalled();
   });
 
-  it("starts a fresh scope at a HeadingReset's own level", async () => {
+  it("starts a fresh scope at a Level's own `level`", async () => {
     render(
-      <HeadingOffset offset={3}>
-        <HeadingReset offset={1}>
+      <Level offset={3}>
+        <Level level={2}>
           <Card title="Dialog title">
             <Card title="Dialog part" />
           </Card>
-        </HeadingReset>
-      </HeadingOffset>,
+        </Level>
+      </Level>,
     );
     await settle();
 
     expect(warn).not.toHaveBeenCalled();
   });
 
-  it("does not count a HeadingReset's headings toward its parent scope", async () => {
+  it("does not count headings under `level` toward the parent scope", async () => {
     render(
       <Card title="Page">
-        <HeadingReset offset={2}>
+        <Level level={3}>
           <Card title="Dialog" />
-        </HeadingReset>
+        </Level>
       </Card>,
     );
     await settle();
@@ -194,13 +194,13 @@ describe("skipped level", () => {
     expect(warn).not.toHaveBeenCalled();
   });
 
-  it("warns inside a HeadingReset that skips its own level", async () => {
+  it("warns under `level` when its own level is skipped", async () => {
     render(
-      <HeadingReset>
-        <HeadingOffset>
+      <Level level={1}>
+        <Level>
           <Card title="No h1" />
-        </HeadingOffset>
-      </HeadingReset>,
+        </Level>
+      </Level>,
     );
     await settle();
 
@@ -212,12 +212,12 @@ describe("skipped level", () => {
   it("warns when the heading at a scope's level unmounts", async () => {
     function Chapter({ showTitle }: { showTitle: boolean }) {
       return (
-        <HeadingOffset>
+        <Level>
           {showTitle && <Heading>Chapter</Heading>}
-          <HeadingOffset>
+          <Level>
             <Card title="Sub" />
-          </HeadingOffset>
-        </HeadingOffset>
+          </Level>
+        </Level>
       );
     }
 
@@ -239,19 +239,19 @@ describe("production", () => {
     vi.stubEnv("NODE_ENV", "production");
 
     render(
-      <HeadingOffset offset={-1}>
-        <HeadingOffset offset={8}>
+      <Level offset={-1}>
+        <Level offset={8}>
           <Heading>Too deep</Heading>
-        </HeadingOffset>
-        <HeadingOffset offset={2}>
+        </Level>
+        <Level offset={2}>
           <Heading>Skipped</Heading>
-        </HeadingOffset>
-        <HeadingReset offset={-1}>
-          <HeadingOffset>
+        </Level>
+        <Level level={-1}>
+          <Level>
             <Heading>Skipped in reset</Heading>
-          </HeadingOffset>
-        </HeadingReset>
-      </HeadingOffset>,
+          </Level>
+        </Level>
+      </Level>,
     );
     await settle();
 

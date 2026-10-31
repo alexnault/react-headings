@@ -25,15 +25,19 @@ export type HeadingProps = ComponentPropsWithoutRef<"h1"> & {
   ) => ReactElement;
 };
 
-export type HeadingOffsetProps = { offset?: number; children?: ReactNode };
-
-export type HeadingResetProps = HeadingOffsetProps;
+export type LevelProps = { children?: ReactNode } & (
+  { offset?: number; level?: never } | { level: number; offset?: never }
+);
 
 // Unclamped, so dev checks can see levels above 6.
 const LevelContext = createContext(1);
 
 function getNormalizedOffset(offset: number): number {
   return Number.isFinite(offset) && offset > 0 ? Math.floor(offset) : 0;
+}
+
+function getNormalizedLevel(level: number): number {
+  return Number.isFinite(level) && level > 1 ? Math.floor(level) : 1;
 }
 
 /**
@@ -65,52 +69,39 @@ Heading.displayName = "Heading";
 export { Heading as H };
 
 /**
- * Renders headings inside `offset` levels deeper (default 1).
+ * Renders headings inside `offset` levels deeper (default 1), or at `level`
+ * regardless of ancestors.
  */
-export function HeadingOffset({ offset = 1, children }: HeadingOffsetProps) {
+export function Level({ offset = 1, level, children }: LevelProps) {
   const parentLevel = useContext(LevelContext);
+  const isReset = level !== undefined;
   const normalizedOffset = getNormalizedOffset(offset);
-  const level = parentLevel + normalizedOffset;
+  const innerLevel = isReset
+    ? getNormalizedLevel(level)
+    : parentLevel + normalizedOffset;
 
   if (process.env.NODE_ENV !== "production") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    useInvalidOffsetWarning("HeadingOffset", offset, normalizedOffset);
+    useInvalidPropWarning(
+      isReset ? "level" : "offset",
+      isReset ? level : offset,
+      isReset ? innerLevel : normalizedOffset,
+    );
 
-    if (normalizedOffset > 0) {
-      children = (
-        <SkippedLevelScope firstLevel={parentLevel + 1}>
-          {children}
-        </SkippedLevelScope>
-      );
-    }
-  }
-
-  return (
-    <LevelContext.Provider value={level}>{children}</LevelContext.Provider>
-  );
-}
-
-/**
- * Discards ancestor offsets, then renders headings inside `offset` levels
- * deeper than h1 (default 0).
- */
-export function HeadingReset({ offset = 0, children }: HeadingResetProps) {
-  const normalizedOffset = getNormalizedOffset(offset);
-  const level = 1 + normalizedOffset;
-
-  if (process.env.NODE_ENV !== "production") {
-    // eslint-disable-next-line react-hooks/rules-of-hooks
-    useInvalidOffsetWarning("HeadingReset", offset, normalizedOffset);
-
+    // Always rendered, so toggling `offset` or `level` keeps children mounted.
     children = (
-      <SkippedLevelScope firstLevel={level} isolated>
+      <SkippedLevelScope
+        firstLevel={isReset ? innerLevel : parentLevel + 1}
+        isIsolated={isReset}
+        isPassthrough={!isReset && normalizedOffset === 0}
+      >
         {children}
       </SkippedLevelScope>
     );
   }
 
   return (
-    <LevelContext.Provider value={level}>{children}</LevelContext.Provider>
+    <LevelContext.Provider value={innerLevel}>{children}</LevelContext.Provider>
   );
 }
 
@@ -130,8 +121,7 @@ type ScopeRegistry = { register(level: number): () => void };
 const ScopeContext = /* @__PURE__ */ createContext<ScopeRegistry | null>(null);
 
 /**
- * Collects the heading levels rendered inside a HeadingOffset or HeadingReset
- * and warns if one between `firstLevel` and the deepest is missing. A
+ * Collects the heading levels rendered inside a Level and warns if one between `firstLevel` and the deepest is missing. A
  * non-empty nested scope counts as a heading at its own `firstLevel` in its
  * parent, so each gap is reported by exactly one scope.
  */
@@ -192,17 +182,22 @@ function createScopeRegistry(
 
 function SkippedLevelScope({
   firstLevel,
-  isolated = false,
+  isIsolated,
+  isPassthrough,
   children,
 }: {
   firstLevel: number;
-  isolated?: boolean;
+  isIsolated: boolean;
+  isPassthrough: boolean;
   children: ReactNode;
 }) {
   const parentRegistry = useContext(ScopeContext);
   const registry = useMemo(
-    () => createScopeRegistry(firstLevel, isolated ? null : parentRegistry),
-    [firstLevel, isolated, parentRegistry],
+    () =>
+      isPassthrough
+        ? parentRegistry
+        : createScopeRegistry(firstLevel, isIsolated ? null : parentRegistry),
+    [firstLevel, isIsolated, isPassthrough, parentRegistry],
   );
 
   return (
@@ -225,16 +220,16 @@ function useHeadingChecks() {
   useEffect(() => scopeRegistry?.register(level), [scopeRegistry, level]);
 }
 
-function useInvalidOffsetWarning(
-  component: "HeadingOffset" | "HeadingReset",
-  offset: number,
-  normalizedOffset: number,
+function useInvalidPropWarning(
+  prop: "offset" | "level",
+  value: number,
+  normalizedValue: number,
 ) {
   useEffect(() => {
-    if (offset !== normalizedOffset) {
+    if (value !== normalizedValue) {
       console.warn(
-        `react-headings: ${component} received invalid offset ${offset}, treated as ${normalizedOffset}.`,
+        `react-headings: Level received invalid ${prop} ${value}, treated as ${normalizedValue}.`,
       );
     }
-  }, [component, offset, normalizedOffset]);
+  }, [prop, value, normalizedValue]);
 }

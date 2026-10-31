@@ -18,7 +18,7 @@ Search engines and screen readers rely on heading levels, but reusable component
 ## Features
 
 - Supports server-side rendering
-- 376 bytes minified & brotlied
+- 384 bytes minified & brotlied
 - Typed with TypeScript
 - Works with any CSS solution (Tailwind, CSS-in-JS, etc.)
 - Plays nicely with component libraries
@@ -31,22 +31,22 @@ npm install react-headings
 
 ## Usage
 
-Use `H` for every heading. Wrap the content that belongs under a heading in `HeadingOffset`: headings inside render one level deeper.
+Use `H` for every heading. Wrap the content that belongs under a heading in `Level`: headings inside render one level deeper.
 
 ```tsx
-import { H, HeadingOffset } from "react-headings";
+import { H, Level } from "react-headings";
 
 function Page() {
   return (
     <>
       <H>Star Wars</H> {/* h1 */}
-      <HeadingOffset>
+      <Level>
         <Card title="Characters"> {/* h2 */}
           <Card title="Luke" /> {/* h3 */}
           <Card title="Leia" /> {/* h3 */}
           <Card title="Han Solo" /> {/* h3 */}
         </Card>
-      </HeadingOffset>
+      </Level>
     </>
   );
 }
@@ -55,7 +55,7 @@ function Card({ title, children }) {
   return (
     <article>
       <H>{title}</H>
-      <HeadingOffset>{children}</HeadingOffset>
+      <Level>{children}</Level>
     </article>
   );
 }
@@ -65,13 +65,13 @@ function Card({ title, children }) {
 
 ### Dialogs
 
-Portaled elements, like dialogs, aren't part of the page outline. Use `HeadingReset` to start their headings at `h1`:
+Portaled elements, like dialogs, aren't part of the page outline. Use `level` to start their headings at `h1`:
 
 ```tsx
 <Dialog>
-  <HeadingReset>
+  <Level level={1}>
     <H>Delete file?</H> {/* h1 */}
-  </HeadingReset>
+  </Level>
 </Dialog>
 ```
 
@@ -99,25 +99,20 @@ Accepts every `h1` prop and a `ref`, plus:
 
 `H` is the same component as `Heading`. Pick one name per project.
 
-### `HeadingOffset`
+### `Level`
 
-| Prop     | Type     | Default | Description                                     |
-| -------- | -------- | ------- | ----------------------------------------------- |
-| `offset` | `number` | `1`     | Levels added to headings inside. |
+| Prop     | Type     | Default | Description                                      |
+| -------- | -------- | ------- | ------------------------------------------------ |
+| `offset` | `number` | `1`     | Levels added to headings inside.                 |
+| `level`  | `number` |         | Level of headings inside, ignoring parents.      |
 
-Nested offsets add up. `offset={0}` adds nothing, which is useful for conditional nesting.
+Pass `offset` or `level`, not both. Nested offsets add up. `offset={0}` adds nothing, which is useful for conditional nesting.
 
-### `HeadingReset`
-
-| Prop     | Type     | Default | Description                                                          |
-| -------- | -------- | ------- | -------------------------------------------------------------------- |
-| `offset` | `number` | `0`     | Headings inside start over at `h1` + `offset`, ignoring parents. |
+Invalid values never throw: fractions round down, and anything else invalid counts as `offset={0}` or `level={1}`.
 
 ### `useHeadingLevel()`
 
 Returns the `level` (`1`–`6`) and `tag` (`"h1"`–`"h6"`) a `Heading` would render here.
-
-Invalid offsets never throw: negative values, `NaN` and `Infinity` count as `0`, and fractions round down.
 
 ## Development warnings
 
@@ -125,13 +120,13 @@ In development, React Headings warns in the console when:
 
 - a level is skipped, like an `h3` with no `h2` above it,
 - a level goes past 6,
-- an `offset` is invalid.
+- an `offset` or `level` is invalid.
 
 Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node or Jest, run with `--conditions=development`.
 
 ## Server Components
 
-Works in Server Components, including Server Components nested inside `HeadingOffset`. Only `useHeadingLevel()` needs a Client Component.
+Works in Server Components, including Server Components nested inside `Level`. Only `useHeadingLevel()` needs a Client Component.
 
 ## Differences from `headingoffset`
 

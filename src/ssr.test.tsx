@@ -2,18 +2,18 @@
 import { renderToString } from "react-dom/server";
 import { expect, it } from "vitest";
 
-import { Heading, HeadingOffset, HeadingReset } from "./index";
+import { Heading, Level } from "./index";
 
 it("renders the computed tags on the server", () => {
   const html = renderToString(
     <>
       <Heading>Page</Heading>
-      <HeadingOffset>
+      <Level>
         <Heading>Chapter</Heading>
-        <HeadingReset>
+        <Level level={1}>
           <Heading>Dialog</Heading>
-        </HeadingReset>
-      </HeadingOffset>
+        </Level>
+      </Level>
     </>,
   );
 
