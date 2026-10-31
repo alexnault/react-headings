@@ -15,6 +15,14 @@
 
 React-headings follows the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) and [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset) proposal, but works in any browser today, including through React portals.
 
+## Features
+
+- Supports server-side rendering
+- 376 bytes minified & brotlied
+- Typed with TypeScript
+- Works with any CSS solution (Tailwind, CSS-in-JS, etc.)
+- Plays nicely with component libraries
+
 ## Install
 
 ```sh
