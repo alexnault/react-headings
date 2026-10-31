@@ -32,7 +32,7 @@ export type HeadingResetProps = HeadingOffsetProps;
 // Unclamped, so dev checks can see levels above 6.
 const LevelContext = createContext(1);
 
-function normalizeOffset(offset: number): number {
+function getNormalizedOffset(offset: number): number {
   return Number.isFinite(offset) && offset > 0 ? Math.floor(offset) : 0;
 }
 
@@ -69,16 +69,16 @@ export { Heading as H };
  */
 export function HeadingOffset({ offset = 1, children }: HeadingOffsetProps) {
   const parentLevel = useContext(LevelContext);
-  const normalized = normalizeOffset(offset);
-  const level = parentLevel + normalized;
+  const normalizedOffset = getNormalizedOffset(offset);
+  const level = parentLevel + normalizedOffset;
 
   if (process.env.NODE_ENV !== "production") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    useInvalidOffsetWarning("HeadingOffset", offset, normalized);
+    useInvalidOffsetWarning("HeadingOffset", offset, normalizedOffset);
 
-    if (normalized > 0) {
+    if (normalizedOffset > 0) {
       children = (
-        <SkippedLevelScope start={parentLevel + 1}>
+        <SkippedLevelScope firstLevel={parentLevel + 1}>
           {children}
         </SkippedLevelScope>
       );
@@ -95,15 +95,15 @@ export function HeadingOffset({ offset = 1, children }: HeadingOffsetProps) {
  * deeper than h1 (default 0).
  */
 export function HeadingReset({ offset = 0, children }: HeadingResetProps) {
-  const normalized = normalizeOffset(offset);
-  const level = 1 + normalized;
+  const normalizedOffset = getNormalizedOffset(offset);
+  const level = 1 + normalizedOffset;
 
   if (process.env.NODE_ENV !== "production") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    useInvalidOffsetWarning("HeadingReset", offset, normalized);
+    useInvalidOffsetWarning("HeadingReset", offset, normalizedOffset);
 
     children = (
-      <SkippedLevelScope start={level} isolated>
+      <SkippedLevelScope firstLevel={level} isolated>
         {children}
       </SkippedLevelScope>
     );
@@ -131,30 +131,30 @@ const ScopeContext = /* @__PURE__ */ createContext<ScopeRegistry | null>(null);
 
 /**
  * Collects the heading levels rendered inside a HeadingOffset or HeadingReset
- * and warns if one between `start` and the deepest is missing. A non-empty
- * nested scope counts as a heading at its own `start` in its parent, so each
- * gap is reported by exactly one scope.
+ * and warns if one between `firstLevel` and the deepest is missing. A
+ * non-empty nested scope counts as a heading at its own `firstLevel` in its
+ * parent, so each gap is reported by exactly one scope.
  */
 function createScopeRegistry(
-  start: number,
-  parent: ScopeRegistry | null,
+  firstLevel: number,
+  parentRegistry: ScopeRegistry | null,
 ): ScopeRegistry {
-  const levels = new Map<object, number>();
+  const headingLevels = new Map<object, number>();
   let unregisterFromParent: (() => void) | undefined;
-  let checkScheduled = false;
-  let warned = false;
+  let isCheckScheduled = false;
+  let hasWarned = false;
 
-  function check() {
-    checkScheduled = false;
-    if (warned || levels.size === 0) return;
+  function warnIfLevelSkipped() {
+    isCheckScheduled = false;
+    if (hasWarned || headingLevels.size === 0) return;
 
-    const present = new Set(levels.values());
-    const deepest = Math.max(...present);
-    for (let level = start; level < deepest; level++) {
-      if (!present.has(level)) {
-        warned = true;
+    const presentLevels = new Set(headingLevels.values());
+    const deepestLevel = Math.max(...presentLevels);
+    for (let level = firstLevel; level < deepestLevel; level++) {
+      if (!presentLevels.has(level)) {
+        hasWarned = true;
         console.warn(
-          `react-headings: Skipped heading level ${level}: found a level ${deepest} heading but no level ${level} heading.`,
+          `react-headings: Skipped heading level ${level}: found a level ${deepestLevel} heading but no level ${level} heading.`,
         );
         return;
       }
@@ -164,23 +164,23 @@ function createScopeRegistry(
   // Effects of a whole commit run before microtasks, so the check sees the
   // complete tree instead of whichever heading registered first.
   function scheduleCheck() {
-    if (checkScheduled) return;
-    checkScheduled = true;
-    queueMicrotask(check);
+    if (isCheckScheduled) return;
+    isCheckScheduled = true;
+    queueMicrotask(warnIfLevelSkipped);
   }
 
   return {
     register(level) {
       const token = {};
-      levels.set(token, level);
-      if (levels.size === 1) {
-        unregisterFromParent = parent?.register(start);
+      headingLevels.set(token, level);
+      if (headingLevels.size === 1) {
+        unregisterFromParent = parentRegistry?.register(firstLevel);
       }
       scheduleCheck();
 
       return () => {
-        levels.delete(token);
-        if (levels.size === 0) {
+        headingLevels.delete(token);
+        if (headingLevels.size === 0) {
           unregisterFromParent?.();
           unregisterFromParent = undefined;
         }
@@ -191,18 +191,18 @@ function createScopeRegistry(
 }
 
 function SkippedLevelScope({
-  start,
+  firstLevel,
   isolated = false,
   children,
 }: {
-  start: number;
+  firstLevel: number;
   isolated?: boolean;
   children: ReactNode;
 }) {
-  const parent = useContext(ScopeContext);
+  const parentRegistry = useContext(ScopeContext);
   const registry = useMemo(
-    () => createScopeRegistry(start, isolated ? null : parent),
-    [start, isolated, parent],
+    () => createScopeRegistry(firstLevel, isolated ? null : parentRegistry),
+    [firstLevel, isolated, parentRegistry],
   );
 
   return (
@@ -212,7 +212,7 @@ function SkippedLevelScope({
 
 function useHeadingChecks() {
   const level = useContext(LevelContext);
-  const scope = useContext(ScopeContext);
+  const scopeRegistry = useContext(ScopeContext);
 
   useEffect(() => {
     if (level > 6) {
@@ -222,19 +222,19 @@ function useHeadingChecks() {
     }
   }, [level]);
 
-  useEffect(() => scope?.register(level), [scope, level]);
+  useEffect(() => scopeRegistry?.register(level), [scopeRegistry, level]);
 }
 
 function useInvalidOffsetWarning(
   component: "HeadingOffset" | "HeadingReset",
   offset: number,
-  normalized: number,
+  normalizedOffset: number,
 ) {
   useEffect(() => {
-    if (offset !== normalized) {
+    if (offset !== normalizedOffset) {
       console.warn(
-        `react-headings: ${component} received invalid offset ${offset}, treated as ${normalized}.`,
+        `react-headings: ${component} received invalid offset ${offset}, treated as ${normalizedOffset}.`,
       );
     }
-  }, [component, offset, normalized]);
+  }, [component, offset, normalizedOffset]);
 }
