@@ -1,6 +1,22 @@
 [
   {
-    "name": "Production build",
+    "name": "JS Minified",
+    "path": "dist/index.js",
+    "import": "*",
+    "ignore": ["react"],
+    "brotli": false,
+    "limit": "900 B"
+  },
+  {
+    "name": "JS Gzipped",
+    "path": "dist/index.js",
+    "import": "*",
+    "ignore": ["react"],
+    "gzip": true,
+    "limit": "500 B"
+  },
+  {
+    "name": "JS Brotlied",
     "path": "dist/index.js",
     "import": "*",
     "ignore": ["react"],
