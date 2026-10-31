@@ -25,7 +25,10 @@ type HProps = React.DetailedHTMLProps<
   render?: (context: LevelContextValue) => React.ReactElement;
 };
 
-function InternalH(
+/**
+ * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
+ */
+export const H = React.forwardRef(function H(
   { render, ...props }: HProps,
   forwardedRef: React.ForwardedRef<HTMLHeadingElement>
 ): JSX.Element {
@@ -36,37 +39,56 @@ function InternalH(
   }
 
   return <context.Component ref={forwardedRef} {...props} />;
-}
+});
+
+type LevelProps = {
+  level?: Level;
+  children?: React.ReactNode;
+};
 
 /**
- * Renders a dynamic HTML heading (h1, h2, etc.) or custom component according to the current level.
+ * Renders `children` 1 level down, or at `level` when provided.
+ * @param level The level to render `children` at
+ * @param children The children to render
  */
-export const H = React.forwardRef(InternalH);
+function Level({ level: desiredLevel, children }: LevelProps): JSX.Element {
+  const { level: currentLevel } = useLevel();
+
+  const level = desiredLevel ?? (Math.min(currentLevel + 1, 6) as Level);
+
+  const value = {
+    level,
+    Component: `h${level}` as Heading,
+  };
+
+  return (
+    <LevelContext.Provider value={value}>{children}</LevelContext.Provider>
+  );
+}
 
 type SectionProps = {
   component: React.ReactNode;
   children?: React.ReactNode;
+  level?: Level;
 };
 
 /**
  * Renders `component` in the current level and `children` in the next level.
  * @param component A component containing a heading
  * @param children The children in the next level
+ * @param level A level to render `component` at instead of the current one (e.g. for dialogs and portals)
  */
-export function Section({ component, children }: SectionProps): JSX.Element {
-  const { level } = useLevel();
-
-  const nextLevel = Math.min(level + 1, 6) as Level;
-
-  const value = {
-    level: nextLevel,
-    Component: `h${nextLevel}` as Heading,
-  };
-
-  return (
+export function Section({
+  component,
+  children,
+  level,
+}: SectionProps): JSX.Element {
+  const content = (
     <>
       {component}
-      <LevelContext.Provider value={value}>{children}</LevelContext.Provider>
+      <Level>{children}</Level>
     </>
   );
+
+  return level ? <Level level={level}>{content}</Level> : content;
 }

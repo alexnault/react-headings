@@ -159,6 +159,30 @@ function App() {
 }
 ```
 
+### Dialogs and portals
+
+Content rendered elsewhere in the DOM (e.g. dialogs portalled to the end of `<body>`) can reset the heading hierarchy with the `level` prop.
+Nested sections continue from that level.
+
+```jsx
+import React from "react";
+import { Section, H } from "react-headings";
+
+function App() {
+  return (
+    <Section component={<H>My H1</H>}>
+      <Section component={<H>My H2</H>}>
+        <Dialog>
+          <Section level={1} component={<H>My dialog title (H1)</H>}>
+            My dialog content
+          </Section>
+        </Dialog>
+      </Section>
+    </Section>
+  );
+}
+```
+
 ### Using component libraries
 
 Leveraging `Component` and `level` from the context allows the use of component libraries.
@@ -218,6 +242,7 @@ Creates a new section (a heading and its level).
 | ----------- | ------ | -------- | ------------------------------------------------------------------------------- |
 | `component` | `node` | Yes      | The heading component. Can be anything but best used in combination with `<H>`. |
 | `children`  | `node` | No       | The content of the new level.                                                   |
+| `level`     | `1-6`  | No       | Renders `component` at this level instead of the current one.                   |
 
 #### Example
 
