@@ -96,6 +96,7 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
 - **Server Components:** all exports are `"use client"`; they can be rendered from Server Components (with server children), and SSR produces correct tags. Server Components cannot read the level themselves.
 - **React:** 18+.
+- **Module format:** ESM only. CommonJS support is dropped (breaking change).
 
 ## Dev-only warnings
 
