@@ -13,7 +13,7 @@ The 3.0 API is not a constraint. Docs are written fresh (no migration guide).
 
 ## Release
 
-Ship 4.0 as a prerelease from the `next` branch first (see `.releaserc.json`: `next` → npm dist-tag `next`, versions `4.0.0-next.N`). The breaking change must be marked with a `BREAKING CHANGE:` footer (or `feat!:`) so semantic-release bumps the major. Merge `next` into `master` to publish stable `4.0.0` once validated.
+Development happens on a feature branch whose PR targets `next` (not `master`). Ship 4.0 as a prerelease from the `next` branch first (see `.releaserc.json`: `next` → npm dist-tag `next`, versions `4.0.0-next.N`). The breaking change must be marked with a `BREAKING CHANGE:` footer (or `feat!:`) so semantic-release bumps the major. Merge `next` into `master` to publish stable `4.0.0` once validated.
 
 ## API
 
