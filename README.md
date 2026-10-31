@@ -133,14 +133,12 @@ Warnings are removed from production builds. Vite and webpack show them automati
 
 Works in Server Components, including Server Components nested inside `HeadingOffset`. Only `useHeadingLevel()` needs a Client Component.
 
-## Differences from native `headingoffset`
+## Differences from `headingoffset`
 
 - Levels follow the React tree, not the DOM, so portaled content inherits its level.
 - `Heading` always starts at level 1, while a native `h2` starts at 2.
-- Levels stop at 6, while native goes up to 9 through `aria-level`.
+- Levels stop at 6, while `headingoffset` goes up to 9 through `aria-level`.
 - The output is a real `h1`–`h6` tag, so CSS like `h2 { … }` matches the level.
-
-Don't use both together: offsets would apply twice.
 
 ## License
 
