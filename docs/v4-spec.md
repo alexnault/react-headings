@@ -62,24 +62,24 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 - **Mechanism:** React context is the source of truth. Real `h1`–`h6` tags are rendered; native `headingoffset`/`headingreset` attributes are never emitted (they would double-count on top of the computed tag, and do not follow portals).
 - **No provider required:** a `Heading` outside any `HeadingOffset`/`HeadingReset` renders `h1`.
 - **No DOM:** `HeadingOffset` and `HeadingReset` render only a context provider. Users bring their own `<section>`, `<article>`, etc.
-- **Convention:** a wrapper encloses a heading _and_ its content. A self-contained component wraps itself:
+- **Convention:** a component that renders a heading wraps the content _under_ that heading. Its own heading renders at whatever level it is placed, so it works standalone, nested or inside a `HeadingReset` without changes (like native `headingoffset`, where the embedder applies the offset):
 
   ```tsx
   function Card({ title, children }) {
     return (
-      <HeadingOffset>
-        <article>
-          <H>{title}</H>
-          {children}
-        </article>
-      </HeadingOffset>
+      <article>
+        <H>{title}</H>
+        <HeadingOffset>{children}</HeadingOffset>
+      </article>
     );
   }
 
-  <H>Page</H>              {/* h1 */}
-  <Card title="Chapter">   {/* h2 */}
-    <Card title="Sub" />   {/* h3 */}
-  </Card>
+  <H>Page</H>                    {/* h1 */}
+  <HeadingOffset>
+    <Card title="Chapter">       {/* h2 */}
+      <Card title="Subchapter" /> {/* h3 */}
+    </Card>
+  </HeadingOffset>
   ```
 
 - **Portals:** context flows through portals, so portaled content inherits its React-tree level by default. Dialogs opt out with `HeadingReset`:

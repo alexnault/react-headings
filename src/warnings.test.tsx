@@ -103,12 +103,10 @@ describe("skipped level", () => {
 describe("skipped level with offsets and resets", () => {
   function Card({ title, children }: { title: string; children?: ReactNode }) {
     return (
-      <HeadingOffset>
-        <article>
-          <Heading>{title}</Heading>
-          {children}
-        </article>
-      </HeadingOffset>
+      <article>
+        <Heading>{title}</Heading>
+        <HeadingOffset>{children}</HeadingOffset>
+      </article>
     );
   }
 
@@ -116,10 +114,12 @@ describe("skipped level with offsets and resets", () => {
     render(
       <>
         <Heading>Page</Heading>
-        <Card title="Chapter">
-          <Card title="Sub" />
-        </Card>
-        <Card title="Other chapter" />
+        <HeadingOffset>
+          <Card title="Chapter">
+            <Card title="Sub" />
+          </Card>
+          <Card title="Other chapter" />
+        </HeadingOffset>
       </>
     );
     await settle();
@@ -162,12 +162,11 @@ describe("skipped level with offsets and resets", () => {
 
   it("does not treat offset 0 as a scope", async () => {
     render(
-      <HeadingOffset>
-        <Heading>Chapter</Heading>
+      <Card title="Chapter">
         <HeadingOffset offset={0}>
           <Card title="Sub" />
         </HeadingOffset>
-      </HeadingOffset>
+      </Card>
     );
     await settle();
 
@@ -178,10 +177,24 @@ describe("skipped level with offsets and resets", () => {
     render(
       <HeadingOffset offset={3}>
         <HeadingReset offset={1}>
-          <Heading>Dialog title</Heading>
-          <Card title="Dialog part" />
+          <Card title="Dialog title">
+            <Card title="Dialog part" />
+          </Card>
         </HeadingReset>
       </HeadingOffset>
+    );
+    await settle();
+
+    expect(warn).not.toHaveBeenCalled();
+  });
+
+  it("does not count a HeadingReset's headings toward its parent scope", async () => {
+    render(
+      <Card title="Page">
+        <HeadingReset offset={2}>
+          <Card title="Dialog" />
+        </HeadingReset>
+      </Card>
     );
     await settle();
 
@@ -191,7 +204,9 @@ describe("skipped level with offsets and resets", () => {
   it("warns inside a HeadingReset that skips its own level", async () => {
     render(
       <HeadingReset>
-        <Card title="No h1" />
+        <HeadingOffset>
+          <Card title="No h1" />
+        </HeadingOffset>
       </HeadingReset>
     );
     await settle();
@@ -206,7 +221,9 @@ describe("skipped level with offsets and resets", () => {
       return (
         <HeadingOffset>
           {showTitle && <Heading>Chapter</Heading>}
-          <Card title="Sub" />
+          <HeadingOffset>
+            <Card title="Sub" />
+          </HeadingOffset>
         </HeadingOffset>
       );
     }

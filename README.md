@@ -31,7 +31,7 @@ Requires React 18 or later. The package is ESM only.
 
 ## Usage
 
-Wrap a heading and its content in `HeadingOffset`. Headings inside render one level deeper.
+A component that renders a heading wraps the content under it in `HeadingOffset`. Headings inside render one level deeper.
 
 ```tsx
 import { H, HeadingOffset } from "react-headings";
@@ -40,26 +40,26 @@ function Page() {
   return (
     <>
       <H>Page</H> {/* h1 */}
-      <Card title="Chapter"> {/* h2 */}
-        <Card title="Subchapter" /> {/* h3 */}
-      </Card>
+      <HeadingOffset>
+        <Card title="Chapter"> {/* h2 */}
+          <Card title="Subchapter" /> {/* h3 */}
+        </Card>
+      </HeadingOffset>
     </>
   );
 }
 
 function Card({ title, children }) {
   return (
-    <HeadingOffset>
-      <article>
-        <H>{title}</H>
-        {children}
-      </article>
-    </HeadingOffset>
+    <article>
+      <H>{title}</H>
+      <HeadingOffset>{children}</HeadingOffset>
+    </article>
   );
 }
 ```
 
-`Card` doesn't know its level. It renders an `h2` here and an `h3` wherever it's nested one level deeper.
+`Card` doesn't know its level. Its heading renders at whatever level `Card` is placed: `h1` on its own, `h2` under the page heading, `h3` inside another `Card`.
 
 ### Dialogs
 
