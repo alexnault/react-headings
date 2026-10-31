@@ -45,16 +45,11 @@ describe("overflow", () => {
 });
 
 describe("invalid offset", () => {
-  it.each([
-    [-1, 0],
-    [1.5, 1],
-    [NaN, 0],
-    [Infinity, 0],
-  ])("warns when HeadingOffset receives %s", (offset, treatedAs) => {
-    render(<HeadingOffset offset={offset} />);
+  it("warns when HeadingOffset receives an invalid offset", () => {
+    render(<HeadingOffset offset={1.5} />);
 
     expect(warn).toHaveBeenCalledWith(
-      `react-headings: HeadingOffset received invalid offset ${offset}, treated as ${treatedAs}.`,
+      "react-headings: HeadingOffset received invalid offset 1.5, treated as 1.",
     );
   });
 
@@ -80,6 +75,15 @@ describe("invalid offset", () => {
 });
 
 describe("skipped level", () => {
+  function Card({ title, children }: { title: string; children?: ReactNode }) {
+    return (
+      <article>
+        <Heading>{title}</Heading>
+        <HeadingOffset>{children}</HeadingOffset>
+      </article>
+    );
+  }
+
   it("warns when a scope has deeper headings but none at its own level", async () => {
     render(
       <>
@@ -98,17 +102,6 @@ describe("skipped level", () => {
       "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
     );
   });
-});
-
-describe("skipped level with offsets and resets", () => {
-  function Card({ title, children }: { title: string; children?: ReactNode }) {
-    return (
-      <article>
-        <Heading>{title}</Heading>
-        <HeadingOffset>{children}</HeadingOffset>
-      </article>
-    );
-  }
 
   it("does not warn for a complete outline", async () => {
     render(

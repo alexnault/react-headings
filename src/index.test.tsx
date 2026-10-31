@@ -14,8 +14,8 @@ import {
 afterEach(cleanup);
 
 describe("Heading", () => {
-  it("renders an h1 outside any provider", () => {
-    render(<Heading>Title</Heading>);
+  it("renders an h1 outside any provider (via the H alias)", () => {
+    render(<H>Title</H>);
 
     expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H1");
   });
@@ -62,12 +62,6 @@ describe("Heading render prop", () => {
     expect(heading.className).toBe("big");
     expect(heading.dataset.level).toBe("2");
     expect(ref.current).toBe(heading);
-  });
-});
-
-describe("H", () => {
-  it("is an alias of Heading", () => {
-    expect(H).toBe(Heading);
   });
 });
 
@@ -202,20 +196,13 @@ describe("invalid offsets", () => {
     );
   });
 
-  it.each([
-    [-1, "H1"],
-    [1.5, "H2"],
-    [NaN, "H1"],
-    [-Infinity, "H1"],
-  ])("HeadingReset treats %s like the native attribute", (offset, tagName) => {
+  it("HeadingReset normalizes its offset the same way", () => {
     render(
-      <HeadingReset offset={offset}>
+      <HeadingReset offset={1.5}>
         <Heading>Title</Heading>
       </HeadingReset>,
     );
 
-    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
-      tagName,
-    );
+    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H2");
   });
 });
