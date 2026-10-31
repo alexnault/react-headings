@@ -65,7 +65,7 @@ function Card({ title, children }) {
 
 ### Dialogs
 
-Portaled content inherits the level from where it sits in the React tree. Content that isn't part of the page outline, such as a dialog, should start over with `HeadingReset`:
+Portaled elements, like dialogs, aren't part of the page outline. Use `HeadingReset` to start their headings at `h1`:
 
 ```tsx
 <Dialog>
