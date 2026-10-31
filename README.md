@@ -36,7 +36,7 @@ A component that renders a heading wraps the content under it in `HeadingOffset`
 ```tsx
 import { H, HeadingOffset } from "react-headings";
 
-function StarWars() {
+function Page() {
   return (
     <>
       <H>Star Wars</H> {/* h1 */}
