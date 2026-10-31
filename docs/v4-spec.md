@@ -4,7 +4,7 @@
 
 - Heading levels computed from the current nesting, not hard-coded.
 - Components can be written without knowing the heading hierarchy of their parents.
-- Small, predictable API: one `Level` component for relative nesting (like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) proposal) and absolute resets (like [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset)), similar to Ariakit's `HeadingLevel`.
+- Small, predictable API: one `HeadingLevel` component for relative nesting (like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) proposal) and absolute resets (like [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset)), like Ariakit's `HeadingLevel` plus an `offset` prop.
 - Works through portals (modals, popovers).
 - SSR-safe; usable from React Server Components.
 - Dev-only hierarchy enforcement.
@@ -18,12 +18,11 @@ Development happens on a feature branch whose PR targets `next` (not `master`). 
 ## API
 
 ```ts
-export { Heading, Heading as H, Level, useHeadingLevel };
+export { Heading, Heading as H, HeadingLevel, useHeadingLevel };
 export type {
   HeadingProps,
-  HeadingLevel, // 1 | 2 | 3 | 4 | 5 | 6
   HeadingTag, // "h1" | … | "h6"
-  LevelProps,
+  HeadingLevelProps,
 };
 ```
 
@@ -32,7 +31,7 @@ export type {
 Renders `h1`–`h6` according to the current level.
 
 - Accepts all native heading props and `ref` (via `forwardRef`, for React 18 support).
-- `render?: (props, heading: { level: HeadingLevel; tag: HeadingTag }) => ReactElement`
+- `render?: (props, heading: { level: 1–6; tag: HeadingTag }) => ReactElement`
   - `props` contains only element props (`children`, `className`, `ref`, …), so spreading it never leaks `level`/`tag` to the DOM.
   - Function form only.
 
@@ -42,7 +41,7 @@ Renders `h1`–`h6` according to the current level.
 </Heading>
 ```
 
-### `Level`
+### `HeadingLevel`
 
 Takes either `offset` or `level`, never both (enforced by a union type):
 
@@ -50,9 +49,9 @@ Takes either `offset` or `level`, never both (enforced by a union type):
 - `level?: number` — integer ≥ 1. Discards all ancestor levels; headings inside render at `level` (like native `headingreset`, plus `headingoffset` for levels above 1).
 
 ```tsx
-<Level>             {/* Heading inside → parent + 1 */}
-<Level offset={2}>  {/* Heading inside → parent + 2 */}
-<Level level={1}>   {/* Heading inside → h1 */}
+<HeadingLevel>             {/* Heading inside → parent + 1 */}
+<HeadingLevel offset={2}>  {/* Heading inside → parent + 2 */}
+<HeadingLevel level={1}>   {/* Heading inside → h1 */}
 ```
 
 ### `useHeadingLevel()`
@@ -62,8 +61,8 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 ## Behaviour
 
 - **Mechanism:** React context is the source of truth. Real `h1`–`h6` tags are rendered; native `headingoffset`/`headingreset` attributes are never emitted (they would double-count on top of the computed tag, and do not follow portals).
-- **No provider required:** a `Heading` outside any `Level` renders `h1`.
-- **No DOM:** `Level` renders only a context provider. Users bring their own `<section>`, `<article>`, etc.
+- **No provider required:** a `Heading` outside any `HeadingLevel` renders `h1`.
+- **No DOM:** `HeadingLevel` renders only a context provider. Users bring their own `<section>`, `<article>`, etc.
 - **Convention:** a component that renders a heading wraps the content _under_ that heading. Its own heading renders at whatever level it is placed, so it works standalone, nested or under `level` without changes (like native `headingoffset`, where the embedder applies the offset):
 
   ```tsx
@@ -71,26 +70,26 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
     return (
       <article>
         <H>{title}</H>
-        <Level>{children}</Level>
+        <HeadingLevel>{children}</HeadingLevel>
       </article>
     );
   }
 
   <H>Page</H>                    {/* h1 */}
-  <Level>
+  <HeadingLevel>
     <Card title="Chapter">       {/* h2 */}
       <Card title="Subchapter" /> {/* h3 */}
     </Card>
-  </Level>
+  </HeadingLevel>
   ```
 
 - **Portals:** context flows through portals, so portaled content inherits its React-tree level by default. Dialogs opt out with `level`:
 
   ```tsx
   <Dialog>
-    <Level level={1}>
+    <HeadingLevel level={1}>
       <H>Confirm</H> {/* h1 */}
-    </Level>
+    </HeadingLevel>
   </Dialog>
   ```
 
@@ -105,7 +104,7 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
   | Large                       | kept; the final level clamps to 6 | kept; the final level clamps to 6 |
 
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
-- **Server Components:** all exports are `"use client"`; they can be rendered from Server Components, including Server Components nested inside `Level`, and SSR produces correct tags. Only `useHeadingLevel()` needs a Client Component.
+- **Server Components:** all exports are `"use client"`; they can be rendered from Server Components, including Server Components nested inside `HeadingLevel`, and SSR produces correct tags. Only `useHeadingLevel()` needs a Client Component.
 - **React:** 18+.
 
 ## Differences from native `headingoffset`
@@ -119,7 +118,7 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 | Maximum level                | 9 (levels 7–9 exposed via `aria-level`)                    | 6 (clamped to `h6`)                                                          |
 | Offset value range           | 0–8 per element                                            | Any non-negative integer; only the final level is clamped                    |
 | Reset                        | Boolean `headingreset`, combined with `headingoffset`      | Absolute `level` prop, exclusive with `offset`                               |
-| Offset on the heading itself | Allowed (`<h1 headingoffset="2">` → 3)                     | Not supported; offsets come only from `Level`                                |
+| Offset on the heading itself | Allowed (`<h1 headingoffset="2">` → 3)                     | Not supported; offsets come only from `HeadingLevel`                         |
 | Rendered output              | Tag unchanged; level exists only in the accessibility tree | Real `h1`–`h6` tag, so CSS `h2` selectors and default styles match the level |
 
 ## Packaging & tooling
@@ -155,19 +154,19 @@ Dev toolchain and CI:
 
 Only present in the `development` export condition build; never thrown.
 
-1. **Skipped level** — a scope (`Level`) contains deeper headings but is missing a level between its first expected level and the deepest one (e.g. `h1` → `h3`, or `offset={2}`). Message: `react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.`
-   - A `Level` with `offset` expects its first heading at the parent level + 1. `offset={0}` is not a scope; its headings count toward the nearest scope above.
-   - Each `Level` with `level` starts a fresh, isolated scope whose expected first level is `level`; its headings don't count toward the parent.
+1. **Skipped level** — a scope (`HeadingLevel`) contains deeper headings but is missing a level between its first expected level and the deepest one (e.g. `h1` → `h3`, or `offset={2}`). Message: `react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.`
+   - A `HeadingLevel` with `offset` expects its first heading at the parent level + 1. `offset={0}` is not a scope; its headings count toward the nearest scope above.
+   - Each `HeadingLevel` with `level` starts a fresh, isolated scope whose expected first level is `level`; its headings don't count toward the parent.
    - A non-empty nested scope counts as a heading at its own first level in its parent, so each gap is reported by exactly one scope.
    - Headings register with their scope in effects (client-only; zero cost in SSR/production). The check runs in a microtask after the commit, so it sees the whole tree, and re-runs when headings mount or unmount. Each scope warns at most once.
 2. **Overflow** — computed level exceeds 6. Message: `react-headings: Heading level 7 exceeds 6 and was clamped to h6.`
-3. **Invalid value** — `offset` or `level` was normalized. Message: `react-headings: Level received invalid offset -1, treated as 0.` (or `invalid level`).
+3. **Invalid value** — `offset` or `level` was normalized. Message: `react-headings: HeadingLevel received invalid offset -1, treated as 0.` (or `invalid level`).
 
-The root (outside any `Level`) is not a scope, so a page with no `h1` is not detected.
+The root (outside any `HeadingLevel`) is not a scope, so a page with no `h1` is not detected.
 
 ## Non-goals
 
 - Emitting native `headingoffset`/`headingreset` attributes. The native attribute is an _alternative_ to this library, not a complement.
 - `as` / `asChild` polymorphism.
 - "Single `h1`" enforcement.
-- Absolute-level props on `Heading` (only `Level` takes `level`).
+- Absolute-level props on `Heading` (only `HeadingLevel` takes `level`).

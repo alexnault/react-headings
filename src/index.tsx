@@ -14,19 +14,20 @@ import type {
   ReactNode,
 } from "react";
 
-export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
+type ClampedLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type HeadingTag = `h${HeadingLevel}`;
+export type HeadingTag = `h${ClampedLevel}`;
 
 export type HeadingProps = ComponentPropsWithoutRef<"h1"> & {
   render?: (
     props: ComponentPropsWithRef<"h1">,
-    heading: { level: HeadingLevel; tag: HeadingTag },
+    heading: { level: ClampedLevel; tag: HeadingTag },
   ) => ReactElement;
 };
 
-export type LevelProps = { children?: ReactNode } & (
-  { offset?: number; level?: never } | { level: number; offset?: never }
+export type HeadingLevelProps = { children?: ReactNode } & (
+  | { offset?: number; level?: never }
+  | { level: number; offset?: never }
 );
 
 // Unclamped, so dev checks can see levels above 6.
@@ -72,7 +73,11 @@ export { Heading as H };
  * Renders headings inside `offset` levels deeper (default 1), or at `level`
  * regardless of ancestors.
  */
-export function Level({ offset = 1, level, children }: LevelProps) {
+export function HeadingLevel({
+  offset = 1,
+  level,
+  children,
+}: HeadingLevelProps) {
   const parentLevel = useContext(LevelContext);
   const isReset = level !== undefined;
   const normalizedOffset = getNormalizedOffset(offset);
@@ -108,8 +113,8 @@ export function Level({ offset = 1, level, children }: LevelProps) {
 /**
  * Returns the level and tag a `Heading` would render at this position.
  */
-export function useHeadingLevel(): { level: HeadingLevel; tag: HeadingTag } {
-  const level = Math.min(useContext(LevelContext), 6) as HeadingLevel;
+export function useHeadingLevel(): { level: ClampedLevel; tag: HeadingTag } {
+  const level = Math.min(useContext(LevelContext), 6) as ClampedLevel;
   return { level, tag: `h${level}` };
 }
 
@@ -121,7 +126,7 @@ type ScopeRegistry = { register(level: number): () => void };
 const ScopeContext = /* @__PURE__ */ createContext<ScopeRegistry | null>(null);
 
 /**
- * Collects the heading levels rendered inside a Level and warns if one between `firstLevel` and the deepest is missing. A
+ * Collects the heading levels rendered inside a HeadingLevel and warns if one between `firstLevel` and the deepest is missing. A
  * non-empty nested scope counts as a heading at its own `firstLevel` in its
  * parent, so each gap is reported by exactly one scope.
  */
@@ -228,7 +233,7 @@ function useInvalidPropWarning(
   useEffect(() => {
     if (value !== normalizedValue) {
       console.warn(
-        `react-headings: Level received invalid ${prop} ${value}, treated as ${normalizedValue}.`,
+        `react-headings: HeadingLevel received invalid ${prop} ${value}, treated as ${normalizedValue}.`,
       );
     }
   }, [prop, value, normalizedValue]);

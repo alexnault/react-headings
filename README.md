@@ -31,22 +31,22 @@ npm install react-headings
 
 ## Usage
 
-Use `H` for every heading. Wrap the content that belongs under a heading in `Level`: headings inside render one level deeper.
+Use `H` for every heading. Wrap the content that belongs under a heading in `HeadingLevel`: headings inside render one level deeper.
 
 ```tsx
-import { H, Level } from "react-headings";
+import { H, HeadingLevel } from "react-headings";
 
 function Page() {
   return (
     <>
       <H>Star Wars</H> {/* h1 */}
-      <Level>
+      <HeadingLevel>
         <Card title="Characters"> {/* h2 */}
           <Card title="Luke" /> {/* h3 */}
           <Card title="Leia" /> {/* h3 */}
           <Card title="Han Solo" /> {/* h3 */}
         </Card>
-      </Level>
+      </HeadingLevel>
     </>
   );
 }
@@ -55,7 +55,7 @@ function Card({ title, children }) {
   return (
     <article>
       <H>{title}</H>
-      <Level>{children}</Level>
+      <HeadingLevel>{children}</HeadingLevel>
     </article>
   );
 }
@@ -69,9 +69,9 @@ Portaled elements, like dialogs, aren't part of the page outline. Use `level` to
 
 ```tsx
 <Dialog>
-  <Level level={1}>
+  <HeadingLevel level={1}>
     <H>Delete file?</H> {/* h1 */}
-  </Level>
+  </HeadingLevel>
 </Dialog>
 ```
 
@@ -99,7 +99,7 @@ Accepts every `h1` prop and a `ref`, plus:
 
 `H` is the same component as `Heading`. Pick one name per project.
 
-### `Level`
+### `HeadingLevel`
 
 | Prop     | Type     | Default | Description                                      |
 | -------- | -------- | ------- | ------------------------------------------------ |
@@ -126,7 +126,7 @@ Warnings are removed from production builds. Vite and webpack show them automati
 
 ## Server Components
 
-Works in Server Components, including Server Components nested inside `Level`. Only `useHeadingLevel()` needs a Client Component.
+Works in Server Components, including Server Components nested inside `HeadingLevel`. Only `useHeadingLevel()` needs a Client Component.
 
 ## Differences from `headingoffset`
 
