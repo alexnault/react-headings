@@ -17,7 +17,7 @@
   </a>
 </p>
 
-> Heading levels that follow your component tree, so every component can use the right `h1`–`h6` without knowing where it's rendered.
+> Heading levels that follow your component tree, so components render the right `h1`–`h6` wherever they're used.
 
 React Headings computes heading levels from nesting, like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) and [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset) attributes, but it renders real heading tags today, works through portals and renders on the server.
 
