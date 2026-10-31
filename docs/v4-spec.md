@@ -96,11 +96,28 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
 - **Server Components:** all exports are `"use client"`; they can be rendered from Server Components (with server children), and SSR produces correct tags. Server Components cannot read the level themselves.
 - **React:** 18+.
-- **Module format:** ESM only. CommonJS support is dropped (breaking change).
+
+## Packaging & tooling
+
+Breaking:
+
+- **ESM only.** CommonJS support is dropped. `"type": "module"` with an `exports` map; the package root is the only public entry point (no deep imports).
+- **Named exports only.** No default export.
+- **React peer range** `^18.0.0 || ^19.0.0` (drops 16.8 and 17).
+- **Modern build target** (ES2020) instead of ES5.
+- **Dev/prod builds via export conditions.** `exports` provides `development` and `production` (default) conditions; dev warnings exist only in the development build, so no reliance on `process.env.NODE_ENV`.
+- **TypeScript 5.0+** required for the published types.
+
+Non-breaking:
+
+- Automatic JSX runtime (`jsx: "react-jsx"`).
+- New package description and keywords reflecting dynamic heading levels / `headingoffset` polyfill.
+- Upgraded dev toolchain (TypeScript 5, current ESLint, Vitest).
+- Size-limit budget re-baselined on the new build (should be well under the current 755 B gzip).
 
 ## Dev-only warnings
 
-Stripped from production builds; never thrown.
+Only present in the `development` export condition build; never thrown.
 
 1. **Skipped level** — a scope (`HeadingOffset` / `HeadingReset`) contains deeper headings but no heading at its own level (e.g. `h1` → `h3`, or `offset={2}`). Each `HeadingReset` starts a fresh scope whose expected first level is its own. Implemented via heading registration in effects (client-only; zero cost in SSR/production).
 2. **Overflow** — computed level exceeds 6.
