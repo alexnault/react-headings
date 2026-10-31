@@ -205,12 +205,12 @@ describe("Section component", () => {
   it("should not affect siblings when rendering at a specified level", () => {
     const { getByText } = render(
       <Section component={<H>My H1</H>}>
-        <Section component={<H>My H2</H>} level={5} />
+        <Section component={<H>My H5</H>} level={5} />
         <H>My sibling H2</H>
       </Section>
     );
 
-    expect(getByText("My H2").tagName).toBe("H5");
+    expect(getByText("My H5").tagName).toBe("H5");
     expect(getByText("My sibling H2").tagName).toBe("H2");
   });
 });
