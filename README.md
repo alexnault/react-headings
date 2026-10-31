@@ -36,13 +36,15 @@ A component that renders a heading wraps the content under it in `HeadingOffset`
 ```tsx
 import { H, HeadingOffset } from "react-headings";
 
-function Page() {
+function StarWars() {
   return (
     <>
-      <H>Page</H> {/* h1 */}
+      <H>Star Wars</H> {/* h1 */}
       <HeadingOffset>
-        <Card title="Chapter"> {/* h2 */}
-          <Card title="Subchapter" /> {/* h3 */}
+        <Card title="Characters"> {/* h2 */}
+          <Card title="Luke" /> {/* h3 */}
+          <Card title="Leia" /> {/* h3 */}
+          <Card title="Han Solo" /> {/* h3 */}
         </Card>
       </HeadingOffset>
     </>
@@ -59,7 +61,7 @@ function Card({ title, children }) {
 }
 ```
 
-`Card` doesn't know its level. Its heading renders at whatever level `Card` is placed: `h1` on its own, `h2` under the page heading, `h3` inside another `Card`.
+`Card` doesn't know its level. Its heading renders at whatever level `Card` is placed: `h2` for Characters, `h3` for each character nested inside, and `h1` if you render it on its own.
 
 ### Dialogs
 
