@@ -129,9 +129,9 @@ In development, React Headings warns in the console when:
 
 Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node or Jest, run with `--conditions=development`.
 
-## Server Components and SSR
+## Server Components
 
-All components are client components (`"use client"`), so you can use them in Server Components, with server-rendered children inside. SSR outputs the right tags. Server Components can't call `useHeadingLevel`.
+Works in Server Components, including Server Components nested inside `HeadingOffset`. Only `useHeadingLevel()` needs a Client Component.
 
 ## Differences from native `headingoffset`
 
