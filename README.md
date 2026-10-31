@@ -13,7 +13,7 @@
 
 > Heading levels that follow your component tree, so components render the right `h1`–`h6` wherever they're used.
 
-React-headings follows the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) and [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset) proposal, but renders real heading tags today, works through portals and on the server.
+React-headings follows the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) and [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset) proposal, but works in any browser today, including through React portals.
 
 ## Install
 
