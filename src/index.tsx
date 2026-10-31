@@ -16,12 +16,12 @@ import type {
 
 type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type HeadingState = { level: Level; tag: `h${Level}` };
+export type HeadingLevel = { level: Level; tag: `h${Level}` };
 
 export type HeadingProps = ComponentPropsWithoutRef<"h1"> & {
   render?: (
     props: ComponentPropsWithRef<"h1">,
-    state: HeadingState,
+    headingLevel: HeadingLevel,
   ) => ReactElement;
 };
 
@@ -117,7 +117,7 @@ export function HeadingReset({ offset = 0, children }: HeadingResetProps) {
 /**
  * Returns the level and tag a `Heading` would render at this position.
  */
-export function useHeadingLevel(): HeadingState {
+export function useHeadingLevel(): HeadingLevel {
   const level = Math.min(useContext(LevelContext), 6) as Level;
   return { level, tag: `h${level}` };
 }
