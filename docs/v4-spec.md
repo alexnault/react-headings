@@ -95,12 +95,13 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 - **Overflow:** levels above 6 clamp to `h6`.
 - **Invalid `offset`:** normalized like the native attribute, never thrown. Typed as plain `number`.
 
-  | Input | Treated as |
-  | --- | --- |
-  | Negative | `0` |
-  | Fractional | floored (`1.5` → `1`) |
-  | `NaN`, `±Infinity` | `0` |
-  | Large | kept; the final level clamps to 6 |
+  | Input              | Treated as                        |
+  | ------------------ | --------------------------------- |
+  | Negative           | `0`                               |
+  | Fractional         | floored (`1.5` → `1`)             |
+  | `NaN`, `±Infinity` | `0`                               |
+  | Large              | kept; the final level clamps to 6 |
+
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
 - **Server Components:** all exports are `"use client"`; they can be rendered from Server Components (with server children), and SSR produces correct tags. Server Components cannot read the level themselves.
 - **React:** 18+.
@@ -109,14 +110,14 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 
 The semantics mirror the HTML proposal, with these deliberate divergences:
 
-| | Native | react-headings |
-| --- | --- | --- |
-| Tree followed | DOM ancestors | React tree, so portals inherit their React-tree level |
-| Base level | The tag's own number (`h2` + offset 1 → 3) | Always 1; `Heading` has no intrinsic level |
-| Maximum level | 9 (levels 7–9 exposed via `aria-level`) | 6 (clamped to `h6`) |
-| Offset value range | 0–8 per element | Any non-negative integer; only the final level is clamped |
-| Offset on the heading itself | Allowed (`<h1 headingoffset="2">` → 3) | Not supported; offsets come only from `HeadingOffset` / `HeadingReset` |
-| Rendered output | Tag unchanged; level exists only in the accessibility tree | Real `h1`–`h6` tag, so CSS `h2` selectors and default styles match the level |
+|                              | Native                                                     | react-headings                                                               |
+| ---------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------- |
+| Tree followed                | DOM ancestors                                              | React tree, so portals inherit their React-tree level                        |
+| Base level                   | The tag's own number (`h2` + offset 1 → 3)                 | Always 1; `Heading` has no intrinsic level                                   |
+| Maximum level                | 9 (levels 7–9 exposed via `aria-level`)                    | 6 (clamped to `h6`)                                                          |
+| Offset value range           | 0–8 per element                                            | Any non-negative integer; only the final level is clamped                    |
+| Offset on the heading itself | Allowed (`<h1 headingoffset="2">` → 3)                     | Not supported; offsets come only from `HeadingOffset` / `HeadingReset`       |
+| Rendered output              | Tag unchanged; level exists only in the accessibility tree | Real `h1`–`h6` tag, so CSS `h2` selectors and default styles match the level |
 
 ## Packaging & tooling
 

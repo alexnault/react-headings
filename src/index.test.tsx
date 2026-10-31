@@ -1,182 +1,221 @@
-import React from "react";
-import { render, cleanup } from "@testing-library/react";
-import { describe, it, expect, afterEach } from "vitest";
+import { cleanup, render, screen } from "@testing-library/react";
+import { createRef } from "react";
+import { createPortal } from "react-dom";
+import { afterEach, describe, expect, it } from "vitest";
 
-import { H, Section, useLevel } from "./index";
+import {
+  H,
+  Heading,
+  HeadingOffset,
+  HeadingReset,
+  useHeadingLevel,
+} from "./index";
 
-afterEach(() => {
-  cleanup();
+afterEach(cleanup);
+
+describe("Heading", () => {
+  it("renders an h1 outside any provider", () => {
+    render(<Heading>Title</Heading>);
+
+    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H1");
+  });
 });
 
-describe("useLevel hook", () => {
-  it("should be level 1 by default", () => {
-    function MyComponent() {
-      const { level, Component } = useLevel();
-
-      expect(level).toBe(1);
-      expect(Component).toBe("h1");
-
-      return null;
-    }
-
-    render(<MyComponent />);
-  });
-
-  it("should be level 2 when 1 level down", () => {
-    function MyComponent() {
-      const { level, Component } = useLevel();
-
-      expect(level).toBe(2);
-      expect(Component).toBe("h2");
-
-      return null;
-    }
+describe("Heading props", () => {
+  it("forwards native props and the ref", () => {
+    const ref = createRef<HTMLHeadingElement>();
 
     render(
-      <Section component={<H>My H1</H>}>
-        <MyComponent />
-      </Section>
+      <Heading ref={ref} id="title" className="big">
+        Title
+      </Heading>
     );
+
+    const heading = screen.getByRole("heading", { name: "Title" });
+    expect(heading.id).toBe("title");
+    expect(heading.className).toBe("big");
+    expect(ref.current).toBe(heading);
   });
+});
 
-  it("should be level 6 when at level 7 or more", () => {
-    function MyComponent() {
-      const { level, Component } = useLevel();
-
-      expect(level).toBe(6);
-      expect(Component).toBe("h6");
-
-      return null;
-    }
+describe("Heading render prop", () => {
+  it("receives element props and the computed level and tag", () => {
+    const ref = createRef<HTMLHeadingElement>();
 
     render(
-      <Section component={<H>My H1</H>}>
-        <Section component={<H>My H2</H>}>
-          <Section component={<H>My H3</H>}>
-            <Section component={<H>My H4</H>}>
-              <Section component={<H>My H5</H>}>
-                <Section component={<H>My H6</H>}>
-                  <Section component={<H>My H6-2</H>}>
-                    <MyComponent />
-                  </Section>
-                </Section>
-              </Section>
-            </Section>
-          </Section>
-        </Section>
-      </Section>
+      <HeadingOffset>
+        <Heading
+          ref={ref}
+          className="big"
+          render={(props, { level, tag }) => {
+            const Tag = tag;
+            return <Tag {...props} data-level={level} />;
+          }}
+        >
+          Custom
+        </Heading>
+      </HeadingOffset>
+    );
+
+    const heading = screen.getByRole("heading", { name: "Custom" });
+    expect(heading.tagName).toBe("H2");
+    expect(heading.className).toBe("big");
+    expect(heading.dataset.level).toBe("2");
+    expect(ref.current).toBe(heading);
+  });
+});
+
+describe("H", () => {
+  it("is an alias of Heading", () => {
+    expect(H).toBe(Heading);
+  });
+});
+
+describe("Heading clamping", () => {
+  it("clamps levels above 6 to h6", () => {
+    render(
+      <HeadingOffset offset={8}>
+        <Heading>Too deep</Heading>
+      </HeadingOffset>
+    );
+
+    expect(screen.getByRole("heading", { name: "Too deep" }).tagName).toBe(
+      "H6"
     );
   });
 });
 
-describe("H component", () => {
-  it("should be level 1 by default", () => {
-    const { getByText } = render(<H>My H1</H>);
-
-    const headingEl = getByText("My H1");
-
-    expect(headingEl.tagName).toBe("H1");
-  });
-
-  it("should forward HTML heading props", () => {
-    const { getByText } = render(<H className="myClass">My H1</H>);
-
-    const headingEl = getByText("My H1");
-
-    expect(headingEl.className).toBe("myClass");
-  });
-
-  it("should render a custom component", () => {
-    const { getByText } = render(<H render={() => <span>My span</span>} />);
-
-    const headingEl = getByText("My span");
-
-    expect(headingEl.tagName).toBe("SPAN");
-  });
-
-  it("should render a custom component based on arguments", () => {
-    const { getByText } = render(
-      <Section component={<H>My H1</H>}>
-        <Section
-          component={
-            <H
-              render={({ Component, level }) => (
-                <Component>My H{level}</Component>
-              )}
-            />
-          }
-        ></Section>
-      </Section>
+describe("HeadingOffset", () => {
+  it("renders headings inside one level deeper by default", () => {
+    render(
+      <>
+        <Heading>Page</Heading>
+        <HeadingOffset>
+          <Heading>Chapter</Heading>
+          <HeadingOffset>
+            <Heading>Sub</Heading>
+          </HeadingOffset>
+        </HeadingOffset>
+      </>
     );
 
-    const headingEl = getByText("My H2");
-
-    expect(headingEl.tagName).toBe("H2");
+    expect(screen.getByRole("heading", { name: "Page" }).tagName).toBe("H1");
+    expect(screen.getByRole("heading", { name: "Chapter" }).tagName).toBe("H2");
+    expect(screen.getByRole("heading", { name: "Sub" }).tagName).toBe("H3");
   });
 
-  it("should forward ref", () => {
-    const ref = React.createRef<HTMLHeadingElement>();
-    const { container } = render(<H ref={ref}>Heading</H>);
-    expect(ref.current).toBe(container.firstElementChild);
+  it("renders headings inside `offset` levels deeper", () => {
+    render(
+      <HeadingOffset offset={2}>
+        <Heading>Deep</Heading>
+        <HeadingOffset offset={0}>
+          <Heading>Same</Heading>
+        </HeadingOffset>
+      </HeadingOffset>
+    );
+
+    expect(screen.getByRole("heading", { name: "Deep" }).tagName).toBe("H3");
+    expect(screen.getByRole("heading", { name: "Same" }).tagName).toBe("H3");
   });
 });
 
-describe("Section component", () => {
-  it("should be level 1 in first section", () => {
-    const { getByText } = render(<Section component={<H>My H1</H>}></Section>);
-
-    const headingEl = getByText("My H1");
-
-    expect(headingEl.tagName).toBe("H1");
-  });
-
-  it("should be level 2 in second section", () => {
-    const { getByText } = render(
-      <Section component={<H>My H1</H>}>
-        <Section component={<H>My H2</H>}></Section>
-      </Section>
+describe("HeadingReset", () => {
+  it("discards ancestor offsets, then applies its own offset", () => {
+    render(
+      <HeadingOffset offset={3}>
+        <HeadingReset>
+          <Heading>Reset</Heading>
+          <HeadingOffset>
+            <Heading>Nested</Heading>
+          </HeadingOffset>
+        </HeadingReset>
+        <HeadingReset offset={1}>
+          <Heading>Reset with offset</Heading>
+        </HeadingReset>
+      </HeadingOffset>
     );
 
-    const headingEl = getByText("My H2");
-
-    expect(headingEl.tagName).toBe("H2");
+    expect(screen.getByRole("heading", { name: "Reset" }).tagName).toBe("H1");
+    expect(screen.getByRole("heading", { name: "Nested" }).tagName).toBe("H2");
+    expect(
+      screen.getByRole("heading", { name: "Reset with offset" }).tagName
+    ).toBe("H2");
   });
+});
 
-  it("should be level 6 in 7th section", () => {
-    const { getByText } = render(
-      <Section component={<H>My H1</H>}>
-        <Section component={<H>My H2</H>}>
-          <Section component={<H>My H3</H>}>
-            <Section component={<H>My H4</H>}>
-              <Section component={<H>My H5</H>}>
-                <Section component={<H>My H6</H>}>
-                  <Section component={<H>My H6-2</H>}></Section>
-                </Section>
-              </Section>
-            </Section>
-          </Section>
-        </Section>
-      </Section>
+describe("portals", () => {
+  it("inherit the level from the React tree", () => {
+    render(
+      <HeadingOffset>
+        {createPortal(<Heading>Portaled</Heading>, document.body)}
+      </HeadingOffset>
     );
 
-    const headingEl = getByText("My H6-2");
-
-    expect(headingEl.tagName).toBe("H6");
+    expect(screen.getByRole("heading", { name: "Portaled" }).tagName).toBe(
+      "H2"
+    );
   });
+});
 
-  it("should render a heading and its content", () => {
-    const { getByText } = render(
-      <Section component={<H>My H1</H>}>
-        <p>My content</p>
-      </Section>
+describe("useHeadingLevel", () => {
+  function Probe({ name }: { name: string }) {
+    const { level, tag } = useHeadingLevel();
+    return <output aria-label={name}>{`${level} ${tag}`}</output>;
+  }
+
+  it("returns the level and tag a Heading would render at this position", () => {
+    render(
+      <>
+        <Probe name="root" />
+        <HeadingOffset offset={2}>
+          <Probe name="nested" />
+        </HeadingOffset>
+        <HeadingOffset offset={9}>
+          <Probe name="clamped" />
+        </HeadingOffset>
+      </>
     );
 
-    const headingEl = getByText("My H1");
+    expect(screen.getByLabelText("root").textContent).toBe("1 h1");
+    expect(screen.getByLabelText("nested").textContent).toBe("3 h3");
+    expect(screen.getByLabelText("clamped").textContent).toBe("6 h6");
+  });
+});
 
-    expect(headingEl.tagName).toBe("H1");
+describe("invalid offsets", () => {
+  it.each([
+    [-1, "H2"],
+    [1.5, "H3"],
+    [NaN, "H2"],
+    [Infinity, "H2"],
+  ])("HeadingOffset treats %s like the native attribute", (offset, tagName) => {
+    render(
+      <HeadingOffset>
+        <HeadingOffset offset={offset}>
+          <Heading>Title</Heading>
+        </HeadingOffset>
+      </HeadingOffset>
+    );
 
-    const pEl = getByText("My content");
+    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
+      tagName
+    );
+  });
 
-    expect(pEl.tagName).toBe("P");
+  it.each([
+    [-1, "H1"],
+    [1.5, "H2"],
+    [NaN, "H1"],
+    [-Infinity, "H1"],
+  ])("HeadingReset treats %s like the native attribute", (offset, tagName) => {
+    render(
+      <HeadingReset offset={offset}>
+        <Heading>Title</Heading>
+      </HeadingReset>
+    );
+
+    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
+      tagName
+    );
   });
 });

@@ -1,13 +1,9 @@
-  [
+[
   {
-    "name": "JS Minified",
-    "path": "dist/*.js",
-    "gzip": false,
-    "limit": "1616B"
-  },
-  {
-    "name": "JS Compressed",
-    "path": "dist/*.js",
-    "limit": "755B"
+    "name": "Production build",
+    "path": "dist/index.js",
+    "import": "*",
+    "ignore": ["react"],
+    "limit": "450 B"
   }
 ]
