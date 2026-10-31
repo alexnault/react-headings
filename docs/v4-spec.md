@@ -93,6 +93,14 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
   ```
 
 - **Overflow:** levels above 6 clamp to `h6`.
+- **Invalid `offset`:** normalized like the native attribute, never thrown. Typed as plain `number`.
+
+  | Input | Treated as |
+  | --- | --- |
+  | Negative | `0` |
+  | Fractional | floored (`1.5` → `1`) |
+  | `NaN`, `±Infinity` | `0` |
+  | Large | kept; the final level clamps to 6 |
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
 - **Server Components:** all exports are `"use client"`; they can be rendered from Server Components (with server children), and SSR produces correct tags. Server Components cannot read the level themselves.
 - **React:** 18+.
@@ -121,6 +129,7 @@ Only present in the `development` export condition build; never thrown.
 
 1. **Skipped level** — a scope (`HeadingOffset` / `HeadingReset`) contains deeper headings but no heading at its own level (e.g. `h1` → `h3`, or `offset={2}`). Each `HeadingReset` starts a fresh scope whose expected first level is its own. Implemented via heading registration in effects (client-only; zero cost in SSR/production).
 2. **Overflow** — computed level exceeds 6.
+3. **Invalid offset** — `offset` was normalized (e.g. `HeadingOffset: invalid offset -1, treated as 0`).
 
 ## Non-goals
 
