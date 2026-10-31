@@ -17,6 +17,6 @@ await Promise.all(
       jsx: "automatic",
       define: { "process.env.NODE_ENV": JSON.stringify(env) },
       minifySyntax: true,
-    })
-  )
+    }),
+  ),
 );

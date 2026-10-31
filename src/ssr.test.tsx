@@ -14,7 +14,7 @@ it("renders the computed tags on the server", () => {
           <Heading>Dialog</Heading>
         </HeadingReset>
       </HeadingOffset>
-    </>
+    </>,
   );
 
   expect(html).toBe("<h1>Page</h1><h2>Chapter</h2><h1>Dialog</h1>");

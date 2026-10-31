@@ -21,7 +21,7 @@ export type HeadingState = { level: Level; tag: `h${Level}` };
 export type HeadingProps = ComponentPropsWithoutRef<"h1"> & {
   render?: (
     props: ComponentPropsWithRef<"h1">,
-    state: HeadingState
+    state: HeadingState,
   ) => ReactElement;
 };
 
@@ -57,7 +57,7 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
 
     const Tag = tag;
     return <Tag ref={ref} {...props} />;
-  }
+  },
 );
 
 Heading.displayName = "Heading";
@@ -137,7 +137,7 @@ const ScopeContext = /* @__PURE__ */ createContext<ScopeRegistry | null>(null);
  */
 function createScopeRegistry(
   start: number,
-  parent: ScopeRegistry | null
+  parent: ScopeRegistry | null,
 ): ScopeRegistry {
   const levels = new Map<object, number>();
   let unregisterFromParent: (() => void) | undefined;
@@ -154,7 +154,7 @@ function createScopeRegistry(
       if (!present.has(level)) {
         warned = true;
         console.warn(
-          `react-headings: Skipped heading level ${level}: found a level ${deepest} heading but no level ${level} heading.`
+          `react-headings: Skipped heading level ${level}: found a level ${deepest} heading but no level ${level} heading.`,
         );
         return;
       }
@@ -202,7 +202,7 @@ function SkippedLevelScope({
   const parent = useContext(ScopeContext);
   const registry = useMemo(
     () => createScopeRegistry(start, isolated ? null : parent),
-    [start, isolated, parent]
+    [start, isolated, parent],
   );
 
   return (
@@ -217,7 +217,7 @@ function useHeadingChecks() {
   useEffect(() => {
     if (level > 6) {
       console.warn(
-        `react-headings: Heading level ${level} exceeds 6 and was clamped to h6.`
+        `react-headings: Heading level ${level} exceeds 6 and was clamped to h6.`,
       );
     }
   }, [level]);
@@ -228,12 +228,12 @@ function useHeadingChecks() {
 function useInvalidOffsetWarning(
   component: "HeadingOffset" | "HeadingReset",
   offset: number,
-  normalized: number
+  normalized: number,
 ) {
   useEffect(() => {
     if (offset !== normalized) {
       console.warn(
-        `react-headings: ${component} received invalid offset ${offset}, treated as ${normalized}.`
+        `react-headings: ${component} received invalid offset ${offset}, treated as ${normalized}.`,
       );
     }
   }, [component, offset, normalized]);

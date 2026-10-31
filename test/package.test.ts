@@ -14,7 +14,7 @@ function resolveWith(conditions: string[]) {
       "-e",
       "console.log(import.meta.resolve('react-headings'))",
     ],
-    { encoding: "utf8" }
+    { encoding: "utf8" },
   );
   return new URL(url.trim()).pathname.split("/").slice(-2).join("/");
 }
@@ -27,7 +27,7 @@ describe("built package", () => {
   it("starts both builds with the use client directive", () => {
     expect(read("dist/index.js").startsWith('"use client";')).toBe(true);
     expect(read("dist/index.development.js").startsWith('"use client";')).toBe(
-      true
+      true,
     );
   });
 

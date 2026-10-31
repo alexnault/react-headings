@@ -25,11 +25,11 @@ describe("overflow", () => {
     render(
       <HeadingOffset offset={6}>
         <Heading>Too deep</Heading>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: Heading level 7 exceeds 6 and was clamped to h6."
+      "react-headings: Heading level 7 exceeds 6 and was clamped to h6.",
     );
   });
 
@@ -37,7 +37,7 @@ describe("overflow", () => {
     render(
       <HeadingOffset offset={5}>
         <Heading>Deepest</Heading>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     expect(warn).not.toHaveBeenCalled();
@@ -54,7 +54,7 @@ describe("invalid offset", () => {
     render(<HeadingOffset offset={offset} />);
 
     expect(warn).toHaveBeenCalledWith(
-      `react-headings: HeadingOffset received invalid offset ${offset}, treated as ${treatedAs}.`
+      `react-headings: HeadingOffset received invalid offset ${offset}, treated as ${treatedAs}.`,
     );
   });
 
@@ -62,7 +62,7 @@ describe("invalid offset", () => {
     render(<HeadingReset offset={-2} />);
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: HeadingReset received invalid offset -2, treated as 0."
+      "react-headings: HeadingReset received invalid offset -2, treated as 0.",
     );
   });
 
@@ -72,7 +72,7 @@ describe("invalid offset", () => {
         <HeadingOffset offset={0} />
         <HeadingOffset offset={3} />
         <HeadingReset offset={1} />
-      </>
+      </>,
     );
 
     expect(warn).not.toHaveBeenCalled();
@@ -89,13 +89,13 @@ describe("skipped level", () => {
             <Heading>Too deep</Heading>
           </HeadingOffset>
         </HeadingOffset>
-      </>
+      </>,
     );
     await settle();
 
     expect(warn).toHaveBeenCalledTimes(1);
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading."
+      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
     );
   });
 });
@@ -120,7 +120,7 @@ describe("skipped level with offsets and resets", () => {
           </Card>
           <Card title="Other chapter" />
         </HeadingOffset>
-      </>
+      </>,
     );
     await settle();
 
@@ -134,12 +134,12 @@ describe("skipped level with offsets and resets", () => {
         <HeadingOffset offset={2}>
           <Heading>Skipped</Heading>
         </HeadingOffset>
-      </>
+      </>,
     );
     await settle();
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading."
+      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
     );
   });
 
@@ -150,13 +150,13 @@ describe("skipped level with offsets and resets", () => {
         <HeadingOffset offset={2}>
           <Heading>Skipped</Heading>
         </HeadingOffset>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
     await settle();
 
     expect(warn).toHaveBeenCalledTimes(1);
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: Skipped heading level 3: found a level 4 heading but no level 3 heading."
+      "react-headings: Skipped heading level 3: found a level 4 heading but no level 3 heading.",
     );
   });
 
@@ -166,7 +166,7 @@ describe("skipped level with offsets and resets", () => {
         <HeadingOffset offset={0}>
           <Card title="Sub" />
         </HeadingOffset>
-      </Card>
+      </Card>,
     );
     await settle();
 
@@ -181,7 +181,7 @@ describe("skipped level with offsets and resets", () => {
             <Card title="Dialog part" />
           </Card>
         </HeadingReset>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
     await settle();
 
@@ -194,7 +194,7 @@ describe("skipped level with offsets and resets", () => {
         <HeadingReset offset={2}>
           <Card title="Dialog" />
         </HeadingReset>
-      </Card>
+      </Card>,
     );
     await settle();
 
@@ -207,12 +207,12 @@ describe("skipped level with offsets and resets", () => {
         <HeadingOffset>
           <Card title="No h1" />
         </HeadingOffset>
-      </HeadingReset>
+      </HeadingReset>,
     );
     await settle();
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: Skipped heading level 1: found a level 2 heading but no level 1 heading."
+      "react-headings: Skipped heading level 1: found a level 2 heading but no level 1 heading.",
     );
   });
 
@@ -236,7 +236,7 @@ describe("skipped level with offsets and resets", () => {
     await settle();
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading."
+      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
     );
   });
 });
@@ -258,7 +258,7 @@ describe("production", () => {
             <Heading>Skipped in reset</Heading>
           </HeadingOffset>
         </HeadingReset>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
     await settle();
 

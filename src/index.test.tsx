@@ -28,7 +28,7 @@ describe("Heading props", () => {
     render(
       <Heading ref={ref} id="title" className="big">
         Title
-      </Heading>
+      </Heading>,
     );
 
     const heading = screen.getByRole("heading", { name: "Title" });
@@ -54,7 +54,7 @@ describe("Heading render prop", () => {
         >
           Custom
         </Heading>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     const heading = screen.getByRole("heading", { name: "Custom" });
@@ -76,11 +76,11 @@ describe("Heading clamping", () => {
     render(
       <HeadingOffset offset={8}>
         <Heading>Too deep</Heading>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     expect(screen.getByRole("heading", { name: "Too deep" }).tagName).toBe(
-      "H6"
+      "H6",
     );
   });
 });
@@ -96,7 +96,7 @@ describe("HeadingOffset", () => {
             <Heading>Sub</Heading>
           </HeadingOffset>
         </HeadingOffset>
-      </>
+      </>,
     );
 
     expect(screen.getByRole("heading", { name: "Page" }).tagName).toBe("H1");
@@ -111,7 +111,7 @@ describe("HeadingOffset", () => {
         <HeadingOffset offset={0}>
           <Heading>Same</Heading>
         </HeadingOffset>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     expect(screen.getByRole("heading", { name: "Deep" }).tagName).toBe("H3");
@@ -132,13 +132,13 @@ describe("HeadingReset", () => {
         <HeadingReset offset={1}>
           <Heading>Reset with offset</Heading>
         </HeadingReset>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     expect(screen.getByRole("heading", { name: "Reset" }).tagName).toBe("H1");
     expect(screen.getByRole("heading", { name: "Nested" }).tagName).toBe("H2");
     expect(
-      screen.getByRole("heading", { name: "Reset with offset" }).tagName
+      screen.getByRole("heading", { name: "Reset with offset" }).tagName,
     ).toBe("H2");
   });
 });
@@ -148,11 +148,11 @@ describe("portals", () => {
     render(
       <HeadingOffset>
         {createPortal(<Heading>Portaled</Heading>, document.body)}
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     expect(screen.getByRole("heading", { name: "Portaled" }).tagName).toBe(
-      "H2"
+      "H2",
     );
   });
 });
@@ -173,7 +173,7 @@ describe("useHeadingLevel", () => {
         <HeadingOffset offset={9}>
           <Probe name="clamped" />
         </HeadingOffset>
-      </>
+      </>,
     );
 
     expect(screen.getByLabelText("root").textContent).toBe("1 h1");
@@ -194,11 +194,11 @@ describe("invalid offsets", () => {
         <HeadingOffset offset={offset}>
           <Heading>Title</Heading>
         </HeadingOffset>
-      </HeadingOffset>
+      </HeadingOffset>,
     );
 
     expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
-      tagName
+      tagName,
     );
   });
 
@@ -211,11 +211,11 @@ describe("invalid offsets", () => {
     render(
       <HeadingReset offset={offset}>
         <Heading>Title</Heading>
-      </HeadingReset>
+      </HeadingReset>,
     );
 
     expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
-      tagName
+      tagName,
     );
   });
 });

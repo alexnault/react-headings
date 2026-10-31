@@ -19,10 +19,24 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npm run lint
+      - run: npm run typecheck
       - run: npm test
       - run: npm run build
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v2
+  # devDependencies pin React 18 (the lowest supported); also test the latest.
+  test-react-19:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24.x
+          cache: npm
+      - run: npm ci
+      - run: npm install --no-save react@19 react-dom@19 @types/react@19 @types/react-dom@19
+      - run: npm run typecheck
+      - run: npm test
   size:
     runs-on: ubuntu-latest
     steps:
