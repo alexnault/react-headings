@@ -78,7 +78,7 @@ export function HeadingLevel({
   children,
 }: HeadingLevelProps) {
   const parentLevel = useContext(LevelContext);
-  const isReset = level !== undefined;
+  const isReset = level != null;
   const normalizedOffset = getNormalizedOffset(offset);
   const innerLevel = isReset
     ? getNormalizedLevel(level)
