@@ -106,7 +106,7 @@ Accepts every `<h1>` prop and a `ref`, plus:
 
 ### `<HeadingLevel>`
 
-Creates a new heading level.
+Moves the headings inside one level deeper.
 
 | Prop     | Type     | Default | Description                                      |
 | -------- | -------- | ------- | ------------------------------------------------ |
