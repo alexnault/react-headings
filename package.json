@@ -1,27 +1,37 @@
 {
   "name": "react-headings",
   "version": "1.0.0-semantic-release",
-  "description": "HTML headings with auto-incrementing levels for WCAG compliance.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "type": "module",
+  "description": "Dynamic heading levels for React. A polyfill of the HTML headingoffset proposal.",
   "author": "Alex Nault",
   "keywords": [
     "react",
     "heading",
-    "auto",
+    "headings",
+    "headingoffset",
+    "headingreset",
     "level",
+    "outline",
     "accessibility",
     "a11y",
     "wcag",
-    "h1",
-    "header",
-    "title"
+    "h1"
   ],
   "license": "MIT",
   "repository": "https://github.com/alexnault/react-headings",
   "homepage": "https://github.com/alexnault/react-headings#readme",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "development": "./dist/index.development.js",
+      "production": "./dist/index.js",
+      "default": "./dist/index.js"
+    },
+    "./package.json": "./package.json"
+  },
   "scripts": {
-    "build": "rm -rf ./dist && tsc",
+    "build": "rm -rf dist && node scripts/build.js && tsc -p tsconfig.build.json",
+    "typecheck": "tsc",
     "format": "prettier ./ --write",
     "lint": "eslint ./ --max-warnings=0",
     "size": "size-limit",
@@ -32,26 +42,28 @@
   ],
   "sideEffects": false,
   "peerDependencies": {
-    "react": "^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0"
+    "react": "^18.0.0 || ^19.0.0"
   },
   "devDependencies": {
-    "@size-limit/preset-small-lib": "^7.0.8",
-    "@testing-library/react": "^13.4.0",
-    "@types/react": "^18.3.28",
-    "@types/react-dom": "^18.3.7",
-    "@typescript-eslint/eslint-plugin": "^4.33.0",
-    "@typescript-eslint/parser": "^4.33.0",
-    "@vitest/coverage-c8": "^0.30.1",
-    "conventional-changelog-conventionalcommits": "^8.0.0",
-    "eslint": "^7.32.0",
-    "eslint-config-prettier": "^8.10.2",
-    "jsdom": "^21.1.2",
-    "prettier": "^2.8.8",
-    "react": "^18.3.1",
-    "react-dom": "^18.3.1",
+    "@eslint/js": "^10.0.1",
+    "@size-limit/preset-small-lib": "^14.3.0",
+    "@testing-library/dom": "^10.4.2",
+    "@testing-library/react": "^16.3.3",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitest/coverage-v8": "^5.0.5",
+    "conventional-changelog-conventionalcommits": "^10.4.1",
+    "esbuild": "^0.28.2",
+    "eslint": "^10.14.0",
+    "eslint-plugin-react-hooks": "^7.1.1",
+    "jsdom": "^30.1.3",
+    "prettier": "^3.9.10",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
     "semantic-release": "^25.0.3",
-    "size-limit": "^7.0.8",
-    "typescript": "^4.9.5",
-    "vitest": "^0.30.1"
+    "size-limit": "^14.3.0",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.72.1",
+    "vitest": "^5.0.5"
   }
 }

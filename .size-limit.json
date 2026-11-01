@@ -1,13 +1,25 @@
 [
   {
     "name": "JS Minified",
-    "path": "dist/*.js",
-    "gzip": false,
-    "limit": "1760B"
+    "path": "dist/index.js",
+    "import": "*",
+    "ignore": ["react"],
+    "brotli": false,
+    "limit": "900 B"
   },
   {
-    "name": "JS Compressed",
-    "path": "dist/*.js",
-    "limit": "790B"
+    "name": "JS Gzipped",
+    "path": "dist/index.js",
+    "import": "*",
+    "ignore": ["react"],
+    "gzip": true,
+    "limit": "500 B"
+  },
+  {
+    "name": "JS Brotlied",
+    "path": "dist/index.js",
+    "import": "*",
+    "ignore": ["react"],
+    "limit": "450 B"
   }
 ]
