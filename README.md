@@ -126,7 +126,7 @@ Warnings are removed from production builds. Vite and webpack show them automati
 
 ## Server Components
 
-Works in Server Components, including Server Components nested inside `HeadingLevel`. Only `useHeadingLevel()` needs a Client Component.
+Works in Server Components, including Server Components nested inside `HeadingLevel`. Only `useHeadingLevel()` and the `render` prop need a Client Component, because a Server Component can't pass a function. In a Server Component, style headings with `className`, or move the `render` call into your own Client Component.
 
 ## Differences from `headingoffset`
 
