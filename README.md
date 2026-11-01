@@ -13,7 +13,7 @@
 
 > Never write `h1`–`h6` again.
 
-Search engines and screen readers rely on heading levels, but reusable components can't know how deep they'll be rendered. React Headings works out each level from your component tree, like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) proposal, but in any browser today.
+Hardcoded heading levels break accessibility and SEO when components are reused. React Headings fixes this by computing each level from your component tree.
 
 ## Features
 
