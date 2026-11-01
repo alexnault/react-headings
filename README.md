@@ -11,7 +11,7 @@
   </a>
 </p>
 
-> Never write `h1`–`h6` again.
+> Never write `<h1>`–`<h6>` again.
 
 Hardcoded heading levels break accessibility and SEO when components are reused. React Headings fixes this by computing each level from your component tree.
 
@@ -39,13 +39,13 @@ import { Heading, HeadingLevel } from "react-headings";
 function Page() {
   return (
     <>
-      <Heading>Star Wars</Heading> {/* h1 */}
+      <Heading>Star Wars</Heading> {/* <h1> */}
       <HeadingLevel>
-        <Heading>Characters</Heading> {/* h2 */}
+        <Heading>Characters</Heading> {/* <h2> */}
         <HeadingLevel>
-          <Section title="Luke" /> {/* h3 */}
-          <Section title="Leia" /> {/* h3 */}
-          <Section title="Han Solo" /> {/* h3 */}
+          <Section title="Luke" /> {/* <h3> */}
+          <Section title="Leia" /> {/* <h3> */}
+          <Section title="Han Solo" /> {/* <h3> */}
         </HeadingLevel>
       </HeadingLevel>
     </>
@@ -62,23 +62,29 @@ function Section({ title, children }) {
 }
 ```
 
-`Section` doesn't know its level: it renders `h3` here.
+`Section` doesn't know its level: it renders `<h3>` here.
 
 ### Dialogs
 
-Portaled elements, like dialogs, aren't part of the page outline. Use `level` to start their headings at `h1`:
+Portaled elements, like dialogs, aren't part of the page outline. Use `level` to start their headings at `<h1>`:
 
 ```tsx
 <Dialog>
   <HeadingLevel level={1}>
-    <Heading>Delete file?</Heading> {/* h1 */}
+    <Heading>Delete file?</Heading> {/* <h1> */}
   </HeadingLevel>
 </Dialog>
 ```
 
 ### Styling
 
-React Headings only picks the tag. Style headings however you like, or use `render` for your own component:
+React Headings only picks the tag. Style headings however you like:
+
+```tsx
+<Heading className="text-lg">Title</Heading>
+```
+
+Or use `render` for component libraries:
 
 ```tsx
 <Heading render={(props, { tag }) => <Text as={tag} size="lg" {...props} />}>
@@ -88,21 +94,23 @@ React Headings only picks the tag. Style headings however you like, or use `rend
 
 ## API
 
-### `Heading`
+### `<Heading>`
 
-Renders `h1`–`h6` based on the current level: `h1` by default, and never deeper than `h6`.
+Renders `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>`, or `<h6>` based on the current level. `<h1>` by default.
 
-Accepts every `h1` prop and a `ref`, plus:
+Accepts every `<h1>` prop and a `ref`, plus:
 
 | Prop     | Type                                         | Description                                                                                                 |
 | -------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `render` | `(props, { level, tag }) => ReactElement`    | Renders your own element. Spread `props` on it (includes `children` and `ref`). |
 
-### `HeadingLevel`
+### `<HeadingLevel>`
+
+Moves the headings inside one level deeper.
 
 | Prop     | Type     | Default | Description                                      |
 | -------- | -------- | ------- | ------------------------------------------------ |
-| `offset` | `number` | `1`     | Levels added to headings inside.                 |
+| `offset` | `number` | `1`     | Levels added to headings inside. Rarely used.    |
 | `level`  | `number` |         | Level of headings inside, ignoring parents.      |
 
 Pass `offset` or `level`, not both. Nested offsets add up. `offset={0}` adds nothing, which is useful for conditional nesting.
