@@ -9,304 +9,120 @@
   <a aria-label="NPM version" href="https://www.npmjs.com/package/react-headings">
     <img alt="" src="https://img.shields.io/npm/v/react-headings?style=for-the-badge">
   </a>
-  <a aria-label="Size" href="https://bundlephobia.com/package/react-headings">
-    <img alt="" src="https://img.shields.io/bundlephobia/minzip/react-headings?style=for-the-badge">
-  </a>
-  <a aria-label="Monthly downloads" href="https://www.npmjs.com/package/react-headings">
-    <img alt="" src="https://img.shields.io/npm/dm/react-headings?style=for-the-badge">
-  </a>
 </p>
 
-> Never worry about using the wrong heading level (`h1`, `h2`, etc.) in complex React apps!
+> Never write `h1`–`h6` again.
 
-React-headings maintains the proper hierarchy of headings for improved accessibility and SEO, no matter the component structure, while you keep full control of what's rendered.
+Hardcoded heading levels break accessibility and SEO when components are reused. React Headings fixes this by computing each level from your component tree.
 
-References:
+## Features
 
-- [WCAG 2.0 technique H69](https://www.w3.org/TR/WCAG20-TECHS/H69.html)
-- [Lighthouse SEO heading order audit](https://web.dev/heading-order/)
-
-## Table of contents
-
-- [Demos](#demos)
-- [Highlights](#highlights)
-- [Installation](#installation)
-- [Examples](#examples)
-- [API](#api)
-- [Changelog](#changelog)
-- [Contributing](#contributing)
-
-## Demos
-
-- [Minimal](https://codesandbox.io/s/react-headings-minimal-4temt?file=/src/Demo.js)
-- [Custom component](https://codesandbox.io/s/react-headings-custom-component-l4bjb?file=/src/Demo.js)
-- [Advanced structure](https://codesandbox.io/s/react-headings-advanced-structure-uxk4p?file=/src/Demo.js)
-
-## Highlights
-
-- Improves SEO and accessibility
 - Supports server-side rendering
-- Under 1 kB minified & gzipped
+- Only 369 bytes minified & brotlied
 - Typed with TypeScript
-- Fully tested
-- Works with any CSS solutions (Tailwind, CSS-in-JS, etc.)
-- Plays nicely with component libraries (Material UI, etc.)
-- Follows [semantic versioning](https://semver.org/)
+- Works with any CSS solution (Tailwind, CSS-in-JS, etc.)
+- Plays nicely with component libraries
 
-## Installation
+## Install
 
-```bash
+```sh
 npm install react-headings
 ```
 
-## Examples
+## Usage
 
-### Basic usage
+Use `Heading` for every heading. Wrap the content that belongs under a heading in `HeadingLevel`: headings inside render one level deeper.
 
-```jsx
-import React from "react";
-import { H, Section } from "react-headings";
+```tsx
+import { Heading, HeadingLevel } from "react-headings";
 
-function App() {
+function Page() {
   return (
-    <Section component={<H>My hx</H>}>
-      <div>...</div>
-      <div>...</div>
-      <div>...</div>
-      <Section component={<H>My hx+1</H>}>
-        <div>...</div>
-        <div>...</div>
-        <div>...</div>
-      </Section>
-    </Section>
+    <>
+      <Heading>Star Wars</Heading> {/* h1 */}
+      <HeadingLevel>
+        <Heading>Characters</Heading> {/* h2 */}
+        <HeadingLevel>
+          <Section title="Luke" /> {/* h3 */}
+          <Section title="Leia" /> {/* h3 */}
+          <Section title="Han Solo" /> {/* h3 */}
+        </HeadingLevel>
+      </HeadingLevel>
+    </>
+  );
+}
+
+function Section({ title, children }) {
+  return (
+    <section>
+      <Heading>{title}</Heading>
+      <HeadingLevel>{children}</HeadingLevel>
+    </section>
   );
 }
 ```
 
-### Advanced structure
+`Section` doesn't know its level: it renders `h3` here.
 
-Child components inherit the current level of their parent:
+### Dialogs
 
-```jsx
-import React from "react";
-import { H, Section } from "react-headings";
+Portaled elements, like dialogs, aren't part of the page outline. Use `level` to start their headings at `h1`:
 
-function ParentComponent() {
-  return (
-    <Section component={<H>My hx</H>}>
-      <Section component={<H>My hx+1</H>}>
-        <Section component={<H>My hx+2</H>}>
-          <ChildComponent />
-        </Section>
-      </Section>
-    </Section>
-  );
-}
-
-function ChildComponent() {
-  return (
-    <Section component={<H>My hy</H>}>
-      {/* The following heading would be a <h5> in the current context */}
-      <Section component={<H>My hy+1</H>}>
-        <p>...</p>
-      </Section>
-    </Section>
-  );
-}
+```tsx
+<Dialog>
+  <HeadingLevel level={1}>
+    <Heading>Delete file?</Heading> {/* h1 */}
+  </HeadingLevel>
+</Dialog>
 ```
 
 ### Styling
 
-A heading can be styled like any ordinary `<hx>` element since it accepts all the same props:
+React Headings only picks the tag. Style headings however you like, or use `render` for your own component:
 
-```jsx
-import React from "react";
-import { H, Section } from "react-headings";
-
-function App() {
-  return (
-    <Section component={<H className="my-class">My hx</H>}>
-      ...
-    </Section>
-  );
-}
-```
-
-### Custom heading
-
-A heading can be as complex as we want:
-
-```jsx
-import React from "react";
-import { H, Section } from "react-headings";
-import MyIcon from "./MyIcon";
-
-function App() {
-  return (
-    <Section
-      component={
-        <div className="my-div">
-          <MyIcon className="my-icon" />
-          <H className="my-heading">My hx</H>
-        </div>
-      }
-    >
-      <div>...</div>
-      <div>...</div>
-      <div>...</div>
-    </Section>
-  );
-}
-```
-
-### Dialogs and portals
-
-Content rendered elsewhere in the DOM (e.g. dialogs portalled to the end of `<body>`) can reset the heading hierarchy with the `level` prop.
-Nested sections continue from that level.
-
-```jsx
-import React from "react";
-import { Section, H } from "react-headings";
-
-function App() {
-  return (
-    <Section component={<H>My H1</H>}>
-      <Section component={<H>My H2</H>}>
-        <Dialog>
-          <Section level={1} component={<H>My dialog title (H1)</H>}>
-            My dialog content
-          </Section>
-        </Dialog>
-      </Section>
-    </Section>
-  );
-}
-```
-
-### Using component libraries
-
-Leveraging `Component` and `level` from the context allows the use of component libraries.
-Here's an example with [Material UI](https://material-ui.com/api/typography/):
-
-```jsx
-import React from "react";
-import { useLevel } from "react-headings";
-import { Typography } from "@material-ui/core";
-
-function MyHeading(props) {
-  const { Component } = useLevel();
-
-  return <Typography component={Component} {...props} />;
-}
+```tsx
+<Heading render={(props, { tag }) => <Text as={tag} size="lg" {...props} />}>
+  Title
+</Heading>
 ```
 
 ## API
 
-### `<H>` component
+### `Heading`
 
-Renders a `<h1>`, `<h2>`, `<h3>`, `<h4>`, `<h5>` or `<h6>` depending on the current level.
+Renders `h1`–`h6` based on the current level: `h1` by default, and never deeper than `h6`.
 
-#### Props
+Accepts every `h1` prop and a `ref`, plus:
 
-| Name       | Type       | Required | Description                                                     |
-| ---------- | ---------- | -------- | --------------------------------------------------------------- |
-| `render`   | `function` | No       | Override with a custom heading. Has precedence over `children`. |
-| `children` | `node`     | No       | The content of the heading. Usually the title.                  |
+| Prop     | Type                                         | Description                                                                                                 |
+| -------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
+| `render` | `(props, { level, tag }) => ReactElement`    | Renders your own element. Spread `props` on it (includes `children` and `ref`). |
 
-Any other props will be passed to the heading element.
+### `HeadingLevel`
 
-#### Example
+| Prop     | Type     | Default | Description                                      |
+| -------- | -------- | ------- | ------------------------------------------------ |
+| `offset` | `number` | `1`     | Levels added to headings inside.                 |
+| `level`  | `number` |         | Level of headings inside, ignoring parents.      |
 
-```jsx
-import React from "react";
-import { H } from "react-headings";
+Pass `offset` or `level`, not both. Nested offsets add up. `offset={0}` adds nothing, which is useful for conditional nesting.
 
-function Example1() {
-  return <H>This is my title</H>;
-}
+Invalid values never throw: they're ignored with a warning, as if not passed. `null` counts as not passed, without a warning.
 
-function Example2() {
-  return (
-    <H render={({ level, Component }) => <Component>My h{level}</Component>} />
-  );
-}
-```
+### `useHeadingLevel()`
 
-### `<Section>` component
+Returns the `level` (`1`–`6`) and `tag` (`"h1"`–`"h6"`) a `Heading` would render here.
 
-Creates a new section (a heading and its level).
+## Development warnings
 
-#### Props
+In development, React Headings warns in the console when:
 
-| Name        | Type   | Required | Description                                                                     |
-| ----------- | ------ | -------- | ------------------------------------------------------------------------------- |
-| `component` | `node` | Yes      | The heading component. Can be anything but best used in combination with `<H>`. |
-| `children`  | `node` | No       | The content of the new level.                                                   |
-| `level`     | `1-6`  | No       | Renders `component` at this level instead of the current one.                   |
+- a level is skipped,
+- a level goes past 6,
+- an `offset` or `level` is invalid.
 
-#### Example
+Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node, run with `--conditions=development`.
 
-```jsx
-import React from "react";
-import { Section, H } from "react-headings";
+## License
 
-function Example1() {
-  return (
-    <Section component={<H>This is my title</H>}>
-      This is my content
-    </Section>
-  );
-}
-
-function Example2() {
-  return (
-    <Section
-      component={
-        <div>
-          <div>
-            <H>This is my title</H>
-          </div>
-        </div>
-      }
-    >
-      This is my content
-    </Section>
-  );
-}
-```
-
-### `useLevel` hook
-
-Returns an object containing the current `level` and current `Component`.
-
-#### Arguments
-
-None
-
-#### Returns
-
-| Name        | Type                                                     | Description                           |
-| ----------- | -------------------------------------------------------- | ------------------------------------- |
-| `level`     | `1` \| `2` \| `3` \| `4` \| `5` \| `6`                   | The current level.                    |
-| `Component` | `"h1"` \| `"h2"` \| `"h3"` \| `"h4"` \| `"h5"` \| `"h6"` | The current component. Same as level. |
-
-#### Example
-
-```jsx
-import React from "react";
-import { useLevel } from "react-headings";
-
-function Example(props) {
-  const { level, Component } = useLevel();
-
-  return <Component {...props}>This is a h{level}</Component>;
-}
-```
-
-## Changelog
-
-For a list of changes and releases, see the [changelog](https://github.com/alexnault/react-headings/releases).
-
-## Contributing
-
-Found a bug, have a question or looking to improve react-headings? Open an [issue](https://github.com/alexnault/react-headings/issues/new), start a [discussion](https://github.com/alexnault/react-headings/discussions/new) or submit a [PR](https://github.com/alexnault/react-headings/fork)!
+MIT

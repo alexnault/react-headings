@@ -1,20 +1,18 @@
 {
   "compilerOptions": {
-    "esModuleInterop": true,
-    "isolatedModules": false,
-    "jsx": "react",
-    "lib": ["esnext", "dom"],
-    "outDir": "dist",
-    "target": "es5",
-    "declaration": true,
-    "noImplicitAny": true,
+    "target": "ES2020",
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "lib": ["ES2020", "DOM"],
+    "jsx": "react-jsx",
+    "types": [],
+    "strict": true,
     "noImplicitReturns": true,
-    "noImplicitThis": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
+    "isolatedModules": true,
     "skipLibCheck": true,
-    "strict": true
+    "noEmit": true
   },
-  "include": ["src/**/*"],
-  "exclude": ["src/**/*.test.ts", "src/**/*.test.tsx"]
+  "include": ["src", "*.ts", "*.js", "scripts"]
 }

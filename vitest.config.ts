@@ -4,12 +4,11 @@ export default defineConfig({
   test: {
     environment: "jsdom",
     coverage: {
-      provider: "c8",
+      provider: "v8",
+      include: ["src"],
+      exclude: ["src/env.d.ts"],
       reporter: ["lcov", "text"],
-      branches: 100,
-      functions: 100,
-      lines: 100,
-      statements: 100,
+      thresholds: { 100: true },
     },
   },
 });
