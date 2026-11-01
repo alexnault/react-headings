@@ -13,12 +13,12 @@
 
 > Never write `h1`–`h6` again.
 
-Search engines and screen readers rely on heading levels, but reusable components can't know how deep they'll be rendered. React Headings works out each level from your component tree, like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) proposal, but in any browser today.
+Hardcoded heading levels break accessibility and SEO when components are reused. React Headings fixes this by computing each level from your component tree.
 
 ## Features
 
 - Supports server-side rendering
-- 384 bytes minified & brotlied
+- 370 bytes minified & brotlied
 - Typed with TypeScript
 - Works with any CSS solution (Tailwind, CSS-in-JS, etc.)
 - Plays nicely with component libraries
@@ -108,7 +108,7 @@ Accepts every `h1` prop and a `ref`, plus:
 
 Pass `offset` or `level`, not both. Nested offsets add up. `offset={0}` adds nothing, which is useful for conditional nesting.
 
-Invalid values never throw: fractions round down, and anything else invalid counts as `offset={0}` or `level={1}`.
+Invalid values never throw: they're ignored with a warning, as if not passed. `null` counts as not passed, without a warning.
 
 ### `useHeadingLevel()`
 
@@ -118,22 +118,11 @@ Returns the `level` (`1`–`6`) and `tag` (`"h1"`–`"h6"`) a `Heading` would re
 
 In development, React Headings warns in the console when:
 
-- a level is skipped, like an `h3` with no `h2` above it,
+- a level is skipped,
 - a level goes past 6,
 - an `offset` or `level` is invalid.
 
-Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node or Jest, run with `--conditions=development`.
-
-## Server Components
-
-Works in Server Components, including Server Components nested inside `HeadingLevel`. Only `useHeadingLevel()` needs a Client Component.
-
-## Differences from `headingoffset`
-
-- Levels follow the React tree, not the DOM, so portaled content inherits its level.
-- `Heading` always starts at level 1, while a native `h2` starts at 2.
-- Levels stop at 6, while `headingoffset` goes up to 9 through `aria-level`.
-- The output is a real `h1`–`h6` tag, so CSS like `h2 { … }` matches the level.
+Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node, run with `--conditions=development`.
 
 ## License
 

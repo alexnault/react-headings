@@ -4,7 +4,7 @@
 
 - Heading levels computed from the current nesting, not hard-coded.
 - Components can be written without knowing the heading hierarchy of their parents.
-- Small, predictable API: one `HeadingLevel` component for relative nesting (like the HTML [`headingoffset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingoffset) proposal) and absolute resets (like [`headingreset`](https://developer.mozilla.org/en-US/docs/Web/HTML/Reference/Global_attributes/headingreset)), like Ariakit's `HeadingLevel` plus an `offset` prop.
+- Small, predictable API: one `HeadingLevel` component for relative nesting and absolute resets, like Ariakit's `HeadingLevel` plus an `offset` prop.
 - Works through portals (modals, popovers).
 - SSR-safe; usable from React Server Components.
 - Dev-only hierarchy enforcement.
@@ -42,7 +42,7 @@ Renders `h1`–`h6` according to the current level.
 Takes either `offset` or `level`, never both (enforced by a union type):
 
 - `offset?: number` — integer ≥ 0, default `1`. Headings inside render `offset` levels deeper. Nested offsets accumulate. `offset={0}` is a no-op, useful for conditional nesting; the rendered tree is the same for every `offset`, so toggling it never remounts children.
-- `level?: number` — integer ≥ 1. Discards all ancestor levels; headings inside render at `level` (like native `headingreset`, plus `headingoffset` for levels above 1).
+- `level?: number` — integer ≥ 1. Discards all ancestor levels; headings inside render at `level`.
 
 ```tsx
 <HeadingLevel>             {/* Heading inside → parent + 1 */}
@@ -56,10 +56,10 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
 
 ## Behaviour
 
-- **Mechanism:** React context is the source of truth. Real `h1`–`h6` tags are rendered; native `headingoffset`/`headingreset` attributes are never emitted (they would double-count on top of the computed tag, and do not follow portals).
+- **Mechanism:** React context is the source of truth. Real `h1`–`h6` tags are rendered.
 - **No provider required:** a `Heading` outside any `HeadingLevel` renders `h1`.
 - **No DOM:** `HeadingLevel` renders only a context provider. Users bring their own `<section>`, `<article>`, etc.
-- **Convention:** a component that renders a heading wraps the content _under_ that heading. Its own heading renders at whatever level it is placed, so it works standalone, nested or under `level` without changes (like native `headingoffset`, where the embedder applies the offset):
+- **Convention:** a component that renders a heading wraps the content _under_ that heading. Its own heading renders at whatever level it is placed, so it works standalone, nested or under `level` without changes:
 
   ```tsx
   function Card({ title, children }) {
@@ -90,32 +90,11 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
   ```
 
 - **Overflow:** levels above 6 clamp to `h6`.
-- **Invalid `offset` / `level`:** normalized like the native attribute, never thrown. Typed as plain `number`.
-
-  | Input                       | `offset` treated as               | `level` treated as                |
-  | --------------------------- | --------------------------------- | --------------------------------- |
-  | Below minimum (`<0` / `<1`) | `0`                               | `1`                               |
-  | Fractional                  | floored (`1.5` → `1`)             | floored (`2.5` → `2`)             |
-  | `NaN`, `±Infinity`          | `0`                               | `1`                               |
-  | Large                       | kept; the final level clamps to 6 | kept; the final level clamps to 6 |
+- **Invalid `offset` / `level`:** anything but an integer in range (fractions, `NaN`, `±Infinity`, below the minimum) is ignored as if not passed, with a warning; never thrown. `null` counts as not passed, without a warning. Typed as plain `number`.
 
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
-- **Server Components:** all exports are `"use client"`; they can be rendered from Server Components, including Server Components nested inside `HeadingLevel`, and SSR produces correct tags. Only `useHeadingLevel()` needs a Client Component.
+- **Server Components:** all exports are `"use client"`; they can be rendered from Server Components, including Server Components nested inside `HeadingLevel`, and SSR produces correct tags.
 - **React:** 18+.
-
-## Differences from native `headingoffset`
-
-`offset` mirrors native `headingoffset` and `level` mirrors `headingreset` (plus `headingoffset`), with these deliberate divergences:
-
-|                              | Native                                                     | react-headings                                                               |
-| ---------------------------- | ---------------------------------------------------------- | ---------------------------------------------------------------------------- |
-| Tree followed                | DOM ancestors                                              | React tree, so portals inherit their React-tree level                        |
-| Base level                   | The tag's own number (`h2` + offset 1 → 3)                 | Always 1; `Heading` has no intrinsic level                                   |
-| Maximum level                | 9 (levels 7–9 exposed via `aria-level`)                    | 6 (clamped to `h6`)                                                          |
-| Offset value range           | 0–8 per element                                            | Any non-negative integer; only the final level is clamped                    |
-| Reset                        | Boolean `headingreset`, combined with `headingoffset`      | Absolute `level` prop, exclusive with `offset`                               |
-| Offset on the heading itself | Allowed (`<h1 headingoffset="2">` → 3)                     | Not supported; offsets come only from `HeadingLevel`                         |
-| Rendered output              | Tag unchanged; level exists only in the accessibility tree | Real `h1`–`h6` tag, so CSS `h2` selectors and default styles match the level |
 
 ## Packaging & tooling
 
@@ -131,7 +110,8 @@ Breaking:
 Non-breaking:
 
 - Automatic JSX runtime (`jsx: "react-jsx"`).
-- New package description and keywords reflecting dynamic heading levels / `headingoffset` polyfill.
+- Top-level `types` field pointing at `dist/index.d.ts`, for TypeScript projects on `moduleResolution: "node"`, which ignores `exports`.
+- New package description and keywords reflecting dynamic heading levels.
 - Size-limit tracks `dist/index.js` (React excluded) minified, gzipped and brotlied.
 
 Build:
@@ -156,13 +136,12 @@ Only present in the `development` export condition build; never thrown.
    - A non-empty nested scope counts as a heading at its own first level in its parent, so each gap is reported by exactly one scope.
    - Headings register with their scope in effects (client-only; zero cost in SSR/production). The check runs in a microtask after the commit, so it sees the whole tree, and re-runs when headings mount or unmount. Each scope warns at most once.
 2. **Overflow** — computed level exceeds 6. Message: `react-headings: Heading level 7 exceeds 6 and was clamped to h6.`
-3. **Invalid value** — `offset` or `level` was normalized. Message: `react-headings: HeadingLevel received invalid offset -1, treated as 0.` (or `invalid level`).
+3. **Invalid value** — `offset` or `level` was ignored. Message: `react-headings: HeadingLevel received invalid offset -1, ignored.` (or `invalid level`).
 
-The root (outside any `HeadingLevel`) is not a scope, so a page with no `h1` is not detected.
+The root (outside any `HeadingLevel`) is not a scope, so a page with no `h1` is not detected. Only the levels present in a scope are compared, not their order, so an `h3` placed before its `h2` is not detected either.
 
 ## Non-goals
 
-- Emitting native `headingoffset`/`headingreset` attributes. The native attribute is an _alternative_ to this library, not a complement.
 - `as` / `asChild` polymorphism.
 - "Single `h1`" enforcement.
 - Absolute-level props on `Heading` (only `HeadingLevel` takes `level`).

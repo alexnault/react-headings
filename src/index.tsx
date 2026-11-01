@@ -32,12 +32,12 @@ export type HeadingLevelProps = { children?: ReactNode } & (
 // Unclamped, so dev checks can see levels above 6.
 const LevelContext = createContext(1);
 
-function getNormalizedOffset(offset: number): number {
-  return Number.isFinite(offset) && offset > 0 ? Math.floor(offset) : 0;
+function isValidOffset(offset: number): boolean {
+  return Number.isInteger(offset) && offset >= 0;
 }
 
-function getNormalizedLevel(level: number): number {
-  return Number.isFinite(level) && level > 1 ? Math.floor(level) : 1;
+function isValidLevel(level: number | undefined): level is number {
+  return Number.isInteger(level) && (level as number) >= 1;
 }
 
 /**
@@ -78,26 +78,25 @@ export function HeadingLevel({
   children,
 }: HeadingLevelProps) {
   const parentLevel = useContext(LevelContext);
-  const isReset = level !== undefined;
-  const normalizedOffset = getNormalizedOffset(offset);
+  // Invalid values are ignored, as if not passed.
+  const isReset = isValidLevel(level);
+  const isOffsetValid = isValidOffset(offset);
   const innerLevel = isReset
-    ? getNormalizedLevel(level)
-    : parentLevel + normalizedOffset;
+    ? level
+    : parentLevel + (isOffsetValid ? offset : 1);
 
   if (process.env.NODE_ENV !== "production") {
     // eslint-disable-next-line react-hooks/rules-of-hooks
-    useInvalidPropWarning(
-      isReset ? "level" : "offset",
-      isReset ? level : offset,
-      isReset ? innerLevel : normalizedOffset,
-    );
+    useInvalidPropWarning("offset", offset, isOffsetValid);
+    // eslint-disable-next-line react-hooks/rules-of-hooks
+    useInvalidPropWarning("level", level, isReset);
 
     // Always rendered, so toggling `offset` or `level` keeps children mounted.
     children = (
       <SkippedLevelScope
         firstLevel={isReset ? innerLevel : parentLevel + 1}
         isIsolated={isReset}
-        isPassthrough={!isReset && normalizedOffset === 0}
+        isPassthrough={!isReset && offset === 0}
       >
         {children}
       </SkippedLevelScope>
@@ -226,14 +225,15 @@ function useHeadingChecks() {
 
 function useInvalidPropWarning(
   prop: "offset" | "level",
-  value: number,
-  normalizedValue: number,
+  value: number | undefined,
+  isValid: boolean,
 ) {
   useEffect(() => {
-    if (value !== normalizedValue) {
+    // `null` means not passed, like `undefined`.
+    if (value != null && !isValid) {
       console.warn(
-        `react-headings: HeadingLevel received invalid ${prop} ${value}, treated as ${normalizedValue}.`,
+        `react-headings: HeadingLevel received invalid ${prop} ${value}, ignored.`,
       );
     }
-  }, [prop, value, normalizedValue]);
+  }, [prop, value, isValid]);
 }

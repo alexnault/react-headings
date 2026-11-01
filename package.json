@@ -2,14 +2,12 @@
   "name": "react-headings",
   "version": "1.0.0-semantic-release",
   "type": "module",
-  "description": "Dynamic heading levels for React. A polyfill of the HTML headingoffset proposal.",
+  "description": "Dynamic heading levels for React.",
   "author": "Alex Nault",
   "keywords": [
     "react",
     "heading",
     "headings",
-    "headingoffset",
-    "headingreset",
     "level",
     "outline",
     "accessibility",
@@ -20,6 +18,7 @@
   "license": "MIT",
   "repository": "https://github.com/alexnault/react-headings",
   "homepage": "https://github.com/alexnault/react-headings#readme",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",

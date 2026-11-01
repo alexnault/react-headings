@@ -1,5 +1,6 @@
-import { cleanup, render } from "@testing-library/react";
-import type { ReactNode } from "react";
+import { act, cleanup, render } from "@testing-library/react";
+import { lazy, Suspense } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Heading, HeadingLevel } from "./index";
@@ -49,7 +50,7 @@ describe("invalid value", () => {
     render(<HeadingLevel offset={1.5} />);
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: HeadingLevel received invalid offset 1.5, treated as 1.",
+      "react-headings: HeadingLevel received invalid offset 1.5, ignored.",
     );
   });
 
@@ -57,8 +58,19 @@ describe("invalid value", () => {
     render(<HeadingLevel level={-2} />);
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: HeadingLevel received invalid level -2, treated as 1.",
+      "react-headings: HeadingLevel received invalid level -2, ignored.",
     );
+  });
+
+  it("does not warn for null, which means not passed", () => {
+    render(
+      <>
+        <HeadingLevel offset={null as unknown as number} />
+        <HeadingLevel level={null as unknown as number} />
+      </>,
+    );
+
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it("does not warn for valid values", () => {
@@ -232,6 +244,76 @@ describe("skipped level", () => {
       "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
     );
   });
+
+  it("warns at most once per scope", async () => {
+    function Chapter({ sectionCount }: { sectionCount: number }) {
+      return (
+        <HeadingLevel>
+          {Array.from({ length: sectionCount }, (_, index) => (
+            <HeadingLevel key={index}>
+              <Heading>Too deep</Heading>
+            </HeadingLevel>
+          ))}
+        </HeadingLevel>
+      );
+    }
+
+    const { rerender } = render(<Chapter sectionCount={1} />);
+    await settle();
+    rerender(<Chapter sectionCount={2} />);
+    await settle();
+
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  it("warns when a heading renders in a later commit than a deeper one", async () => {
+    const Title = lazy(() => new Promise<{ default: ComponentType }>(() => {}));
+
+    render(
+      <HeadingLevel>
+        <Suspense fallback={null}>
+          <Title />
+        </Suspense>
+        <HeadingLevel>
+          <Heading>Sub</Heading>
+        </HeadingLevel>
+      </HeadingLevel>,
+    );
+    await settle();
+
+    expect(warn).toHaveBeenCalledWith(
+      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
+    );
+  });
+
+  it("does not warn when the Suspense fallback has a heading", async () => {
+    let resolveTitle!: (titleModule: { default: ComponentType }) => void;
+    const Title = lazy(
+      () =>
+        new Promise<{ default: ComponentType }>((resolve) => {
+          resolveTitle = resolve;
+        }),
+    );
+
+    const { container } = render(
+      <HeadingLevel>
+        <Suspense fallback={<Heading>Loading</Heading>}>
+          <Title />
+        </Suspense>
+        <HeadingLevel>
+          <Heading>Sub</Heading>
+        </HeadingLevel>
+      </HeadingLevel>,
+    );
+    await settle();
+    await act(async () => {
+      resolveTitle({ default: () => <Heading>Title</Heading> });
+    });
+    await settle();
+
+    expect(container.innerHTML).toBe("<h2>Title</h2><h3>Sub</h3>");
+    expect(warn).not.toHaveBeenCalled();
+  });
 });
 
 describe("production", () => {
@@ -246,7 +328,8 @@ describe("production", () => {
         <HeadingLevel offset={2}>
           <Heading>Skipped</Heading>
         </HeadingLevel>
-        <HeadingLevel level={-1}>
+        <HeadingLevel level={-1} />
+        <HeadingLevel level={1}>
           <HeadingLevel>
             <Heading>Skipped in reset</Heading>
           </HeadingLevel>
