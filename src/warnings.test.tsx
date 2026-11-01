@@ -1,21 +1,24 @@
-import { cleanup, render } from "@testing-library/react";
-import type { ReactNode } from "react";
+import { act, cleanup, render } from "@testing-library/react";
+import { lazy, Suspense } from "react";
+import type { ComponentType, ReactNode } from "react";
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 import { Heading, HeadingLevel } from "./index";
 
 function settle() {
-  return new Promise((resolve) => setTimeout(resolve));
+  return vi.runAllTimersAsync();
 }
 
 let warn: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
   warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 
 afterEach(() => {
   cleanup();
+  vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
 });
@@ -231,6 +234,54 @@ describe("skipped level", () => {
     expect(warn).toHaveBeenCalledWith(
       "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
     );
+  });
+
+  it("warns at most once per scope", async () => {
+    function Chapter({ sectionCount }: { sectionCount: number }) {
+      return (
+        <HeadingLevel>
+          {Array.from({ length: sectionCount }, (_, index) => (
+            <HeadingLevel key={index}>
+              <Heading>Too deep</Heading>
+            </HeadingLevel>
+          ))}
+        </HeadingLevel>
+      );
+    }
+
+    const { rerender } = render(<Chapter sectionCount={1} />);
+    await settle();
+    rerender(<Chapter sectionCount={2} />);
+    await settle();
+
+    expect(warn).toHaveBeenCalledTimes(1);
+  });
+
+  it("counts headings that render in a later commit", async () => {
+    let resolveTitle!: (titleModule: { default: ComponentType }) => void;
+    const Title = lazy(
+      () =>
+        new Promise<{ default: ComponentType }>((resolve) => {
+          resolveTitle = resolve;
+        }),
+    );
+
+    render(
+      <HeadingLevel>
+        <Suspense fallback={null}>
+          <Title />
+        </Suspense>
+        <HeadingLevel>
+          <Heading>Sub</Heading>
+        </HeadingLevel>
+      </HeadingLevel>,
+    );
+    await act(async () => {
+      resolveTitle({ default: () => <Heading>Title</Heading> });
+    });
+    await settle();
+
+    expect(warn).not.toHaveBeenCalled();
   });
 });
 
