@@ -135,10 +135,11 @@ function createScopeRegistry(
 ): ScopeRegistry {
   const headingLevels = new Map<object, number>();
   let unregisterFromParent: (() => void) | undefined;
-  let checkTimeout: ReturnType<typeof setTimeout> | undefined;
+  let isCheckScheduled = false;
   let hasWarned = false;
 
   function warnIfLevelSkipped() {
+    isCheckScheduled = false;
     if (hasWarned || headingLevels.size === 0) return;
 
     const presentLevels = new Set(headingLevels.values());
@@ -154,11 +155,12 @@ function createScopeRegistry(
     }
   }
 
-  // Waits until headings stop changing for a second, so headings that render
-  // in a later commit (Suspense, lazy, hydration) are counted too.
+  // Effects of a whole commit run before microtasks, so the check sees the
+  // complete tree instead of whichever heading registered first.
   function scheduleCheck() {
-    clearTimeout(checkTimeout);
-    checkTimeout = setTimeout(warnIfLevelSkipped, 1000);
+    if (isCheckScheduled) return;
+    isCheckScheduled = true;
+    queueMicrotask(warnIfLevelSkipped);
   }
 
   return {

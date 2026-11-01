@@ -6,19 +6,17 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { Heading, HeadingLevel } from "./index";
 
 function settle() {
-  return vi.runAllTimersAsync();
+  return new Promise((resolve) => setTimeout(resolve));
 }
 
 let warn: ReturnType<typeof vi.spyOn>;
 
 beforeEach(() => {
-  vi.useFakeTimers({ toFake: ["setTimeout", "clearTimeout"] });
   warn = vi.spyOn(console, "warn").mockImplementation(() => {});
 });
 
 afterEach(() => {
   cleanup();
-  vi.useRealTimers();
   vi.restoreAllMocks();
   vi.unstubAllEnvs();
 });
@@ -257,14 +255,8 @@ describe("skipped level", () => {
     expect(warn).toHaveBeenCalledTimes(1);
   });
 
-  it("counts headings that render in a later commit", async () => {
-    let resolveTitle!: (titleModule: { default: ComponentType }) => void;
-    const Title = lazy(
-      () =>
-        new Promise<{ default: ComponentType }>((resolve) => {
-          resolveTitle = resolve;
-        }),
-    );
+  it("warns when a heading renders in a later commit than a deeper one", async () => {
+    const Title = lazy(() => new Promise<{ default: ComponentType }>(() => {}));
 
     render(
       <HeadingLevel>
@@ -276,11 +268,39 @@ describe("skipped level", () => {
         </HeadingLevel>
       </HeadingLevel>,
     );
+    await settle();
+
+    expect(warn).toHaveBeenCalledWith(
+      "react-headings: Skipped heading level 2: found a level 3 heading but no level 2 heading.",
+    );
+  });
+
+  it("does not warn when the Suspense fallback has a heading", async () => {
+    let resolveTitle!: (titleModule: { default: ComponentType }) => void;
+    const Title = lazy(
+      () =>
+        new Promise<{ default: ComponentType }>((resolve) => {
+          resolveTitle = resolve;
+        }),
+    );
+
+    const { container } = render(
+      <HeadingLevel>
+        <Suspense fallback={<Heading>Loading</Heading>}>
+          <Title />
+        </Suspense>
+        <HeadingLevel>
+          <Heading>Sub</Heading>
+        </HeadingLevel>
+      </HeadingLevel>,
+    );
+    await settle();
     await act(async () => {
       resolveTitle({ default: () => <Heading>Title</Heading> });
     });
     await settle();
 
+    expect(container.innerHTML).toBe("<h2>Title</h2><h3>Sub</h3>");
     expect(warn).not.toHaveBeenCalled();
   });
 });

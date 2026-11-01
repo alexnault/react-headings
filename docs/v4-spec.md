@@ -141,7 +141,7 @@ Only present in the `development` export condition build; never thrown.
    - A `HeadingLevel` with `offset` expects its first heading at the parent level + 1. `offset={0}` is not a scope; its headings count toward the nearest scope above.
    - Each `HeadingLevel` with `level` starts a fresh, isolated scope whose expected first level is `level`; its headings don't count toward the parent.
    - A non-empty nested scope counts as a heading at its own first level in its parent, so each gap is reported by exactly one scope.
-   - Headings register with their scope in effects (client-only; zero cost in SSR/production). The check runs once a scope's headings have stopped changing for a second, so headings that render in a later commit (Suspense, lazy, hydration) are counted. It re-runs when headings mount or unmount. Each scope warns at most once.
+   - Headings register with their scope in effects (client-only; zero cost in SSR/production). The check runs in a microtask after the commit, so it sees the whole tree, and re-runs when headings mount or unmount. Each scope warns at most once.
 2. **Overflow** — computed level exceeds 6. Message: `react-headings: Heading level 7 exceeds 6 and was clamped to h6.`
 3. **Invalid value** — `offset` or `level` was normalized. Message: `react-headings: HeadingLevel received invalid offset -1, treated as 0.` (or `invalid level`).
 
