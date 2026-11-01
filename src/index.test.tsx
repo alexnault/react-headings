@@ -201,22 +201,19 @@ describe("invalid offsets", () => {
     [1.5, "H3"],
     [NaN, "H2"],
     [Infinity, "H2"],
-  ])(
-    "HeadingLevel treats offset %s like the native attribute",
-    (offset, tagName) => {
-      render(
-        <HeadingLevel>
-          <HeadingLevel offset={offset}>
-            <Heading>Title</Heading>
-          </HeadingLevel>
-        </HeadingLevel>,
-      );
+  ])("HeadingLevel normalizes offset %s", (offset, tagName) => {
+    render(
+      <HeadingLevel>
+        <HeadingLevel offset={offset}>
+          <Heading>Title</Heading>
+        </HeadingLevel>
+      </HeadingLevel>,
+    );
 
-      expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
-        tagName,
-      );
-    },
-  );
+    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
+      tagName,
+    );
+  });
 
   it.each([
     [0, "H1"],
