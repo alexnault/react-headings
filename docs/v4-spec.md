@@ -158,7 +158,7 @@ Only present in the `development` export condition build; never thrown.
 2. **Overflow** — computed level exceeds 6. Message: `react-headings: Heading level 7 exceeds 6 and was clamped to h6.`
 3. **Invalid value** — `offset` or `level` was normalized. Message: `react-headings: HeadingLevel received invalid offset -1, treated as 0.` (or `invalid level`).
 
-The root (outside any `HeadingLevel`) is not a scope, so a page with no `h1` is not detected.
+The root (outside any `HeadingLevel`) is not a scope, so a page with no `h1` is not detected. Only the levels present in a scope are compared, not their order, so an `h3` placed before its `h2` is not detected either.
 
 ## Non-goals
 

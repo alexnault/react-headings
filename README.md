@@ -118,7 +118,7 @@ Returns the `level` (`1`–`6`) and `tag` (`"h1"`–`"h6"`) a `Heading` would re
 
 In development, React Headings warns in the console when:
 
-- a level is skipped, like an `h3` with no `h2` above it,
+- a level is skipped,
 - a level goes past 6,
 - an `offset` or `level` is invalid.
 
