@@ -66,8 +66,6 @@ export const Heading = forwardRef<HTMLHeadingElement, HeadingProps>(
 
 Heading.displayName = "Heading";
 
-export { Heading as H };
-
 /**
  * Renders headings inside `offset` levels deeper (default 1), or at `level`
  * regardless of ancestors.

@@ -3,13 +3,13 @@ import { createRef } from "react";
 import { createPortal } from "react-dom";
 import { afterEach, describe, expect, it } from "vitest";
 
-import { H, Heading, HeadingLevel, useHeadingLevel } from "./index";
+import { Heading, HeadingLevel, useHeadingLevel } from "./index";
 
 afterEach(cleanup);
 
 describe("Heading", () => {
-  it("renders an h1 outside any provider (via the H alias)", () => {
-    render(<H>Title</H>);
+  it("renders an h1 outside any provider", () => {
+    render(<Heading>Title</Heading>);
 
     expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H1");
   });

@@ -18,7 +18,7 @@ Hardcoded heading levels break accessibility and SEO when components are reused.
 ## Features
 
 - Supports server-side rendering
-- 370 bytes minified & brotlied
+- Only 369 bytes minified & brotlied
 - Typed with TypeScript
 - Works with any CSS solution (Tailwind, CSS-in-JS, etc.)
 - Plays nicely with component libraries
@@ -31,37 +31,38 @@ npm install react-headings
 
 ## Usage
 
-Use `H` for every heading. Wrap the content that belongs under a heading in `HeadingLevel`: headings inside render one level deeper.
+Use `Heading` for every heading. Wrap the content that belongs under a heading in `HeadingLevel`: headings inside render one level deeper.
 
 ```tsx
-import { H, HeadingLevel } from "react-headings";
+import { Heading, HeadingLevel } from "react-headings";
 
 function Page() {
   return (
     <>
-      <H>Star Wars</H> {/* h1 */}
+      <Heading>Star Wars</Heading> {/* h1 */}
       <HeadingLevel>
-        <Card title="Characters"> {/* h2 */}
-          <Card title="Luke" /> {/* h3 */}
-          <Card title="Leia" /> {/* h3 */}
-          <Card title="Han Solo" /> {/* h3 */}
-        </Card>
+        <Heading>Characters</Heading> {/* h2 */}
+        <HeadingLevel>
+          <Section title="Luke" /> {/* h3 */}
+          <Section title="Leia" /> {/* h3 */}
+          <Section title="Han Solo" /> {/* h3 */}
+        </HeadingLevel>
       </HeadingLevel>
     </>
   );
 }
 
-function Card({ title, children }) {
+function Section({ title, children }) {
   return (
-    <article>
-      <H>{title}</H>
+    <section>
+      <Heading>{title}</Heading>
       <HeadingLevel>{children}</HeadingLevel>
-    </article>
+    </section>
   );
 }
 ```
 
-`Card` doesn't know its level: it renders `h2` for Characters, `h3` for each character, and `h1` on its own.
+`Section` doesn't know its level: it renders `h3` here.
 
 ### Dialogs
 
@@ -70,7 +71,7 @@ Portaled elements, like dialogs, aren't part of the page outline. Use `level` to
 ```tsx
 <Dialog>
   <HeadingLevel level={1}>
-    <H>Delete file?</H> {/* h1 */}
+    <Heading>Delete file?</Heading> {/* h1 */}
   </HeadingLevel>
 </Dialog>
 ```
@@ -80,14 +81,14 @@ Portaled elements, like dialogs, aren't part of the page outline. Use `level` to
 React Headings only picks the tag. Style headings however you like, or use `render` for your own component:
 
 ```tsx
-<H render={(props, { tag }) => <Text as={tag} size="lg" {...props} />}>
+<Heading render={(props, { tag }) => <Text as={tag} size="lg" {...props} />}>
   Title
-</H>
+</Heading>
 ```
 
 ## API
 
-### `Heading` / `H`
+### `Heading`
 
 Renders `h1`–`h6` based on the current level: `h1` by default, and never deeper than `h6`.
 
@@ -96,8 +97,6 @@ Accepts every `h1` prop and a `ref`, plus:
 | Prop     | Type                                         | Description                                                                                                 |
 | -------- | -------------------------------------------- | ----------------------------------------------------------------------------------------------------------- |
 | `render` | `(props, { level, tag }) => ReactElement`    | Renders your own element. Spread `props` on it (includes `children` and `ref`). |
-
-`H` is the same component as `Heading`. Pick one name per project.
 
 ### `HeadingLevel`
 
