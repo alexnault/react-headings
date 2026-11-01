@@ -41,27 +41,28 @@ function Page() {
     <>
       <H>Star Wars</H> {/* h1 */}
       <HeadingLevel>
-        <Card title="Characters"> {/* h2 */}
-          <Card title="Luke" /> {/* h3 */}
-          <Card title="Leia" /> {/* h3 */}
-          <Card title="Han Solo" /> {/* h3 */}
-        </Card>
+        <H>Characters</H> {/* h2 */}
+        <HeadingLevel>
+          <Section title="Luke" /> {/* h3 */}
+          <Section title="Leia" /> {/* h3 */}
+          <Section title="Han Solo" /> {/* h3 */}
+        </HeadingLevel>
       </HeadingLevel>
     </>
   );
 }
 
-function Card({ title, children }) {
+function Section({ title, children }) {
   return (
-    <article>
+    <section>
       <H>{title}</H>
       <HeadingLevel>{children}</HeadingLevel>
-    </article>
+    </section>
   );
 }
 ```
 
-`Card` doesn't know its level: it renders `h2` for Characters, `h3` for each character, and `h1` on its own.
+`Section` doesn't know its level: it renders `h3` here.
 
 ### Dialogs
 
