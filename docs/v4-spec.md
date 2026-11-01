@@ -131,6 +131,7 @@ Breaking:
 Non-breaking:
 
 - Automatic JSX runtime (`jsx: "react-jsx"`).
+- Top-level `types` field pointing at `dist/index.d.ts`, for TypeScript projects on `moduleResolution: "node"`, which ignores `exports`.
 - New package description and keywords reflecting dynamic heading levels / `headingoffset` polyfill.
 - Size-limit tracks `dist/index.js` (React excluded) minified, gzipped and brotlied.
 

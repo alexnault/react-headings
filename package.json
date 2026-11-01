@@ -20,6 +20,7 @@
   "license": "MIT",
   "repository": "https://github.com/alexnault/react-headings",
   "homepage": "https://github.com/alexnault/react-headings#readme",
+  "types": "./dist/index.d.ts",
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
