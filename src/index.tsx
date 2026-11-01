@@ -14,20 +14,19 @@ import type {
   ReactNode,
 } from "react";
 
-type ClampedLevel = 1 | 2 | 3 | 4 | 5 | 6;
+type Level = 1 | 2 | 3 | 4 | 5 | 6;
 
-export type HeadingTag = `h${ClampedLevel}`;
+type Tag = `h${Level}`;
 
 export type HeadingProps = ComponentPropsWithoutRef<"h1"> & {
   render?: (
     props: ComponentPropsWithRef<"h1">,
-    heading: { level: ClampedLevel; tag: HeadingTag },
+    heading: { level: Level; tag: Tag },
   ) => ReactElement;
 };
 
 export type HeadingLevelProps = { children?: ReactNode } & (
-  | { offset?: number; level?: never }
-  | { level: number; offset?: never }
+  { offset?: number; level?: never } | { level: number; offset?: never }
 );
 
 // Unclamped, so dev checks can see levels above 6.
@@ -113,8 +112,8 @@ export function HeadingLevel({
 /**
  * Returns the level and tag a `Heading` would render at this position.
  */
-export function useHeadingLevel(): { level: ClampedLevel; tag: HeadingTag } {
-  const level = Math.min(useContext(LevelContext), 6) as ClampedLevel;
+export function useHeadingLevel(): { level: Level; tag: Tag } {
+  const level = Math.min(useContext(LevelContext), 6) as Level;
   return { level, tag: `h${level}` };
 }
 

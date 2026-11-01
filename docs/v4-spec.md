@@ -19,11 +19,7 @@ Development happens on a feature branch whose PR targets `next` (not `master`). 
 
 ```ts
 export { Heading, Heading as H, HeadingLevel, useHeadingLevel };
-export type {
-  HeadingProps,
-  HeadingTag, // "h1" | … | "h6"
-  HeadingLevelProps,
-};
+export type { HeadingProps, HeadingLevelProps };
 ```
 
 ### `Heading` (alias `H`)
@@ -31,7 +27,7 @@ export type {
 Renders `h1`–`h6` according to the current level.
 
 - Accepts all native heading props and `ref` (via `forwardRef`, for React 18 support).
-- `render?: (props, heading: { level: 1–6; tag: HeadingTag }) => ReactElement`
+- `render?: (props, heading: { level: 1–6; tag: "h1"–"h6" }) => ReactElement`
   - `props` contains only element props (`children`, `className`, `ref`, …), so spreading it never leaks `level`/`tag` to the DOM.
   - Function form only.
 
