@@ -50,7 +50,7 @@ describe("invalid value", () => {
     render(<HeadingLevel offset={1.5} />);
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: HeadingLevel received invalid offset 1.5, treated as 1.",
+      "react-headings: HeadingLevel received invalid offset 1.5, ignored.",
     );
   });
 
@@ -58,8 +58,19 @@ describe("invalid value", () => {
     render(<HeadingLevel level={-2} />);
 
     expect(warn).toHaveBeenCalledWith(
-      "react-headings: HeadingLevel received invalid level -2, treated as 1.",
+      "react-headings: HeadingLevel received invalid level -2, ignored.",
     );
+  });
+
+  it("does not warn for null, which means not passed", () => {
+    render(
+      <>
+        <HeadingLevel offset={null as unknown as number} />
+        <HeadingLevel level={null as unknown as number} />
+      </>,
+    );
+
+    expect(warn).not.toHaveBeenCalled();
   });
 
   it("does not warn for valid values", () => {
@@ -317,7 +328,8 @@ describe("production", () => {
         <HeadingLevel offset={2}>
           <Heading>Skipped</Heading>
         </HeadingLevel>
-        <HeadingLevel level={-1}>
+        <HeadingLevel level={-1} />
+        <HeadingLevel level={1}>
           <HeadingLevel>
             <Heading>Skipped in reset</Heading>
           </HeadingLevel>

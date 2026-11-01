@@ -90,14 +90,7 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
   ```
 
 - **Overflow:** levels above 6 clamp to `h6`.
-- **Invalid `offset` / `level`:** normalized, never thrown. Typed as plain `number`.
-
-  | Input                       | `offset` treated as               | `level` treated as                |
-  | --------------------------- | --------------------------------- | --------------------------------- |
-  | Below minimum (`<0` / `<1`) | `0`                               | `1`                               |
-  | Fractional                  | floored (`1.5` → `1`)             | floored (`2.5` → `2`)             |
-  | `NaN`, `±Infinity`          | `0`                               | `1`                               |
-  | Large                       | kept; the final level clamps to 6 | kept; the final level clamps to 6 |
+- **Invalid `offset` / `level`:** anything but an integer in range (fractions, `NaN`, `±Infinity`, below the minimum) is ignored as if not passed, with a warning; never thrown. `null` counts as not passed, without a warning. Typed as plain `number`.
 
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
 - **Server Components:** all exports are `"use client"`; they can be rendered from Server Components, including Server Components nested inside `HeadingLevel`, and SSR produces correct tags.
@@ -143,7 +136,7 @@ Only present in the `development` export condition build; never thrown.
    - A non-empty nested scope counts as a heading at its own first level in its parent, so each gap is reported by exactly one scope.
    - Headings register with their scope in effects (client-only; zero cost in SSR/production). The check runs in a microtask after the commit, so it sees the whole tree, and re-runs when headings mount or unmount. Each scope warns at most once.
 2. **Overflow** — computed level exceeds 6. Message: `react-headings: Heading level 7 exceeds 6 and was clamped to h6.`
-3. **Invalid value** — `offset` or `level` was normalized. Message: `react-headings: HeadingLevel received invalid offset -1, treated as 0.` (or `invalid level`).
+3. **Invalid value** — `offset` or `level` was ignored. Message: `react-headings: HeadingLevel received invalid offset -1, ignored.` (or `invalid level`).
 
 The root (outside any `HeadingLevel`) is not a scope, so a page with no `h1` is not detected. Only the levels present in a scope are compared, not their order, so an `h3` placed before its `h2` is not detected either.
 

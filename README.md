@@ -18,7 +18,7 @@ Hardcoded heading levels break accessibility and SEO when components are reused.
 ## Features
 
 - Supports server-side rendering
-- 381 bytes minified & brotlied
+- 370 bytes minified & brotlied
 - Typed with TypeScript
 - Works with any CSS solution (Tailwind, CSS-in-JS, etc.)
 - Plays nicely with component libraries
@@ -108,7 +108,7 @@ Accepts every `h1` prop and a `ref`, plus:
 
 Pass `offset` or `level`, not both. Nested offsets add up. `offset={0}` adds nothing, which is useful for conditional nesting.
 
-Invalid values never throw: fractions round down, and anything else invalid counts as `offset={0}` or `level={1}`.
+Invalid values never throw: they're ignored with a warning, as if not passed. `null` counts as not passed, without a warning.
 
 ### `useHeadingLevel()`
 

@@ -195,39 +195,34 @@ describe("useHeadingLevel", () => {
   });
 });
 
-describe("invalid offsets", () => {
-  it.each([
-    [-1, "H2"],
-    [1.5, "H3"],
-    [NaN, "H2"],
-    [Infinity, "H2"],
-  ])("HeadingLevel normalizes offset %s", (offset, tagName) => {
-    render(
-      <HeadingLevel>
-        <HeadingLevel offset={offset}>
-          <Heading>Title</Heading>
-        </HeadingLevel>
-      </HeadingLevel>,
-    );
+describe("invalid values", () => {
+  it.each([-1, 2.5, NaN, Infinity, null])(
+    "HeadingLevel ignores offset %s",
+    (offset) => {
+      render(
+        <HeadingLevel>
+          <HeadingLevel offset={offset as number}>
+            <Heading>Title</Heading>
+          </HeadingLevel>
+        </HeadingLevel>,
+      );
 
-    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
-      tagName,
-    );
-  });
+      expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H3");
+    },
+  );
 
-  it.each([
-    [0, "H1"],
-    [2.5, "H2"],
-    [NaN, "H1"],
-  ])("HeadingLevel treats level %s as %s", (level, tagName) => {
-    render(
-      <HeadingLevel level={level}>
-        <Heading>Title</Heading>
-      </HeadingLevel>,
-    );
+  it.each([0, 2.5, NaN, Infinity, null])(
+    "HeadingLevel ignores level %s",
+    (level) => {
+      render(
+        <HeadingLevel>
+          <HeadingLevel level={level as number}>
+            <Heading>Title</Heading>
+          </HeadingLevel>
+        </HeadingLevel>,
+      );
 
-    expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe(
-      tagName,
-    );
-  });
+      expect(screen.getByRole("heading", { name: "Title" }).tagName).toBe("H3");
+    },
+  );
 });
