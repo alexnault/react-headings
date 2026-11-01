@@ -122,7 +122,7 @@ In development, React Headings warns in the console when:
 - a level goes past 6,
 - an `offset` or `level` is invalid.
 
-Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node or Jest, run with `--conditions=development`.
+Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node, run with `--conditions=development`.
 
 ## Server Components
 
