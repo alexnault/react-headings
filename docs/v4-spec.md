@@ -18,11 +18,11 @@ Development happens on a feature branch whose PR targets `next` (not `master`). 
 ## API
 
 ```ts
-export { Heading, Heading as H, HeadingLevel, useHeadingLevel };
+export { Heading, HeadingLevel, useHeadingLevel };
 export type { HeadingProps, HeadingLevelProps };
 ```
 
-### `Heading` (alias `H`)
+### `Heading`
 
 Renders `h1`–`h6` according to the current level.
 
@@ -65,13 +65,13 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
   function Card({ title, children }) {
     return (
       <article>
-        <H>{title}</H>
+        <Heading>{title}</Heading>
         <HeadingLevel>{children}</HeadingLevel>
       </article>
     );
   }
 
-  <H>Page</H>                    {/* h1 */}
+  <Heading>Page</Heading>        {/* h1 */}
   <HeadingLevel>
     <Card title="Chapter">       {/* h2 */}
       <Card title="Subchapter" /> {/* h3 */}
@@ -84,7 +84,7 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
   ```tsx
   <Dialog>
     <HeadingLevel level={1}>
-      <H>Confirm</H> {/* h1 */}
+      <Heading>Confirm</Heading> {/* h1 */}
     </HeadingLevel>
   </Dialog>
   ```
