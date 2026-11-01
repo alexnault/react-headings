@@ -5,7 +5,7 @@
     "import": "*",
     "ignore": ["react"],
     "brotli": false,
-    "limit": "900 B"
+    "limit": "791 B"
   },
   {
     "name": "JS Gzipped",
@@ -13,13 +13,13 @@
     "import": "*",
     "ignore": ["react"],
     "gzip": true,
-    "limit": "500 B"
+    "limit": "442 B"
   },
   {
     "name": "JS Brotlied",
     "path": "dist/index.js",
     "import": "*",
     "ignore": ["react"],
-    "limit": "450 B"
+    "limit": "381 B"
   }
 ]
