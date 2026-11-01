@@ -100,7 +100,7 @@ Returns `{ level: 1–6, tag: "h1"–"h6" }` — what a `Heading` rendered at th
   | Large                       | kept; the final level clamps to 6 | kept; the final level clamps to 6 |
 
 - **Unstyled:** the library handles semantics only. Visual styling is up to the user, via `level`/`tag` from the hook or `render`.
-- **Server Components:** all exports are `"use client"`; they can be rendered from Server Components, including Server Components nested inside `HeadingLevel`, and SSR produces correct tags. Only `useHeadingLevel()` and `render` need a Client Component, because a Server Component can't pass a function.
+- **Server Components:** all exports are `"use client"`; they can be rendered from Server Components, including Server Components nested inside `HeadingLevel`, and SSR produces correct tags.
 - **React:** 18+.
 
 ## Packaging & tooling

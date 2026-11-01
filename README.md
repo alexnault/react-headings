@@ -124,10 +124,6 @@ In development, React Headings warns in the console when:
 
 Warnings are removed from production builds. Vite and webpack show them automatically in dev mode. In plain Node, run with `--conditions=development`.
 
-## Server Components
-
-Works in Server Components, including Server Components nested inside `HeadingLevel`. Only `useHeadingLevel()` and the `render` prop need a Client Component, because a Server Component can't pass a function. In a Server Component, style headings with `className`, or move the `render` call into your own Client Component.
-
 ## License
 
 MIT
