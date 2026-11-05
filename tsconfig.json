@@ -12,7 +12,8 @@
     "noUnusedParameters": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "verbatimModuleSyntax": true
   },
-  "include": ["src", "*.ts", "*.js", "scripts"]
+  "include": ["src", "test", "*.ts", "*.js"]
 }

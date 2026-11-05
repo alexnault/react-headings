@@ -1,4 +1,5 @@
 // @vitest-environment node
+/// <reference types="node" />
 import { execFileSync, execSync } from "node:child_process";
 import { readFileSync } from "node:fs";
 import { beforeAll, describe, expect, it } from "vitest";
