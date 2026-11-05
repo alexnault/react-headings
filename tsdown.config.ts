@@ -8,7 +8,6 @@ const build = (env: "production" | "development"): UserConfig => ({
   target: "es2020",
   fixedExtension: false,
   dts: env === "production",
-  clean: false,
   define: { "process.env.NODE_ENV": JSON.stringify(env) },
   // The single entry keeps its "use client" directive.
   checks: { moduleLevelDirective: false },

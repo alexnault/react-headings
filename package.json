@@ -29,7 +29,7 @@
     "./package.json": "./package.json"
   },
   "scripts": {
-    "build": "rm -rf dist && tsdown",
+    "build": "tsdown",
     "typecheck": "tsc",
     "format": "prettier ./ --write",
     "lint": "eslint ./ --max-warnings=0",
