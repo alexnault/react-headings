@@ -6,7 +6,6 @@ export default defineConfig({
     coverage: {
       provider: "v8",
       include: ["src"],
-      exclude: ["src/env.d.ts"],
       reporter: ["lcov", "text"],
       thresholds: { 100: true },
     },
