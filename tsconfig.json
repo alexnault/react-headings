@@ -5,14 +5,15 @@
     "moduleResolution": "Bundler",
     "lib": ["ES2020", "DOM"],
     "jsx": "react-jsx",
-    "types": [],
+    "types": ["node"],
     "strict": true,
     "noImplicitReturns": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "isolatedModules": true,
     "skipLibCheck": true,
-    "noEmit": true
+    "noEmit": true,
+    "verbatimModuleSyntax": true
   },
-  "include": ["src", "*.ts", "*.js", "scripts"]
+  "include": ["src", "test", "*.ts", "*.js"]
 }

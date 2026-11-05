@@ -18,7 +18,7 @@ Hardcoded heading levels break accessibility and SEO when components are reused.
 ## Features
 
 - Supports server-side rendering
-- Only 369 bytes minified & brotlied
+- Only 373 bytes minified & brotlied
 - Typed with TypeScript
 - Works with any CSS solution (Tailwind, CSS-in-JS, etc.)
 - Plays nicely with component libraries
