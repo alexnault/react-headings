@@ -31,47 +31,74 @@ npm install react-headings
 
 ## Usage
 
-Use `Heading` for every heading. Wrap the content that belongs under a heading in `HeadingLevel`: headings inside render one level deeper.
+### Basics
+
+`HeadingLevel` moves headings inside one level deeper:
 
 ```tsx
 import { Heading, HeadingLevel } from "react-headings";
 
-function Page() {
+function MyPage() {
   return (
-    <>
-      <Heading>Star Wars</Heading> {/* <h1> */}
+    <main>
+      <Heading>Star Wars</Heading>    {/* <h1> */}
       <HeadingLevel>
         <Heading>Characters</Heading> {/* <h2> */}
         <HeadingLevel>
-          <Section title="Luke" /> {/* <h3> */}
-          <Section title="Leia" /> {/* <h3> */}
-          <Section title="Han Solo" /> {/* <h3> */}
+          Luke, Leia, Han Solo...
+        </HeadingLevel>
+        <Heading>Planets</Heading>    {/* <h2> */}
+        <HeadingLevel>
+          Tatooine, Coruscant...
         </HeadingLevel>
       </HeadingLevel>
-    </>
+    </main>
+  );
+}
+```
+
+### Reusability
+
+Headings inside a component adapt to wherever it's used:
+
+```tsx
+function MyPage() {
+  return (
+    <main>
+      <MySection title="Star Wars">    {/* <h1> */}
+        <MySection title="Characters"> {/* <h2> */}
+          Luke, Leia, Han Solo...
+        </MySection>
+        <MySection title="Planets">    {/* <h2> */}
+          Tatooine, Coruscant...
+        </MySection>
+      </MySection>
+    </main>
   );
 }
 
-function Section({ title, children }) {
+function MySection({ title, children }) {
   return (
     <section>
-      <Heading>{title}</Heading>
+      <Heading>{title}</Heading> {/* <h1>, <h2>, etc. depending on where MySection is used */}
       <HeadingLevel>{children}</HeadingLevel>
     </section>
   );
 }
 ```
 
-`Section` doesn't know its level: it renders `<h3>` here.
-
 ### Dialogs
 
-Portaled elements, like dialogs, aren't part of the page outline. Use `level` to start their headings at `<h1>`:
+Portaled elements, like dialogs, aren't part of the page outline. Use `level` to reset their headings to `<h1>`:
 
 ```tsx
 <Dialog>
   <HeadingLevel level={1}>
     <Heading>Delete file?</Heading> {/* <h1> */}
+    <HeadingLevel>
+      <button>Delete</button>
+      <button>Cancel</button>
+    </HeadingLevel>
   </HeadingLevel>
 </Dialog>
 ```
