@@ -2,24 +2,24 @@
   {
     "name": "JS Minified",
     "path": "dist/index.js",
-    "import": "*",
+    "import": "{ Heading, HeadingLevel, useHeadingLevel }",
     "ignore": ["react"],
     "brotli": false,
-    "limit": "763 B"
+    "limit": "559 B"
   },
   {
     "name": "JS Gzipped",
     "path": "dist/index.js",
-    "import": "*",
+    "import": "{ Heading, HeadingLevel, useHeadingLevel }",
     "ignore": ["react"],
     "gzip": true,
-    "limit": "430 B"
+    "limit": "314 B"
   },
   {
     "name": "JS Brotlied",
     "path": "dist/index.js",
-    "import": "*",
+    "import": "{ Heading, HeadingLevel, useHeadingLevel }",
     "ignore": ["react"],
-    "limit": "373 B"
+    "limit": "277 B"
   }
 ]
